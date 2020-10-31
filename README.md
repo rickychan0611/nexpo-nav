@@ -32,11 +32,3 @@ yarn next dev
 ```
 
 ## 📲 Run on your phone using expo
-
-Download the expo app to your phone and open this link on your phone:
-
-📱 [Open expo app directly](https://exp.host/@kellycup8/next-nav) | ☎️ [Expo app website](https://expo.io/@kellycup8/next-nav)
-
-## 💻 See Next.js hosted website
-
-Link: [https://next-nav.fernandorojo.now.sh](https://next-nav.fernandorojo.now.sh)
