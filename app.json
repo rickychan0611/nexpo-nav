@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "next-navigation",
-    "slug": "next-nav",
+    "name": "e-shop",
+    "slug": "e-shop",
     "platforms": ["ios", "android", "web"],
     "icon": "./assets/icon.png",
     "splash": {
