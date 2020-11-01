@@ -20,7 +20,7 @@ export default function Home() {
         title="Click me to open profile :)"
         onPress={() =>
           navigate({
-            routeName: "profile",
+            routeName: "user",
             params: { id: "chris" },
           })
         }

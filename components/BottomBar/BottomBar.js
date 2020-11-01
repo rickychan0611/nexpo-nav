@@ -55,7 +55,7 @@ export default function BottomBar() {
 
           <Button onPress={() => {
             navigate({
-              routeName: "profile",
+              routeName: "user",
             })
           }}>
             <Icon
