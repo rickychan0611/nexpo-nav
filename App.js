@@ -5,8 +5,6 @@ import ContextProvider from './context/Context';
 import { ThemeProvider } from 'react-native-elements';
 import theme from './theme';
 
-// import theme from './theme.js';
-
 import Home from "./pages";
 import Profile from "./pages/Profile";
 

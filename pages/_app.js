@@ -3,6 +3,7 @@ import Head from 'next/head'
 import ContextProvider from '../context/Context'
 import { ThemeProvider } from 'react-native-elements';
 import theme from '../theme'
+import BottomBar from "../components/BottomBar";
 
 export default function myApp({ Component, pageProps }) {
   return (

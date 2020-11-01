@@ -4,7 +4,8 @@ import { Context } from "../context/Context";
 import { ThemeProvider, Button } from 'react-native-elements';
 import { View, Text, StyleSheet } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
-// import styled from "styled-components/native";
+import styled from "styled-components/native";
+import BottomBar from "../components/BottomBar";
 
 export default function Home() {
   const { navigate } = useRouting();
@@ -12,10 +13,10 @@ export default function Home() {
 
   console.log(user)
   return (
-    <View style={styles.container}>
-
+    <AppContainer>
+      <ContextArea>
       {/* <Title>Title</Title> */}
-      <Text style={styles.text}>Home Screen 🥳 {user} </Text>
+      <MyText>Home Screen 🥳 {user} </MyText>
       <Button
         title="Click me to open profile :)"
         onPress={() =>
@@ -25,23 +26,25 @@ export default function Home() {
           })
         }
       />
-
-    </View>
+      </ContextArea>
+      <BottomBar/>
+    </AppContainer>
   );
 }
 
-// const Title = styled.Text`
-//   color: primary;
-// `;
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    text: {
-      fontSize: 20,
-      margin: 20,
-    },
-  });
+const AppContainer = styled.View`
+      flex: 1;
+      align-items: center;
+      background-color: #f5f5f5;
+`;
+const ContextArea = styled.View`
+      flex: 1;
+      align-items: center;
+      background-color: white;
+      width: 100%;
+      max-width: 500px;
+`;
+const MyText = styled.Text`
+      font-size: 20px;
+      margin: 20px;
+`;

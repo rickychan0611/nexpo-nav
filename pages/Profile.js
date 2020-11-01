@@ -1,28 +1,41 @@
 
-import React from "react";
-import { Button } from "react-native-elements";
+
+import React, {useContext} from "react";
+import { Context } from "../context/Context";
+import { ThemeProvider, Button } from 'react-native-elements';
 import { View, Text, StyleSheet } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
+import styled from "styled-components/native";
+import BottomBar from "../components/BottomBar";
 
 export default function Profile() {
-  const { goBack } = useRouting();
+  const { navigate, goBack } = useRouting();
+  const { user } = useContext(Context);
 
   return (
-    <View style={styles.container}>
-    <Text style={styles.text}>Profile! 🏋️‍♀️</Text>
-    <Button title="👈 Go back" onPress={() => goBack()} />
-  </View>
+    <AppContainer>
+      <ContextArea>
+        <MyText>Profile! 🏋️‍♀️</MyText>
+        <Button title="👈 Go back" onPress={() => goBack()} />  
+      </ContextArea>
+      <BottomBar />
+    </AppContainer>
   );
 }
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    text: {
-      fontSize: 20,
-      margin: 20,
-    },
-  });
+const AppContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  background-color: #f5f5f5;
+`;
+const ContextArea = styled.View`
+  flex: 1;
+  align-items: center;
+  background-color: white;
+  width: 100%;
+  max-width: 500px;
+`;
+const MyText = styled.Text`
+  font-size: 20px;
+  margin: 20px;
+`;
