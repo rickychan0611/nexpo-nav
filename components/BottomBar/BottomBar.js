@@ -34,7 +34,11 @@ export default function BottomBar() {
             <Name>Special</Name>
           </Button>
 
-          <Button>
+          <Button onPress={() => {
+            navigate({
+              routeName: "store"
+            })
+          }}>
 
             <Icon
               name='store'

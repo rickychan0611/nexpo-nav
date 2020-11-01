@@ -7,6 +7,7 @@ import theme from './theme';
 
 import home from "./pages";
 import user from "./pages/user";
+import store from "./pages/store";
 
 const Stack = createStackNavigator();
 
@@ -16,7 +17,8 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="home" component={home} />
-          <Stack.Screen name="profile" component={user} />
+          <Stack.Screen name="user" component={user} />
+          <Stack.Screen name="store" component={store} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
