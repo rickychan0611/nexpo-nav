@@ -5,8 +5,8 @@ import ContextProvider from './context/Context';
 import { ThemeProvider } from 'react-native-elements';
 import theme from './theme';
 
-import Home from "./pages";
-import Profile from "./pages/Profile";
+import home from "./pages";
+import profile from "./pages/profile";
 
 const Stack = createStackNavigator();
 
@@ -15,8 +15,8 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="home" component={home} />
+          <Stack.Screen name="profile" component={profile} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

@@ -14,8 +14,7 @@ export default function BottomBar() {
         <ContentArea>
           <Button onPress={() => {
             navigate({
-              routeName: "Home",
-              web: { as: "/", path: 'index' }
+              routeName: "home"
             })
           }}>
             <Icon
@@ -56,7 +55,7 @@ export default function BottomBar() {
 
           <Button onPress={() => {
             navigate({
-              routeName: "Profile",
+              routeName: "profile",
             })
           }}>
             <Icon
