@@ -2,8 +2,7 @@
 
 import React, {useContext} from "react";
 import { Context } from "../context/Context";
-import { ThemeProvider, Button } from 'react-native-elements';
-import { View, Text, StyleSheet } from "react-native";
+import { Button } from 'react-native-elements';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
