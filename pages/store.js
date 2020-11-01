@@ -67,7 +67,6 @@ const ProductContainer = styled.View`
       flex: 5;
       align-items: center;
       background-color: #f5f5f5;
-      border: 1px 0px 0px 1px black;
 `;
 const AppContainer = styled.View`
       flex: 1;
