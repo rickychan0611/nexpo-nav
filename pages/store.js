@@ -37,9 +37,7 @@ export default function Store() {
         <Text>Healthy</Text>
       </CategoryContainer>
       <ProductContainer>
-        <ProductCard>
-          
-        </ProductCard>
+        <ProductCard/>
       </ProductContainer>
       </ContextArea>
       <BottomBar/>
@@ -58,7 +56,7 @@ const ContextArea = styled.View`
       max-width: 500px;
 `;
 const CategoryContainer = styled.View`
-      flex: 1;
+      flex: 2;
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: center;
@@ -66,9 +64,10 @@ const CategoryContainer = styled.View`
       background-color: #f5f5f5;
 `;
 const ProductContainer = styled.View`
-      flex: 2;
+      flex: 5;
       align-items: center;
       background-color: #f5f5f5;
+      border: 1px 0px 0px 1px black;
 `;
 const AppContainer = styled.View`
       flex: 1;

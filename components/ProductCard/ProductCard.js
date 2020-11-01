@@ -5,16 +5,63 @@ import styled from "styled-components/native";
 
 export default function ProductCard() {
   return (
-      <Card>
+      <Container>
         <Image></Image>
         <Content>
-          <Text>Apple</Text>
+          <Name>Apple</Name>
+          <Description>Des</Description>
+          <PriceQtyWrapper>
+            <PricesWrapper>
+              <RegPrice>$12.00</RegPrice>
+              <DisPrice>$10.00</DisPrice>
+            </PricesWrapper>
+            <QtyWrapper>
+              <Text> - </Text>
+              <Text> 1 </Text>
+              <Text> + </Text>
+            </QtyWrapper>
+          </PriceQtyWrapper>
         </Content>
-      </Card>
+      </Container>
     )
 };
 
-const Card = styled.View`
+const PriceQtyWrapper = styled.View`
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 100%;
+`;
+const QtyWrapper = styled.View`
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
+const PricesWrapper = styled.View`
+  flex: 1;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+`;
+const Name = styled.Text`
+  margin-bottom: 10px;
+`;
+const Description = styled.Text`
+  font-size: 12px;
+  color: gray;
+  margin-bottom: 10px;
+
+`;
+const RegPrice = styled.Text`
+text-decoration: line-through;
+`;
+const DisPrice = styled.Text`
+color: red;
+`;
+const Container = styled.View`
       flex: 1;
       flex-direction: row;
       flex-wrap: nowrap;
@@ -23,17 +70,21 @@ const Card = styled.View`
       background-color: white;
       width: 100%;
       max-width: 500px;
+      position: relative;
+      padding: 0 10px 0 5px;
 `;
 const Content = styled.View`
+      /* position: absolute; */
       flex: 2;
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: flex-start;
-      justify-content: flex-start;
+      justify-content: space-between;
       background-color: white;
       width: 100%;
-      background-color: lightpink;
-
+      min-height: 100px;
+      /* background-color: lightpink; */
+      padding: 0 10px 5px 10px;
 `;
 const Image = styled.View`
       flex: 1;
