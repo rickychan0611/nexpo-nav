@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 export const Context = createContext();
 
 const ContextProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState("Hello Ricky");
   return (
     <Context.Provider
       value={
