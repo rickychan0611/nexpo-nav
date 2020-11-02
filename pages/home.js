@@ -6,6 +6,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
+// import AppContainer from "../components/AppContainer";
 
 export default function Home() {
   const { navigate } = useRouting();
@@ -13,7 +14,7 @@ export default function Home() {
 
   console.log(user)
   return (
-    <AppContainer>
+    <>
       <ContextArea>
       <MyText>Home Screen 🥳 {user} </MyText>
       <Button
@@ -27,15 +28,15 @@ export default function Home() {
       />
       </ContextArea>
       <BottomBar/>
-    </AppContainer>
+      </>
   );
 }
 
-const AppContainer = styled.View`
-      flex: 1;
-      align-items: center;
-      background-color: #f5f5f5;
-`;
+// const AppContainer = styled.View`
+//       flex: 1;
+//       align-items: center;
+//       background-color: #f5f5f5;
+// `;
 const ContextArea = styled.View`
       flex: 1;
       align-items: center;

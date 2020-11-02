@@ -1,29 +1,47 @@
-import React, {useContext} from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, Platform } from "react-native";
+import { Icon } from 'react-native-elements'
 
 import styled from "styled-components/native";
 
 export default function ProductCard() {
   return (
-      <Container>
-        <Image></Image>
-        <Content>
-          <Name>Apple</Name>
-          <Description>Des</Description>
-          <PriceQtyWrapper>
+    <Container>
+
+      <Image />
+
+      <Content>
+        <Name>Apple</Name>
+        <Description>Des</Description>
+
+        <PriceQtyWrapper>
+
             <PricesWrapper>
               <RegPrice>$12.00</RegPrice>
               <DisPrice>$10.00</DisPrice>
             </PricesWrapper>
+
             <QtyWrapper>
-              <Text> - </Text>
-              <Text> 1 </Text>
-              <Text> + </Text>
+              <Icon
+                name='minus-circle'
+                type='font-awesome-5'
+                color='grey'
+                size={20}
+              />
+              <Qty> 99 </Qty>
+              <Icon
+                name='plus-circle'
+                type='font-awesome-5'
+                color='red'
+                size={20}
+              />
             </QtyWrapper>
-          </PriceQtyWrapper>
-        </Content>
-      </Container>
-    )
+
+        </PriceQtyWrapper>
+
+      </Content>
+    </Container>
+  )
 };
 
 const PriceQtyWrapper = styled.View`
@@ -34,20 +52,25 @@ const PriceQtyWrapper = styled.View`
   width: 100%;
 `;
 const QtyWrapper = styled.View`
-  flex: 1;
+  flex: 2;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: flex-end;
 `;
 const PricesWrapper = styled.View`
-  flex: 1;
+  flex: 3;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: flex-end;
 `;
 const Name = styled.Text`
   margin-bottom: 10px;
+`;
+const Qty = styled.Text`
+  color: black;
+  font-size: 16px;
+  margin-bottom: ${Platform.OS === 'web' ? "2px" : "0px"};
 `;
 const Description = styled.Text`
   font-size: 12px;
@@ -67,15 +90,14 @@ const Container = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      background-color: white;
       width: 100%;
       max-width: 500px;
-      position: relative;
       padding: 0 10px 0 5px;
+      margin-bottom: ${Platform.OS === 'web' ? "105px" : "5px"};
 `;
 const Content = styled.View`
       /* position: absolute; */
-      flex: 2;
+      flex: 3;
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: flex-start;
@@ -85,11 +107,12 @@ const Content = styled.View`
       min-height: 100px;
       /* background-color: lightpink; */
       padding: 0 10px 5px 10px;
+      
 `;
 const Image = styled.View`
-      flex: 1;
+      flex: 2;
       width: 100px;
       height: 100px;
-      background-color: lightblue;
+      background-color: lightgray;
 
 `;
