@@ -8,11 +8,13 @@ export default function ProductCard() {
   return (
     <Container>
 
-      <Image />
+      <Image source={{
+          uri: 'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg',
+        }}/>
 
       <Content>
         <Name>Apple</Name>
-        <Description>Des</Description>
+        <Description>A big red apple.</Description>
 
         <PriceQtyWrapper>
 
@@ -109,10 +111,10 @@ const Content = styled.View`
       padding: 0 10px 5px 10px;
       
 `;
-const Image = styled.View`
+const Image = styled.Image`
       flex: 2;
       width: 100px;
       height: 100px;
-      background-color: lightgray;
-
+      background-color: white;
+      resize-mode: contain;
 `;

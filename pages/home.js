@@ -18,10 +18,10 @@ export default function Home() {
       <ContextArea>
       <MyText>Home Screen 🥳 {user} </MyText>
       <Button
-        title="Click me to open profile :)"
+        title="Click me to go shopping :)"
         onPress={() =>
           navigate({
-            routeName: "user",
+            routeName: "store",
             params: { id: "chris" },
           })
         }

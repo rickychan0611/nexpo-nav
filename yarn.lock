@@ -9817,6 +9817,13 @@ react-native-vector-icons@^7.1.0:
     prop-types "^15.7.2"
     yargs "^15.0.2"
 
+react-native-web-swiper@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/react-native-web-swiper/-/react-native-web-swiper-2.1.7.tgz#ad88e548e12ced116c031afefd6a3aba927021c1"
+  integrity sha512-u+fytrL1U5UAuEyjUYfDj2S8tK628Vspi8zZiF+oJ8avx8ktTd9it528ZxYC5DWnHzPYuSL6c/CPFIsk6chAJA==
+  dependencies:
+    prop-types "^15.6.2"
+
 react-native-web@^0.14.7:
   version "0.14.7"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.14.7.tgz#3df5b009228e1b8d7ddbfc98c049ef663c7f3910"

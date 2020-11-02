@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { Context } from "../context/Context";
 import { SearchBar, Button } from 'react-native-elements';
-import { View, Text, Platform } from "react-native";
+import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -12,9 +12,8 @@ import AppContainer from "../components/AppContainer";
 export default function Store() {
   const { navigate } = useRouting();
   const { user } = useContext(Context);
-  const outline = Platform.OS === 'web' && { outline: "none" };
+  const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
-  console.log(user)
   return (
     <>
       <SearchBar
@@ -57,7 +56,15 @@ export default function Store() {
           </CategoryContainer>
         </ScrollView>
         <ProductContainer>
-          <ProductCard />
+
+        <TouchableOpacity onPress={() => {
+            navigate({
+              routeName: "details",
+            })
+          }}>
+            <ProductCard />
+          </TouchableOpacity>
+
           <ProductCard />
           <ProductCard />
           <ProductCard />
@@ -112,27 +119,4 @@ const ProductContainer = styled.ScrollView`
       background-color: #f5f5f5;
       height: 100%;
       flex-direction: column;
-      /* flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      align-items: flex-start;
-      height: 100%; */
-`;
-// const ProductContainer_WEB = styled.`
-//       flex: 5;
-//       background-color: #f5f5f5;
-//       /* flex-direction: column;
-//       flex-wrap: nowrap;
-//       justify-content: flex-start;
-//       align-items: flex-start;
-//       height: 100%; */
-// `;
-// const AppContainer = styled.View`
-//       flex: 1;
-//       align-items: center;
-//       background-color: #f5f5f5;
-// `;
-const MyText = styled.Text`
-      font-size: 20px;
-      margin: 20px;
 `;
