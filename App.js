@@ -29,11 +29,6 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="details" component={details} 
-          options={{
-            title: 'Details',
-            ...transition,
-          }}/>
           <Stack.Screen name="home" component={home}options={{
             title: 'Home',
             ...transition,
@@ -44,6 +39,11 @@ function App() {
           }}/>
           <Stack.Screen name="store" component={store}options={{
             title: 'Shop',
+            ...transition,
+          }}/>
+          <Stack.Screen name="details" component={details} 
+          options={{
+            title: 'Details',
             ...transition,
           }}/>
         </Stack.Navigator>

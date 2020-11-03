@@ -3,18 +3,39 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 import { Icon } from 'react-native-elements'
 
 import styled from "styled-components/native";
-import ProductContent from "../ProductContent";
 
-export default function ProductCard({images}) {
+export default function ProductContent({images}) {
   return (
-    <Container>
+      <Content>
+        <Name>Apple</Name>
+        <Description>A big red apple.</Description>
 
-      <Image source={{
-          uri: 'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg'
-        }}/>
+        <PriceQtyWrapper>
 
-      <ProductContent />
-    </Container>
+            <PricesWrapper>
+              <RegPrice>$12.00</RegPrice>
+              <DisPrice>$10.00</DisPrice>
+            </PricesWrapper>
+
+            <QtyWrapper>
+              <Icon
+                name='minus-circle'
+                type='font-awesome-5'
+                color='grey'
+                size={20}
+              />
+              <Qty> 99 </Qty>
+              <Icon
+                name='plus-circle'
+                type='font-awesome-5'
+                color='red'
+                size={20}
+              />
+            </QtyWrapper>
+
+        </PriceQtyWrapper>
+
+      </Content>
   )
 };
 

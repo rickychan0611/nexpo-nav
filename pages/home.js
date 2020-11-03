@@ -12,7 +12,6 @@ export default function Home() {
   const { navigate } = useRouting();
   const { user } = useContext(Context);
 
-  console.log(user)
   return (
     <>
       <ContextArea>

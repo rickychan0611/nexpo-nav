@@ -13,7 +13,11 @@ export default function Store() {
   const { navigate } = useRouting();
   const { user } = useContext(Context);
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
-
+  const images = [
+    'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg',
+    'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg',
+    'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg'
+  ] 
   return (
     <>
       <SearchBar
@@ -62,7 +66,7 @@ export default function Store() {
               routeName: "details",
             })
           }}>
-            <ProductCard />
+            <ProductCard images={images}/>
           </TouchableOpacity>
 
           <ProductCard />
