@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
+import { Button } from 'react-native-elements';
 
 import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
@@ -13,83 +14,31 @@ export default function CartCheckoutBar() {
     <>
       <Wrapper style={Elevations[6]}>
         <ContentArea >
-          <Button onPress={() => {
-            navigate({
-              routeName: "home"
-            })
-          }}>
-            <Icon
-              name='home'
-              type='font-awesome-5'
-              color='#517fa4'
-            />
-            <Name>Home</Name>
-          </Button>
-
-          <Button>
-            <Icon
-              name='star'
-              type='font-awesome-5'
-              color='#517fa4'
-            />
-            <Name>Special</Name>
-          </Button>
-
-          <Button onPress={() => {
-            navigate({
-              routeName: "store"
-            })
-          }}>
-
-            <Icon
-              name='store'
-              type='font-awesome-5'
-              color='#517fa4'
-            />
-            <Name>Shop</Name>
-          </Button>
-
-          <Button onPress={() => {
-            navigate({
-              routeName: "cart",
-            })
-          }}>
-            <Icon
-              name='shopping-cart'
-              type='font-awesome-5'
-              color='#517fa4'
-            />
-            <Name>Cart</Name>
-          </Button>
-
-          <Button onPress={() => {
-            navigate({
-              routeName: "user",
-            })
-          }}>
-            <Icon
-              name='user-circle'
-              type='font-awesome-5'
-              color='#517fa4'
-            />
-            <Name>Me</Name>
-          </Button>
-
+          <Total>
+            Total: $100.00
+          </Total>
+          <Button title="Checkout" color="red"/>
         </ContentArea>
       </Wrapper >
     </>
   )
 };
 
-const Name = styled.Text`
-  color: #517fa4;
+
+const Total = styled.Text`
+  color: red;
+  font-size: 20px;
 `;
-const Button = styled.TouchableOpacity`
-  flex: 1;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
+// const Button = styled(Button)`
+//   flex: 1;
+//   flex-direction: column;
+//   flex-wrap: nowrap;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: red;
+// `;
+const Name = styled.Text`
+  color: white;
 `;
 const Wrapper = styled.View`
   position: absolute;
@@ -113,6 +62,7 @@ const ContentArea = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  padding: 10px;
+  padding: 0 20px 0 20px;
+  justify-content: space-between;
   /* background-color: lightblue; */
 `;

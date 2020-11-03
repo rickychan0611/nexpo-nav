@@ -19,14 +19,14 @@ export default function Cart() {
       <ContextArea>
         <ScrollView>
 
-          <Card containerStyle={{ padding: 0, ...Elevations[3]}}>
+          <Card containerStyle={{ padding: 0, margin: 0, ...Elevations[3]}}>
             <ProductCard />
           </Card>
 
-          <Card containerStyle={{ padding: 0, ...Elevations[3]}}>
+          <Card containerStyle={{ padding: 0, margin: 0,...Elevations[3]}}>
             <ProductCard />
           </Card>
-          <Card containerStyle={{ padding: 0, ...Elevations[3]}}>
+          <Card containerStyle={{ padding: 0, margin: 0,...Elevations[3]}}>
             <ProductCard />
           </Card>
 
