@@ -6,13 +6,13 @@ import Elevations from 'react-native-elevation'
 import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
 
-export default function BottomBar() {
+export default function CartCheckoutBar() {
   const { navigate } = useRouting();
 
   return (
     <>
       <Wrapper style={Elevations[6]}>
-        <ContentArea>
+        <ContentArea >
           <Button onPress={() => {
             navigate({
               routeName: "home"
@@ -93,7 +93,7 @@ const Button = styled.TouchableOpacity`
 `;
 const Wrapper = styled.View`
   position: absolute;
-  bottom: 0;
+  bottom: 65px;
   height: 65px;
   width: 100%;
   flex: 1;

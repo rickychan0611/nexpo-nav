@@ -60,7 +60,7 @@ const DisPrice = styled.Text`
 color: red;
 `;
 const Container = styled.View`
-      flex: 1;
+      /* flex: 1; */
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: flex-start;
@@ -68,7 +68,8 @@ const Container = styled.View`
       width: 100%;
       max-width: 500px;
       padding: 0 10px 0 5px;
-      margin-bottom: ${Platform.OS === 'web' ? "105px" : "5px"};
+      background-color: white;
+      margin-bottom: ${Platform.OS === 'web' ? "5px" : "5px"};
 `;
 const Content = styled.View`
       /* position: absolute; */

@@ -9,6 +9,7 @@ import home from "./pages";
 import user from "./pages/user";
 import store from "./pages/store";
 import details from "./pages/details";
+import cart from "./pages/cart";
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,11 @@ function App() {
           <Stack.Screen name="details" component={details} 
           options={{
             title: 'Details',
+            ...transition,
+          }}/>
+          <Stack.Screen name="cart" component={cart} 
+          options={{
+            title: 'Shopping Cart',
             ...transition,
           }}/>
         </Stack.Navigator>
