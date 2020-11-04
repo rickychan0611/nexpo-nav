@@ -4,17 +4,17 @@ import { Icon } from 'react-native-elements'
 
 import styled from "styled-components/native";
 
-export default function ProductContent({images}) {
+export default function ProductContent({item}) {
   return (
       <Content>
-        <Name>Apple</Name>
-        <Description>A big red apple.</Description>
+        <Name>{item.name}</Name>
+        <Description>{item.description}</Description>
 
         <PriceQtyWrapper>
 
             <PricesWrapper>
-              <RegPrice>$12.00</RegPrice>
-              <DisPrice>$10.00</DisPrice>
+              <RegPrice>${(+item.price).toFixed(2)}</RegPrice>
+              <DisPrice>${(+item.price).toFixed(2)}</DisPrice>
             </PricesWrapper>
 
             <QtyWrapper>

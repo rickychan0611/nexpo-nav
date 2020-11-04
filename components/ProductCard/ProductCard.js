@@ -5,17 +5,20 @@ import { Icon } from 'react-native-elements'
 import styled from "styled-components/native";
 import ProductContent from "../ProductContent";
 
-export default function ProductCard({item}) {
-  console.log(item)
+export default function ProductCard({ item }) {
   return (
-    <Container>
-
-      <Image source={{
-          uri: item.image[0].url
-        }}/>
-
-      <ProductContent />
-    </Container>
+    <>
+      {
+        item && <>
+          <Container>
+            <Image source={{
+              uri: item.image[0].url
+            }} />
+            <ProductContent item={item}/>
+          </Container>
+        </>
+      }
+    </>
   )
 };
 
