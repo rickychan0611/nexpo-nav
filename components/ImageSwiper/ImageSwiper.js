@@ -51,7 +51,7 @@ const ImageContainer = styled.View`
       flex: 1;
       justify-content: center;
       align-items: center;
-      padding: 0 30px 0 30px;
+      padding: 30px;
 `;
 const Image = styled.Image`
       background-color: white;

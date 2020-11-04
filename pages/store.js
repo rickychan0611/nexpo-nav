@@ -5,12 +5,15 @@ import { SearchBar, Button } from 'react-native-elements';
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
+
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
 import AppContainer from "../components/AppContainer";
+import CategoryNames from "../components/CategoryNames";
+
 import dataJson from '../public/db.json';
 
-// const API_URL = `http://strapi-ric.herokuapp.com/categories`
+const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
 export default function Store({ ssrData }) {
@@ -24,12 +27,17 @@ export default function Store({ ssrData }) {
   // console.log(data);
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
-  useEffect(() => {
-    // const res = await fetch(API_URL)
-    // const data = await res.json()
-    // return { props: { data } }
+  const query = async () => {
+    const res = await fetch(API_URL)
+    const data = await res.json()
     console.log(ssrData)
-    ssrData ? setData(ssrData) : setData(dataJson)
+
+    // ssrData ? setData(ssrData) : setData(data)
+    ssrData ? setData(dataJson) : setData(dataJson)
+  }
+  
+  useEffect(() => {
+    query()
   }, [])
 
   return (
@@ -46,263 +54,30 @@ export default function Store({ ssrData }) {
           inputStyle={outline}
         />
         <ContextArea>
+
           <CategoryScrollView>
-
-            <CategoryContainer>
-              {data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-
-{data && data.map((category, index) => {
-                return (
-                  <TouchableOpacity key={category.id}>
-                    <CategoryName
-                      onPress={() => {
-                        setSelectedCat((category.id - 1).toString())
-                      }}
-                      key={category.id} setSelectedCat={setSelectedCat}>
-                      {category.name}
-                    </CategoryName>
-                  </TouchableOpacity>
-                )
-              })}
-            </CategoryContainer>
-
+            <CategoryNames data={data}/>
           </CategoryScrollView>
 
           <ProductContainer>
             {data && data[selectedCat].products.map((item) => {
               return (
                 <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
-
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
+                  onPress={() => {
+                    console.log("pressed")
+                    setSelectedItem(item)
+                    navigate({
+                      routeName: "product",
+                      params: { id: item.id },
+                      web: { as: `/product/${item.name}` },
+                    })
+                  }}>
                   <ProductCard item={item} />
                 </TouchableOpacity>
               )
             })}
 
 
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
-
-
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
-
-
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
-
-
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
-
-
-{data && data[selectedCat].products.map((item) => {
-              return (
-                <TouchableOpacity key={item.id}
-                onPress={() => {
-                  console.log("pressed")
-                  setSelectedItem(item)
-                  navigate({
-                    routeName: "details",
-                  })
-                }}>
-                  <ProductCard item={item} />
-                </TouchableOpacity>
-              )
-            })}
 
 
           </ProductContainer>
@@ -317,11 +92,11 @@ export default function Store({ ssrData }) {
 
 export async function getServerSideProps() {
 
-  // const res = await fetch(API_URL)
-  // const data = await res.json()
-  // return { props: { data } }
+  const res = await fetch(API_URL)
+  const data = await res.json()
+  return { props: { ssrData: data } }
 
-  return { props: { ssrData: dataJson } }
+  // return { props: { ssrData: dataJson } }
 
 
 }
@@ -342,20 +117,6 @@ const CategoryScrollView = styled.ScrollView`
       background-color: white;
       border-right-color: #f5f5f5;
       border-right-width: 4px;
-`;
-const CategoryContainer = styled.View`
-      flex: 2;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: flex-start;
-`;
-const CategoryName = styled.Text`
-      text-transform: capitalize;
-      background-color: white;
-      width: 100%;
-      margin: 10px 0 10px 0;
-
 `;
 const ProductContainer = styled.ScrollView`
       flex: 5;

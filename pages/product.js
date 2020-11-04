@@ -12,32 +12,35 @@ import Divider from "../components/Divider";
 import ProductContent from "../components/ProductContent";
 import { route } from "next/dist/next-server/server/router";
 
-export default function Details() {
-  const { navigate, push } = useRouting();
+export default function Product() {
+  const { navigate, push, getParam } = useRouting();
   const { selectedItem, setSelectedItem } = useContext(Context);
 
   console.log(selectedItem)
 
-  useEffect(() => {
-    if (!selectedItem) {
-      navigate({
-        routeName: "store",
-      })
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!selectedItem) {
+  //     navigate({
+  //       routeName: "store",
+  //     })
+  //   }
+  // }, [])
 
   return (
     <>
       {Platform.OS === 'web' && 
       <IconContainer >
-        <TouchableOpacity onPress={()=>window.history.back()}>
+        <Link 
+         routeName= "store"
+         Web = {{scroll : false}}
+        >
         <Icon
           name='arrow-alt-circle-left'
           type='font-awesome-5'
           color='grey'
           size={30}
         />
-      </TouchableOpacity>
+      </Link>
       </IconContainer>
       }
       {selectedItem &&

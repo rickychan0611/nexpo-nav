@@ -8,7 +8,7 @@ import theme from './theme';
 import home from "./pages";
 import user from "./pages/user";
 import store from "./pages/store";
-import details from "./pages/details";
+import product from "./pages/product";
 import cart from "./pages/cart";
 
 const Stack = createStackNavigator();
@@ -30,21 +30,24 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="home" component={home}options={{
+          <Stack.Screen name="home" component={home}
+          options={{
             title: 'Home',
             ...transition,
           }}/>
-          <Stack.Screen name="user" component={user}options={{
+          <Stack.Screen name="user" component={user}
+          options={{
             title: 'User',
             ...transition,
           }}/>
-          <Stack.Screen name="store" component={store}options={{
+          <Stack.Screen name="store" component={store}
+          options={{
             title: 'Shop',
             ...transition,
           }}/>
-          <Stack.Screen name="details" component={details} 
+          <Stack.Screen name="product" component={product} 
           options={{
-            title: 'Details',
+            title: 'Product Details',
             ...transition,
           }}/>
           <Stack.Screen name="cart" component={cart} 
