@@ -42,7 +42,6 @@ export default function ImageSwiper({ images }) {
 const SlideContainer = styled.View`
       flex: 2;
       width: 100%;
-      height: 50%;
       justify-content: center;
       /* align-items: center; */
 `;

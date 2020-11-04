@@ -22,7 +22,7 @@ export default function ProductContent({item}) {
 
     if (counter < item.qty) {
       setCounter(prev => prev + 1);
-      setTotal(prev => prev + item.price)
+      setTotal(prev => prev + +item.price)
 
       setNewOrderProductList(
         //update state object in nested array
@@ -56,7 +56,7 @@ export default function ProductContent({item}) {
   const handleMinus = () => {
     if (counter > 0) {
       setCounter(prev => prev - 1);
-      setTotal(prev => prev - item.price)
+      setTotal(prev => prev - +item.price)
 
       // remove object if it is the last one
       if (counter === 1) {
@@ -105,6 +105,10 @@ export default function ProductContent({item}) {
     setCounter(prev => prev)
     console.log("counter: ", item.name + "::::" + counter)
   }, [counter])
+
+  useEffect(() => {
+    setNewOrderProductList(prev => prev)
+  }, [newOrderProductList])
 
   return (
         <View>
