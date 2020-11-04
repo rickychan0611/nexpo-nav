@@ -1,0 +1,295 @@
+{
+  "code": 200,
+  "data": {
+      "store": {
+          "createTime": 1602777600000,
+          "desc": "ALL for free",
+          "name": "Test Store",
+          "profile": null,
+          "uuid": "123"
+      },
+      "list": [{
+              "categoryName": "新鲜水产",
+              "categoryId": "1",
+              "productList": [{
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产1233454",
+                      "price": 10.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "1233454"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产125234",
+                      "price": 10.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "125234"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产2345",
+                      "price": 10.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "12234534"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 8.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "13442-475a-81ea-5d3c9e0fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 9.99,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "1344225a-a-81ea-5d3c9e0fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 4.8,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "1344225a-a586-475a-815d3c9e0fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 8.9,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "1344225a-a586-475a-81ea-5d3=fc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 34,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "1344225a-a586-475a-81ea=880fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 7.9,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "1344225a-a586-4=5d3c9e0fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 3.5,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "13446475a-81ea-5d3c9e0fdefc"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "新鲜水产product1",
+                      "price": 4.4,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "13442222346-475a-81ea-5d3c9e0fdefc"
+                  }
+              ]
+          },
+          {
+              "categoryName": "急冻鱼类",
+              "categoryId": "2",
+              "productList": [{
+                      "categoryId": "2",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "急冻鱼类product222",
+                      "price": 0.55,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "777c5f95-f523-4d2c-90e8-f2770b8e8cec"
+                  },
+                  {
+                      "categoryId": "2",
+                      "createTime": 1603728000000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "急冻鱼类product222product1234",
+                      "price": 5,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "2bda9c1de-f224-42c9-8885-b7dbb4933ef0"
+                  },
+                  {
+                      "categoryId": "2",
+                      "createTime": 1603728000000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product1234",
+                      "price": 5.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "3bda9c1de-f224-42c9-8885-b7dbb4933ef0"
+                  },
+                  {
+                      "categoryId": "2",
+                      "createTime": 1603728000000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product1234",
+                      "price": 50.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "4bda9c1de-f224-42c9-8885-b7dbb4933ef0"
+                  }
+              ]
+          },
+          {
+              "categoryName": "急冻虾类",
+              "categoryId": "3",
+              "productList": [{
+                      "categoryId": "3",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product333",
+                      "price": 52.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "dfda28de-1a83-4037-9a5f-959709a172e0"
+                  },
+                  {
+                      "categoryId": "3",
+                      "createTime": 1603296000000,
+                      "desc": "adfasdf",
+                      "name": "test",
+                      "price": 13.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "ff88b7f6-1696-42c3-9763-8ca29c9137cf"
+                  }
+              ]
+          },
+          {
+              "categoryName": "其他水产",
+              "categoryId": "4",
+              "productList": [{
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "123sh3454",
+                      "price": 10.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "12rty334t54"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "12523fs4",
+                      "price": 1000.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "12kt52t34"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603123200000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "23sf45",
+                      "price": 1000.0,
+                      "quantity": 2,
+                      "storeId": "123",
+                      "uuid": "1223fdj4534"
+                  },
+                  {
+                      "categoryId": "1",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product1",
+                      "price": 1000.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "13442rty0fdefc"
+                  }
+              ]
+          },
+          {
+              "categoryName": "急冻虾类4",
+              "categoryId": "5",
+              "productList": [{
+                      "categoryId": "2",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product222",
+                      "price": 400.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "777c5f95-f523-4d2c-90e8-f2770b8e8cec"
+                  },
+                  {
+                      "categoryId": "2",
+                      "createTime": 1603728000000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product1234",
+                      "price": 1000.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "bda9c1de-f224-42c9-8885-b7dbb4933ef0"
+                  }
+              ]
+          },
+          {
+              "categoryName": "急冻虾类33",
+              "categoryId": "6",
+              "productList": [{
+                      "categoryId": "3",
+                      "createTime": 1603382400000,
+                      "desc": "adfasdf akljf d akjf lskf dfasjf lks",
+                      "name": "product333",
+                      "price": 500.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "dfda28de-1a83-4037-9a5f-959709a172e0"
+                  },
+                  {
+                      "categoryId": "3",
+                      "createTime": 1603296000000,
+                      "desc": "adfasdf",
+                      "name": "test",
+                      "price": 13.0,
+                      "quantity": 99,
+                      "storeId": "123",
+                      "uuid": "ff88b7f6-1696-42c3-9763-8ca29c9137cf"
+                  }
+              ]
+          }
+      ]
+  },
+  "message": "Success",
+  "responseCode": "success"
+}

@@ -1,10 +1,10 @@
 const theme = {
     colors: {
-        // primary: "#e34539"
+        primary: "red"
     },
     Button: {
       raised: true,
-      type: "outline"
+      // type: "outline"
     },
   };
 

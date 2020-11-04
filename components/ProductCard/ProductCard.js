@@ -5,12 +5,13 @@ import { Icon } from 'react-native-elements'
 import styled from "styled-components/native";
 import ProductContent from "../ProductContent";
 
-export default function ProductCard({images}) {
+export default function ProductCard({item}) {
+  console.log(item)
   return (
     <Container>
 
       <Image source={{
-          uri: 'https://cdn3.volusion.com/hckyx.hepad/v/vspfiles/photos/CONC-REDAPPLE-2.jpg'
+          uri: item.image[0].url
         }}/>
 
       <ProductContent />
