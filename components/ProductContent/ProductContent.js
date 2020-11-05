@@ -12,7 +12,6 @@ export default function ProductContent({item}) {
   let idArray = [];
 
   const handlePlus = () => {
-    console.log("plus pressed")
     
     if (newOrderProductList[0]) {
       newOrderProductList.forEach(item => {
@@ -38,7 +37,6 @@ export default function ProductContent({item}) {
                 // if the ID is found, get the index and update prev state
 
                 let index = idArray.indexOf(item.id)
-                console.log("index ", index)
                 if (index !== -1) {
                   prev[idArray.indexOf(item.id)] = { item, productId: item.id, quantity: counter + 1, price: item.price };
                 }
@@ -76,7 +74,6 @@ export default function ProductContent({item}) {
           produce(prev => {
             if (prev[0]) {
               let index = idArray.indexOf(item.id)
-              console.log("index ", index)
               if (index !== -1) {
                 prev[index] = { item, productId: item.id, quantity: counter - 1, price: item.price };
                 return
@@ -93,17 +90,14 @@ export default function ProductContent({item}) {
     if (newOrderProductList[0]) {
       newOrderProductList.forEach(e => {
         if (e.productId == item.id) {
-          console.log(e)
-          console.log("counter: ", e.quantity)
           setCounter(e.quantity)
         }
       })
     }
-  }, [])
+  }, [newOrderProductList])
 
   useEffect(() => {
     setCounter(prev => prev)
-    console.log("counter: ", item.name + "::::" + counter)
   }, [counter])
 
   useEffect(() => {
@@ -158,11 +152,11 @@ const PriceQtyWrapper = styled.View`
   width: 100%;
 `;
 const QtyWrapper = styled.View`
-  flex: 2;
+  flex: 3;
   width: 100%;
   flex-direction: row-reverse;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
 `;
 const PricesWrapper = styled.View`
@@ -180,7 +174,7 @@ const Name = styled.Text`
 const Qty = styled.Text`
   color: black;
   font-size: 16px;
-  margin-bottom: ${Platform.OS === 'web' ? "2px" : "0px"};
+  margin: ${Platform.OS === 'web' ? "0 10px 2px 10px" : "0 10px 0px 10px"};
 `;
 const Description = styled.Text`
   font-size: 12px;

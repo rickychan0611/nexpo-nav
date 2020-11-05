@@ -25,13 +25,11 @@ export default function Store({ ssrData }) {
     newOrderProductList, setNewOrderProductList,
   } = useContext(Context);
 
-  // console.log(data);
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
   const query = async () => {
     const res = await fetch(API_URL)
     const data = await res.json()
-    console.log(ssrData)
 
     // ssrData ? setData(ssrData) : setData(data)
     ssrData ? setData(dataJson) : setData(dataJson)
@@ -66,7 +64,6 @@ export default function Store({ ssrData }) {
                 return (
                   <TouchableOpacity key={item.id}
                     onPress={() => {
-                      console.log("pressed")
                       setSelectedItem(item)
                       navigate({
                         routeName: "product",

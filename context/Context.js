@@ -9,6 +9,7 @@ const ContextProvider = ({ children }) => {
   const [selectedCat, setSelectedCat] = useState("0");
   const [total, setTotal] = useState(0);
   const [newOrderProductList, setNewOrderProductList] = useState([]);
+  const [selected, setSelected] = useState("home");
 
   return (
     <Context.Provider
@@ -19,7 +20,8 @@ const ContextProvider = ({ children }) => {
           total, setTotal,
           selectedCat, setSelectedCat,
           selectedItem, setSelectedItem,
-          newOrderProductList, setNewOrderProductList
+          newOrderProductList, setNewOrderProductList,
+          selected, setSelected
         }
       }
     >

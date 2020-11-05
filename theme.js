@@ -1,6 +1,7 @@
 const theme = {
     colors: {
-        primary: "red"
+        primary: "red",
+        grey3: "#d92121"
     },
     Button: {
       raised: true,

@@ -1,19 +1,22 @@
-import React from "react";
+import React, {useContext} from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
 
 import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
+import { Context } from "../../context/Context";
 
 export default function BottomBar() {
-  const { navigate } = useRouting();
+  const { navigate, getParam } = useRouting();
 
-  return (
+  const { selected, setSelected } = useContext(Context);
+    return (
     <>
       <Wrapper style={Elevations[6]}>
         <ContentArea>
           <Button onPress={() => {
+            setSelected("home")
             navigate({
               routeName: "home"
             })
@@ -21,21 +24,22 @@ export default function BottomBar() {
             <Icon
               name='home'
               type='font-awesome-5'
-              color='black'
+              color={selected==="home" ? 'black' : '#ababab'}
             />
-            {/* <Name>Home</Name> */}
+            <Name selected={selected==="home" ? 'black' : '#ababab'}>Home</Name>
           </Button>
 
           <Button>
             <Icon
               name='star'
               type='font-awesome-5'
-              color='black'
+              color={selected==="star" ? 'black' : '#ababab'}
             />
-            {/* <Name>Special</Name> */}
+            <Name selected={selected==="star" ? 'black' : '#ababab'}>Special</Name>
           </Button>
 
           <Button onPress={() => {
+            setSelected("store")
             navigate({
               routeName: "store"
             })
@@ -44,9 +48,9 @@ export default function BottomBar() {
             <Icon
               name='store'
               type='font-awesome-5'
-              color='black'
+              color={selected==="store" ? 'black' : '#ababab'}
             />
-            {/* <Name>Shop</Name> */}
+            <Name selected={selected==="store" ? 'black' : '#ababab'}>Shop</Name>
           </Button>
 
           {/* <Button onPress={() => {
@@ -63,6 +67,7 @@ export default function BottomBar() {
           </Button> */}
 
           <Button onPress={() => {
+            setSelected("user")
             navigate({
               routeName: "user",
             })
@@ -70,9 +75,9 @@ export default function BottomBar() {
             <Icon
               name='user-circle'
               type='font-awesome-5'
-              color='black'
+              color={selected==="user" ? 'black' : '#ababab'}
             />
-            {/* <Name>Me</Name> */}
+            <Name selected={selected==="user" ? 'black' : '#ababab'}>Me</Name>
           </Button>
 
         </ContentArea>
@@ -82,7 +87,9 @@ export default function BottomBar() {
 };
 
 const Name = styled.Text`
-  color: #517fa4;
+  font-size: 12px;
+  font-weight: bold;
+  color: ${props => props.selected}
 `;
 const Button = styled.TouchableOpacity`
   flex: 1;
@@ -114,5 +121,5 @@ const ContentArea = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  margin-bottom: 7px;
+  /* margin-bottom: 3px; */
 `;

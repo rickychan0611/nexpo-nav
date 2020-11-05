@@ -1,5 +1,5 @@
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../context/Context";
 import { Card, Button } from 'react-native-elements';
 import { TouchableOpacity } from "react-native";
@@ -13,6 +13,10 @@ import Elevations from 'react-native-elevation'
 export default function Cart() {
   const { navigate } = useRouting();
   const { user, newOrderProductList, setSelectedItem } = useContext(Context);
+  
+  useEffect(()=>{
+    console.log("newOrderProductList: ", newOrderProductList)
+  })
 
   return (
     <>
@@ -20,7 +24,6 @@ export default function Cart() {
       <Title>Your order</Title>
         <ProductContainer>
           {newOrderProductList && newOrderProductList.map((item) => {
-            console.log(item)
             return (
                 <ProductCard item={item.item} />
             )

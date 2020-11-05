@@ -20,7 +20,6 @@ export default function Product() {
   let idArray = [];
 
   const handlePlus = () => {
-    console.log("plus pressed")
 
     if (newOrderProductList[0]) {
       newOrderProductList.forEach(item => {
@@ -46,7 +45,6 @@ export default function Product() {
                 // if the ID is found, get the index and update prev state
 
                 let index = idArray.indexOf(selectedItem.id)
-                console.log("index ", index)
                 if (index !== -1) {
                   prev[idArray.indexOf(selectedItem.id)] = { selectedItem, productId: selectedItem.id, quantity: counter + 1, price: selectedItem.price };
                 }
@@ -84,7 +82,6 @@ export default function Product() {
           produce(prev => {
             if (prev[0]) {
               let index = idArray.indexOf(selectedItem.id)
-              console.log("index ", index)
               if (index !== -1) {
                 prev[index] = { selectedItem, productId: selectedItem.id, quantity: counter - 1, price: selectedItem.price };
                 return
@@ -101,8 +98,6 @@ export default function Product() {
     if (newOrderProductList[0]) {
       newOrderProductList.forEach(e => {
         if (e.productId == selectedItem.id) {
-          console.log(e)
-          console.log("counter: ", e.quantity)
           setCounter(e.quantity)
         }
       })
@@ -111,7 +106,6 @@ export default function Product() {
 
   useEffect(() => {
     setCounter(prev => prev)
-    console.log("counter: ", selectedItem.name + "::::" + counter)
   }, [counter])
 
 

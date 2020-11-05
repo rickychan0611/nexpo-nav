@@ -8,7 +8,6 @@ export default function useQty() {
   const [counter, setCounter] = useState(0)
   useEffect(()=>{
     let totalCount = 0;
-    console.log(newOrderProductList?.length);
     if (newOrderProductList?.length > 0 ) {
 
       newOrderProductList.map((item, index) => {
