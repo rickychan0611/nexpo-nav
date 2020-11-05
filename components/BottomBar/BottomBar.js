@@ -21,18 +21,18 @@ export default function BottomBar() {
             <Icon
               name='home'
               type='font-awesome-5'
-              color='#517fa4'
+              color='black'
             />
-            <Name>Home</Name>
+            {/* <Name>Home</Name> */}
           </Button>
 
           <Button>
             <Icon
               name='star'
               type='font-awesome-5'
-              color='#517fa4'
+              color='black'
             />
-            <Name>Special</Name>
+            {/* <Name>Special</Name> */}
           </Button>
 
           <Button onPress={() => {
@@ -44,9 +44,9 @@ export default function BottomBar() {
             <Icon
               name='store'
               type='font-awesome-5'
-              color='#517fa4'
+              color='black'
             />
-            <Name>Shop</Name>
+            {/* <Name>Shop</Name> */}
           </Button>
 
           <Button onPress={() => {
@@ -57,9 +57,9 @@ export default function BottomBar() {
             <Icon
               name='shopping-cart'
               type='font-awesome-5'
-              color='#517fa4'
+              color='black'
             />
-            <Name>Cart</Name>
+            {/* <Name>Cart</Name> */}
           </Button>
 
           <Button onPress={() => {
@@ -70,9 +70,9 @@ export default function BottomBar() {
             <Icon
               name='user-circle'
               type='font-awesome-5'
-              color='#517fa4'
+              color='black'
             />
-            <Name>Me</Name>
+            {/* <Name>Me</Name> */}
           </Button>
 
         </ContentArea>
@@ -102,6 +102,7 @@ const Wrapper = styled.View`
   align-items: center;
   justify-content: center;
   background-color: white;
+
 `;
 const ContentArea = styled.View`
   position: absolute;
@@ -113,6 +114,5 @@ const ContentArea = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  padding: 10px;
-  /* background-color: lightblue; */
+  margin-bottom: 7px;
 `;

@@ -84,13 +84,13 @@ export default function Store({ ssrData }) {
               })}
             </ProductContainer>
           </ContextArea>
-          <BottomBar />
         </>
         }
         {newOrderProductList.length > 0 ?
           <CartCheckoutBar />
           : null}
       </CartBarWrapper>
+          <BottomBar />
     </>
   );
 }
