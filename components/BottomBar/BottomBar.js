@@ -49,7 +49,7 @@ export default function BottomBar() {
             {/* <Name>Shop</Name> */}
           </Button>
 
-          <Button onPress={() => {
+          {/* <Button onPress={() => {
             navigate({
               routeName: "cart",
             })
@@ -59,8 +59,8 @@ export default function BottomBar() {
               type='font-awesome-5'
               color='black'
             />
-            {/* <Name>Cart</Name> */}
-          </Button>
+            <Name>Cart</Name>
+          </Button> */}
 
           <Button onPress={() => {
             navigate({

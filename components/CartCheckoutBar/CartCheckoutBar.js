@@ -1,9 +1,10 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
 import { Button } from 'react-native-elements';
 import useQty from '../../hooks/useQty';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
@@ -16,8 +17,25 @@ export default function CartCheckoutBar() {
 
   return (
     <>
-      <Wrapper>
-      <ViewCart>View Cart</ViewCart>
+      <Wrapper onPress={() => {
+        navigate({
+          routeName: "cart",
+        })
+      }}>
+         {/* <LinearGradient
+        // Background Linear Gradient
+        colors={['#1662e2', '#00ffb8']}
+        start={{x: 0, y: 0}}
+        start={{x: 1, y: 1}}
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: 60,
+        }}
+      /> */}
+        <ViewCart>View Cart</ViewCart>
         <Total>
           ${(+total).toFixed(2)}
         </Total>

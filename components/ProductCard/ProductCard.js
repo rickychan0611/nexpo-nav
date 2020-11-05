@@ -11,14 +11,16 @@ export default function ProductCard({ item }) {
       {
         item && <>
           <Container>
-            <Image source={{
-              uri: item.image[0].url
-            }} />
+            <ImageWrapper>
+              <Image source={{
+                uri: item.image[0].url
+              }} />
+            </ImageWrapper>
 
             <RightSideContentWrapper>
               <ProductContent item={item} />
             </RightSideContentWrapper>
-            
+
           </Container>
         </>
       }
@@ -38,13 +40,20 @@ const Container = styled.View`
       margin-bottom: ${Platform.OS === 'web' ? "5px" : "5px"};
 `;
 
-const Image = styled.Image`
+const ImageWrapper = styled.View`
       flex: 2;
-      width: 100px;
-      height: 100px;
+      padding: 20px 0 0px 0 ;
+      width: 110px;
+      height: 110px;
+`;
+const Image = styled.Image`
+      flex: 1;
+      /* width: 100px;
+      height: 100px; */
       background-color: white;
       resize-mode: contain;
 `;
+
 const RightSideContentWrapper = styled.View`
       flex: 3;
       flex-direction: column;

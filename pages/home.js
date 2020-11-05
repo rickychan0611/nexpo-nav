@@ -6,14 +6,16 @@ import { View, Text, StyleSheet } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
-// import AppContainer from "../components/AppContainer";
+import CartCheckoutBar from "../components/CartCheckoutBar";
 
 export default function Home() {
   const { navigate } = useRouting();
-  const { user } = useContext(Context);
+  const { user, newOrderProductList } = useContext(Context);
 
   return (
     <>
+          <CartBarWrapper>
+
       <ContextArea>
       <MyText>Home Screen 🥳 {user} </MyText>
       <Button
@@ -26,16 +28,25 @@ export default function Home() {
         }
       />
       </ContextArea>
+      {newOrderProductList.length > 0 ?
+          <CartCheckoutBar />
+          : null}
+      </CartBarWrapper>
       <BottomBar/>
       </>
   );
 }
 
-// const AppContainer = styled.View`
-//       flex: 1;
-//       align-items: center;
-//       background-color: #f5f5f5;
-// `;
+const CartBarWrapper = styled.View`
+      flex: 1;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 500px;
+      padding-bottom: 62px;
+`;
 const ContextArea = styled.View`
       flex: 1;
       align-items: center;

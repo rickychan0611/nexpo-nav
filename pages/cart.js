@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import { Context } from "../context/Context";
 import { Card, Button } from 'react-native-elements';
-import { View, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -12,45 +12,48 @@ import Elevations from 'react-native-elevation'
 
 export default function Cart() {
   const { navigate } = useRouting();
-  const { user } = useContext(Context);
+  const { user, newOrderProductList, setSelectedItem } = useContext(Context);
 
   return (
     <>
       <ContextArea>
-        <ScrollView>
-
-          <Card containerStyle={{ padding: 0, margin: 0, ...Elevations[3]}}>
-            <ProductCard />
-          </Card>
-
-          <Card containerStyle={{ padding: 0, margin: 0,...Elevations[3]}}>
-            <ProductCard />
-          </Card>
-          <Card containerStyle={{ padding: 0, margin: 0,...Elevations[3]}}>
-            <ProductCard />
-          </Card>
-
-        </ScrollView>
-          <CartCheckoutBar/>
+      <Title>Your order</Title>
+        <ProductContainer>
+          {newOrderProductList && newOrderProductList.map((item) => {
+            console.log(item)
+            return (
+                <ProductCard item={item.item} />
+            )
+          })}
+        </ProductContainer>
+        <CartCheckoutBar />
       </ContextArea>
       <BottomBar />
     </>
   );
 }
 
+const Title = styled.Text`
+    font-size: 20px;
+    width: 100%;
+    padding: 15px;
+    background-color: white;
+    margin-bottom: 5px;
+
+`;
 const ContextArea = styled.View`
       flex: 1;
       align-items: center;
-      background-color: #f5f5f5;
+      background-color: #e8e6e6;
       width: 100%;
       max-width: 500px;
-
 `;
-const ScrollView = styled.ScrollView`
-      /* flex: 1; */
-      width: 100%;
+const ProductContainer = styled.ScrollView`
+      flex: 5;
+      background-color: #e8e6e6;
       height: 100%;
-      /* padding: 15px; */
+      width: 100%;
+      flex-direction: column;
 `;
 const MyText = styled.Text`
       font-size: 20px;

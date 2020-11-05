@@ -41,10 +41,6 @@ export default function Store({ ssrData }) {
     query()
   }, [])
 
-  useEffect(() => {
-    setNewOrderProductList(prev => prev)
-  }, [newOrderProductList])
-  
   return (
     <>
       <CartBarWrapper>
@@ -90,20 +86,20 @@ export default function Store({ ssrData }) {
           <CartCheckoutBar />
           : null}
       </CartBarWrapper>
-          <BottomBar />
+      <BottomBar />
     </>
   );
 }
 
-export async function getServerSideProps() {
+// export async function getServerSideProps() {
 
-  const res = await fetch(API_URL)
-  const data = await res.json()
-  return { props: { ssrData: data } }
+//   const res = await fetch(API_URL)
+//   const data = await res.json()
+//   return { props: { ssrData: data } }
 
-  // return { props: { ssrData: dataJson } }
+//   // return { props: { ssrData: dataJson } }
 
-}
+// }
 
 const CartBarWrapper = styled.View`
       flex: 1;
@@ -129,12 +125,12 @@ const ContextArea = styled.View`
 const CategoryScrollView = styled.ScrollView`
       height: 100%;
       background-color: white;
-      border-right-color: #f5f5f5;
+      border-right-color: #e8e6e6;
       border-right-width: 4px;
 `;
 const ProductContainer = styled.ScrollView`
       flex: 5;
-      background-color: #f5f5f5;
+      background-color: #e8e6e6;
       height: 100%;
       flex-direction: column;
 `;
