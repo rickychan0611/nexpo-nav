@@ -2,15 +2,20 @@ import React, {useContext} from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
+import useQty from '../../hooks/useQty';
 
 import styled from 'styled-components/native';
-import { Icon } from 'react-native-elements'
+import { Badge, Icon, withBadge } from 'react-native-elements'
 import { Context } from "../../context/Context";
 
 export default function BottomBar() {
-  const { navigate, getParam } = useRouting();
+  const { navigate } = useRouting();
 
   const { selected, setSelected } = useContext(Context);
+  const qty = useQty();
+
+  const BadgedIcon = qty > 0 ? withBadge(qty)(Icon) : Icon
+
     return (
     <>
       <Wrapper style={Elevations[6]}>
@@ -53,18 +58,20 @@ export default function BottomBar() {
             <Name selected={selected==="store" ? 'black' : '#ababab'}>Shop</Name>
           </Button>
 
-          {/* <Button onPress={() => {
+          <Button onPress={() => {
+            setSelected("cart")
             navigate({
-              routeName: "cart",
+              routeName: "cart"
             })
           }}>
-            <Icon
+
+            <BadgedIcon 
               name='shopping-cart'
               type='font-awesome-5'
-              color='black'
+              color={selected==="cart" ? 'black' : '#ababab'}
             />
-            <Name>Cart</Name>
-          </Button> */}
+            <Name selected={selected==="cart" ? 'black' : '#ababab'}>Cart</Name>
+          </Button>
 
           <Button onPress={() => {
             setSelected("user")

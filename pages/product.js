@@ -18,7 +18,6 @@ export default function Product() {
   const { newOrderProductList, setNewOrderProductList, selectedItem, setTotal } = useContext(Context);
 
   let idArray = [];
-
   const handlePlus = () => {
 
     if (newOrderProductList[0]) {
@@ -39,7 +38,7 @@ export default function Product() {
               // check if current state contains the same id
               if (idArray.indexOf(selectedItem.id) === -1) {
                 // if the ID is not found, push the new object into the state
-                return [...prev, { selectedItem, productId: selectedItem.id, quantity: counter + 1, price: selectedItem.price }];
+                return [...prev, { item: selectedItem, productId: selectedItem.id, quantity: counter + 1, price: selectedItem.price }];
               }
               else {
                 // if the ID is found, get the index and update prev state
@@ -51,7 +50,7 @@ export default function Product() {
               }
             }
             // if state is empty, just return the value
-            else return [{ selectedItem, productId: selectedItem.id, quantity: counter + 1, price: selectedItem.price }];
+            else return [{ item: selectedItem, productId: selectedItem.id, quantity: counter + 1, price: selectedItem.price }];
           }
         )
       );
@@ -83,7 +82,7 @@ export default function Product() {
             if (prev[0]) {
               let index = idArray.indexOf(selectedItem.id)
               if (index !== -1) {
-                prev[index] = { selectedItem, productId: selectedItem.id, quantity: counter - 1, price: selectedItem.price };
+                prev[index] = { item: selectedItem, productId: selectedItem.id, quantity: counter - 1, price: selectedItem.price };
                 return
               }
             };
@@ -102,11 +101,23 @@ export default function Product() {
         }
       })
     }
-  }, [])
+  }, [newOrderProductList])
 
   useEffect(() => {
     setCounter(prev => prev)
   }, [counter])
+
+  useEffect(() => {
+        console.log("selectedItem in details" , selectedItem)
+        // console.log("newOrderProductList in details" , newOrderProductList)
+
+  }, [])
+
+  useEffect(()=>{
+    setNewOrderProductList(prev => prev)
+    console.log("newOrderProductList in details" , newOrderProductList)
+
+  },[newOrderProductList])
 
 
   return (

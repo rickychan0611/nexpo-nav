@@ -12,11 +12,11 @@ import Elevations from 'react-native-elevation'
 
 export default function Cart() {
   const { navigate } = useRouting();
-  const { user, newOrderProductList, setSelectedItem } = useContext(Context);
+  const { user, newOrderProductList, setNewOrderProductList } = useContext(Context);
   
   useEffect(()=>{
-    console.log("newOrderProductList: ", newOrderProductList)
-  })
+    setNewOrderProductList(prev => prev)
+  },[newOrderProductList])
 
   return (
     <>
@@ -25,7 +25,7 @@ export default function Cart() {
         <ProductContainer>
           {newOrderProductList && newOrderProductList.map((item) => {
             return (
-                <ProductCard item={item.item} />
+              <ProductCard key={item.id} item={item.item} />
             )
           })}
         </ProductContainer>

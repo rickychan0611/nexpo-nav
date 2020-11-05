@@ -12,12 +12,13 @@ import { Context } from "../../context/Context";
 
 export default function CartCheckoutBar() {
   const { navigate } = useRouting();
-  const { newOrderProductList, total } = useContext(Context);
+  const { setSelected, total } = useContext(Context);
   const qty = useQty();
 
   return (
     <>
       <Wrapper onPress={() => {
+        setSelected("cart")
         navigate({
           routeName: "cart",
         })
