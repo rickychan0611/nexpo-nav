@@ -1,8 +1,8 @@
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { ThemeProvider, Button } from 'react-native-elements';
-import { View, Platform } from "react-native";
+import { TextInput, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -37,19 +37,32 @@ export default function Home() {
   // }, [response]);
 
 
-  // const googlelogin = () => {
-  //   auth.createUserWithEmailAndPassword("ric0612@gmail.com", "12345678")
-  //   .then((doc) => {
-  //     console.log('logging in... wait' + JSON.stringify(doc.user))
-  //   })
-  //   .catch(function(error) {
-  //     // Handle Errors here.
-  //     console.log("error")
-  //     var errorCode = error.code;
-  //     var errorMessage = error.message;
-  //     // ...
-  //   });
-  // }
+
+  const [login, setLogin] = useState({});
+  const onChangeText = (name, value) => {
+    setLogin(prev => {
+      return (
+        { ...prev, [name]: value }
+      )
+    })
+    console.log(login)
+  }
+
+  const emaillogin = () => {
+    console.log(login)
+    auth.createUserWithEmailAndPassword(login.email, login.password)
+      .then((doc) => {
+        console.log('logging in... wait' + JSON.stringify(doc.user))
+      })
+      .catch(function (error) {
+        // Handle Errors here.
+        console.log("error")
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+  }
+
   const googlelogin = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -219,7 +232,29 @@ export default function Home() {
 
         <ContextArea>
           <MyText>Welcome, 🥳 {user && user.displayName} </MyText>
-
+          <TextInput
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+            onChangeText={text => onChangeText("email", text)}
+            value={login.email}
+          />
+          <TextInput
+            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+            onChangeText={text => onChangeText("password", text)}
+            value={login.password}
+            name={"password"}
+          />
+          <Button1
+            title="submit"
+            onPress={() =>
+              emaillogin()
+            }
+          />
+          <Button1
+            title="facebook Login"
+            onPress={() =>
+              loginWithFacebook()
+            }
+          />
           <Button1
             title="google Login"
             onPress={() =>

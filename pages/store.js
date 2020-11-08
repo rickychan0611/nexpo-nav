@@ -28,8 +28,8 @@ export default function Store({ ssrData }) {
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
   const query = async () => {
-    const res = await fetch(API_URL)
-    const data = await res.json()
+    // const res = await fetch(API_URL)
+    // const data = await res.json()
 
     // ssrData ? setData(ssrData) : setData(data)
     ssrData ? setData(dataJson) : setData(dataJson)
