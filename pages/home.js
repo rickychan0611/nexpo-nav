@@ -45,14 +45,24 @@ export default function Home() {
         { ...prev, [name]: value }
       )
     })
-    console.log(login)
   }
 
   const emaillogin = () => {
     console.log(login)
     auth.createUserWithEmailAndPassword(login.email, login.password)
       .then((doc) => {
-        console.log('logging in... wait' + JSON.stringify(doc.user))
+        const fff = { ...doc, admin: true }
+        console.log('logging in... wait' + JSON.stringify(fff))
+        db.collection("users").doc(doc.user.uid).set({
+          uid: doc.user.uid,
+          email: doc.user.email,
+          isAdmin: true
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          console.log(error)
+          // ...
+        });
       })
       .catch(function (error) {
         // Handle Errors here.
@@ -116,12 +126,34 @@ export default function Home() {
     else {
       var provider = new firebase.auth.FacebookAuthProvider();
 
-      auth.signInWithPopup(provider).then(function (result) {
-        // This gives you a Google Access Token. You can use it to access the Google API.
+      auth.signInWithPopup(provider)
+        .then(function (result) {
+          var token = result.credential.accessToken;
+          var user = result.user;
+          setUser(result.user)
+          // ...
+        }).catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+    }
+  }
+
+  const facebookloginWEB = () => {
+    var provider = new firebase.auth.FacebookAuthProvider();
+
+    auth.signInWithPopup(provider)
+      .then(function (result) {
         var token = result.credential.accessToken;
-        // The signed-in user info.
         var user = result.user;
         setUser(result.user)
+
         // ...
       }).catch(function (error) {
         // Handle Errors here.
@@ -133,29 +165,6 @@ export default function Home() {
         var credential = error.credential;
         // ...
       });
-    }
-  }
-
-  const facebookloginWEB = () => {
-    var provider = new firebase.auth.FacebookAuthProvider();
-
-    auth.signInWithPopup(provider).then(function (result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      setUser(result.user)
-      // ...
-    }).catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
   }
 
   const storeDB = () => {

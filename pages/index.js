@@ -1,3 +1,7 @@
-import Home from './home';
+import panel from './admin/panel';
 
-export default Home;
+export default panel;
+
+// import Home from './home';
+
+// export default Home;
