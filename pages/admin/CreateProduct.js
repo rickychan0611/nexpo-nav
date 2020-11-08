@@ -12,6 +12,19 @@ import { db } from "../../firebase";
 
 export default function CreateProduct() {
   const { navigate } = useRouting();
+
+  const init = {
+    uid: "",
+    createAt: "",
+    chineseName: "",
+    englishName: "",
+    price: "",
+    qty: "",
+    unit: "",
+    description: "",
+    category: ""
+  }
+
   const {
     user,
     selectedItem, data, setData, total,
@@ -20,17 +33,7 @@ export default function CreateProduct() {
   } = useContext(Context);
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
-  const [product, setProduct] = useState({
-    uid: "",
-    createAt: "",
-    chineseName: "",
-    englishName: "",
-    price: 0,
-    qty: 0,
-    unit: "",
-    description: "",
-    category: ""
-  });
+  const [product, setProduct] = useState({init});
   
   const maskedPrice = (value) => {
     let price = MaskService.toMask('money', value, {
@@ -70,12 +73,8 @@ export default function CreateProduct() {
       uid: productRef.id,
       createAt: timestamp
     })
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      })
+    .then(()=>setProduct(init))
+    .catch(error => console.log(error))
   }
 
   
@@ -113,12 +112,18 @@ export default function CreateProduct() {
       <Input
         placeholder='Price'
         value={product.price}
+        keyboardType="decimal-pad"
         onChangeText={value => {handleChange("price", value) }}
       />
       <Input
         placeholder='Description'
         value={product.description}
         onChangeText={value => { handleChange("description", value) }}
+      />
+      <Input
+        placeholder='Category'
+        value={product.category}
+        onChangeText={value => { handleChange("category", value) }}
       />
       <Button title="Submit" onPress={onSubmit} />
     </>
