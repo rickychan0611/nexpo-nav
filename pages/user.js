@@ -8,7 +8,7 @@ import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import AppContainer from "../components/AppContainer";
 
-export default function User() {
+export default function user() {
   const { navigate, goBack } = useRouting();
   const { user } = useContext(Context);
 

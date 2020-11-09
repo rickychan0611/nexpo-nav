@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../context/Context";
 import { ThemeProvider, Button } from 'react-native-elements';
-import { TextInput, Platform } from "react-native";
+import { TextInput, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../../components/BottomBar";
@@ -10,6 +10,7 @@ import CartCheckoutBar from "../../components/CartCheckoutBar";
 import {db, auth} from "../../firebase";
 
 export default function admin() {
+
   const { navigate } = useRouting();
   const { user, setUser, newOrderProductList } = useContext(Context);
 
@@ -48,8 +49,6 @@ export default function admin() {
 
   return (
     <>
-      <CartBarWrapper>
-
         <ContextArea>
           <MyText>Admin Login </MyText>
           <TextInput
@@ -81,11 +80,6 @@ export default function admin() {
             }
           />
         </ContextArea>
-        {newOrderProductList.length > 0 ?
-          <CartCheckoutBar />
-          : null}
-      </CartBarWrapper>
-      <BottomBar />
     </>
   );
 }

@@ -1,7 +1,7 @@
-import panel from './admin/panel';
+// import panel from './admin/panel';
 
-export default panel;
+// export default panel;
 
-// import Home from './home';
+import Home from './home';
 
-// export default Home;
+export default Home;

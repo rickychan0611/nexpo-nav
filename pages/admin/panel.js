@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
+import SideMenu from 'react-native-side-menu'
 
 import BottomBar from "../../components/BottomBar";
 import ProductCard from "../../components/ProductCard";
@@ -36,21 +37,34 @@ export default function panel({ ssrData }) {
     })
   };
 
-  return (
-    <>
-      <ContextArea>
+  const menu = <AdminSideBar data={data} />
 
-        <SideBarScrollView>
-          <AdminSideBar data={data} />
-        </SideBarScrollView>
-
+  const Content = () => {
+    return (
+      <SideBarScrollView>
         <ContentWrapper>
-
           <CreateProduct />
-          
         </ContentWrapper>
+      </SideBarScrollView>
+    )
+  }
+
+  if (Platform.OS === "web") {
+    return (
+      <ContextArea>
+        <SideBarScrollView>
+          {menu}
+        </SideBarScrollView>
+        <Content />
       </ContextArea>
-    </>
+    )
+  }
+  else return (
+    <SideMenu menu={menu}>
+      <ContextArea>
+        <Content />
+      </ContextArea>
+    </SideMenu>
   );
 }
 
