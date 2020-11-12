@@ -62,8 +62,8 @@ const Container = styled.View`
       justify-content: flex-start;
 `;
 const Name = styled.Text`
-      background-color: white;
+      /* background-color: white; */
       width: 100%;
-      margin: 10px 0 10px 20px;
-
+      margin: 12px 0;
+      font-size: 16px;
 `;

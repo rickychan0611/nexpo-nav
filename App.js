@@ -1,4 +1,5 @@
 import React from "react";
+import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import ContextProvider from './context/Context';
@@ -13,6 +14,8 @@ import product from "./pages/product";
 import cart from "./pages/cart";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+
+import TopBar from './components/TopBar';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +32,7 @@ const transition = { ...TransitionPresets.ScaleFromCenterAndroid }
 
 const options = (name) => {
   return {
+    headerShown: false,
     title: name,
     ...transition,
   }
@@ -57,10 +61,12 @@ export default () => {
     <ContextProvider>
       <PaperProvider>
         <ThemeProvider theme={theme}>
-          <App />
+          <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+            <TopBar />
+            <App />
+          </SafeAreaView>
         </ThemeProvider>
       </PaperProvider>
     </ContextProvider>
-
   )
 }

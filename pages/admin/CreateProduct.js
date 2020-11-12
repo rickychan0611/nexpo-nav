@@ -1,7 +1,7 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
-// import { Input } from 'react-native-elements';
+// import {   } from 'react-native-elements';
 import { View, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
@@ -28,15 +28,12 @@ export default function CreateProduct() {
   }
 
   const {
-    user,
-    selectedItem, data, setData, total,
-    setSelectedItem, selectedCat,
-    newOrderProductList, setNewOrderProductList,
+    categories, setCategories
   } = useContext(Context);
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
   const [product, setProduct] = useState(init);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
 
   const handleChange = (name, value) => {
     if (name === "price") {
@@ -88,37 +85,32 @@ export default function CreateProduct() {
     })
   }
 
-
-  useEffect(() => {
-    db.collection("categories").get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          console.log(doc.id)
-          setCategories(prev => {
-            return [...prev, doc.id]
-          })
-        })
-      })
-      .catch((err) => console.log(err))
-  }, [])
-
   return (
-    <View style={{width: "100%", marginBottom: 20}}>
+    <View style={{ width: "100%", marginBottom: 20 }}>
       <Title h2>Add a product</Title>
 
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="Chinese Name"
         placeholder='Chinese Name'
         value={product.chineseName}
         onChangeText={value => { handleChange("chineseName", value) }}
       />
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="English Name"
         placeholder='English Name'
         value={product.englishName}
         onChangeText={value => { handleChange("englishName", value) }}
       />
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="Quantity"
         placeholder='Quantity'
         value={product.qty}
@@ -131,6 +123,9 @@ export default function CreateProduct() {
         }
       />
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="Unit"
         placeholder='Unit'
         value={product.unit}
@@ -138,6 +133,9 @@ export default function CreateProduct() {
         onChangeText={value => { handleChange("unit", value) }}
       />
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="Price"
         placeholder='Price'
         value={product.price}
@@ -145,6 +143,9 @@ export default function CreateProduct() {
         onChangeText={value => { handleChange("price", value) }}
       />
       <Input
+        style={{ backgroundColor: "white" }}
+        mode="outlined"
+        dense
         label="Description"
         placeholder='Description'
         value={product.description}
@@ -173,6 +174,9 @@ export default function CreateProduct() {
           )
         })}
         <Input
+          style={{ backgroundColor: "white" }}
+          mode="outlined"
+          dense
           label="Add new Category"
           placeholder='Category Name'
           value={cat}
@@ -190,7 +194,7 @@ export default function CreateProduct() {
 
 
 const Input = styled(TextInput)`
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 const ScrollView = styled.ScrollView`
   height: 100%;
