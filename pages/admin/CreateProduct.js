@@ -2,18 +2,25 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { View, Platform, Text } from "react-native";
+import moment from "moment";
+import { View, Platform, Image } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
 import { TextInputMask, MaskService } from 'react-native-masked-text'
 import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge } from 'react-native-paper';
+import {storage} from '../../firebase';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
-import imagePlaceholder from "../../public/imagePlaceholder.jpg";
+
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 export default function CreateProduct() {
+
+  const [images, setImages] = useState(null);
+
   const { navigate } = useRouting();
   const [selectedCategory, setSelectedCategory] = useState([]);
 
@@ -84,17 +91,88 @@ export default function CreateProduct() {
     })
   }
 
-  const images = [
-    { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' },
-    { url: 'https://blog.depositphotos.com/wp-content/uploads/2017/01/Exquisite-Dishes-Interview-With-Food-Photographer-Natalia-Lisovskaya-5.jpg.webp' },
-    { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' }
-  ]
+  // const images = [
+  //   { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' },
+  //   { url: 'https://blog.depositphotos.com/wp-content/uploads/2017/01/Exquisite-Dishes-Interview-With-Food-Photographer-Natalia-Lisovskaya-5.jpg.webp' },
+  //   { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' }
+  // ]
+
+  const [progress, setProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+
+
+  const uploadImage = async image => {
+    setUploading(true);
+    setProgress(0);
+    console.log('image', image.uri);
+    const task = storage.ref(image.ref).putString(image.uri, 'data_url');
+
+    task.on('state_changed', snap => {
+      setProgress(Math.round(snap.bytesTransferred / snap.totalBytes) * 10000);
+      console.log(progress)
+    });
+
+    try {
+      const final = await task;
+      console.log('final image', final);
+    } catch (e) {
+      console.error(e);
+    }
+    setUploading(false);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: .8,
+    });
+
+    // console.log(result);
+
+    if (!result.cancelled) {
+      setImages(prev => {
+        if (!prev) {
+          return [{ url: result.uri }]
+        }
+        else return (
+          [...prev, { url: result.uri }]
+        )
+      });
+
+      let timestamp = moment().format('YYYYMMDDhhmmss');
+      const final = {uri: result.uri, id: timestamp, ref: timestamp + '.jpeg'};
+      // setFiles([...files, final]);
+      uploadImage(final);
+
+    }
+  };
+
+  
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
 
   return (
     <>
       <Container>
         <Headline style={{ color: theme.titleColor }}>Add a product</Headline>
-      {images && <ImageSwiper images={images} />}
+
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Button onPress={pickImage} mode="contained">Pick an image from camera roll</Button>
+          {images && <Image source={{ uri: images[0] }} style={{ width: 200, height: 200 }} />}
+        </View>
+
+
+        {images && <ImageSwiper images={images} />}
 
         <AddImageContainer>
 
@@ -102,7 +180,7 @@ export default function CreateProduct() {
             <AddedImage source={{ uri: images && images[0].url }} />
             <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge>
           </View>
-      
+
           <View>
             <AddedImage source={require("../../public/plusButton.png")} />
             {/* <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge> */}
