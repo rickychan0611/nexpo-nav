@@ -3,13 +3,15 @@ import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
-import { View, Platform, Image } from "react-native";
+import { View, Platform, Image, TouchableOpacity } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
 import { TextInputMask, MaskService } from 'react-native-masked-text'
 import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge } from 'react-native-paper';
-import {storage} from '../../firebase';
+import { storage } from '../../firebase';
+import produce from "immer"
+import { useImmer } from 'use-immer';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
@@ -19,7 +21,7 @@ import Constants from 'expo-constants';
 
 export default function CreateProduct() {
 
-  const [images, setImages] = useState(null);
+  const [images, setImages] = useImmer(null);
 
   const { navigate } = useRouting();
   const [selectedCategory, setSelectedCategory] = useState([]);
@@ -101,24 +103,43 @@ export default function CreateProduct() {
   const [uploading, setUploading] = useState(false);
 
 
-  const uploadImage = async image => {
+  const uploadImage = async imgData => {
     setUploading(true);
     setProgress(0);
-    console.log('image', image.uri);
-    const task = storage.ref(image.ref).putString(image.uri, 'data_url');
+    // console.log('image', imgData.uri);
+    const task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url');
 
     task.on('state_changed', snap => {
-      setProgress(Math.round(snap.bytesTransferred / snap.totalBytes) * 10000);
-      console.log(progress)
+      setProgress(Math.round(snap.bytesTransferred / snap.totalBytes) * 100);
+      // console.log("snap", snap)
     });
 
     try {
-      const final = await task;
-      console.log('final image', final);
+      //get image URL
+      await task
+      let urlRef = storage.ref(imgData.ref)
+      urlRef.getDownloadURL().then(function (downloadURL) {
+        return downloadURL
+      })
+        .then((downloadURL) => {
+          console.log('PickFile PROFILE PIC load ' + downloadURL)
+          setUploading(false);
+
+          //store returned url in image array
+          setImages(prev => {
+            if (!prev) {
+              return [{ url: downloadURL}]
+            }
+            else return (
+              [...prev, { url: downloadURL }]
+            )
+          });
+
+          return
+        })
     } catch (e) {
       console.error(e);
     }
-    setUploading(false);
   };
 
   const pickImage = async () => {
@@ -132,24 +153,17 @@ export default function CreateProduct() {
     // console.log(result);
 
     if (!result.cancelled) {
-      setImages(prev => {
-        if (!prev) {
-          return [{ url: result.uri }]
-        }
-        else return (
-          [...prev, { url: result.uri }]
-        )
-      });
-
       let timestamp = moment().format('YYYYMMDDhhmmss');
-      const final = {uri: result.uri, id: timestamp, ref: timestamp + '.jpeg'};
-      // setFiles([...files, final]);
-      uploadImage(final);
-
+      const imgData = { uri: result.uri, id: timestamp, ref: timestamp + '.jpg' };
+      uploadImage(imgData);
     }
   };
 
-  
+  useEffect(() => {
+    setImages(prev => prev)
+    console.log(images)
+  }, [images])
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -165,26 +179,23 @@ export default function CreateProduct() {
     <>
       <Container>
         <Headline style={{ color: theme.titleColor }}>Add a product</Headline>
+        <Headline style={{ color: theme.titleColor }}>{progress}</Headline>
 
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Button onPress={pickImage} mode="contained">Pick an image from camera roll</Button>
-          {images && <Image source={{ uri: images[0] }} style={{ width: 200, height: 200 }} />}
-        </View>
-
-
-        {images && <ImageSwiper images={images} />}
+        <ImageSwiper images={images} setImages={setImages} />
 
         <AddImageContainer>
+          {images && images.map((image) => {
+            return (
+              <View>
+                <AddedImage source={{ uri: image.url }} />
+                <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge>
+              </View>
+            )
+          })}
 
-          <View>
-            <AddedImage source={{ uri: images && images[0].url }} />
-            <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge>
-          </View>
-
-          <View>
+          <TouchableOpacity onPress={pickImage}>
             <AddedImage source={require("../../public/plusButton.png")} />
-            {/* <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge> */}
-          </View>
+          </TouchableOpacity>
 
         </AddImageContainer>
         <MyCard style={{

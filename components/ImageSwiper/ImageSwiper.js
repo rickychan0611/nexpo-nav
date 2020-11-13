@@ -1,12 +1,46 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import Swiper from 'react-native-web-swiper';
 import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 
-export default function ImageSwiper({ images }) {
+export default function ImageSwiper({ images, setImages }) {
+
+  useEffect(() => {
+    setImages(prev => prev)
+  }, [])
+
+  const Images = () => {
+    if (images) {
+      return (
+        images.map(image => {
+          return (
+          <ImageContainer key={image.url}>
+            <Image source={{ uri: image.url }} />
+          </ImageContainer>
+          )
+        })
+      )
+    }
+
+    else return (
+      <>
+      <ImageContainer>
+        <Image source={imagePlaceholder} />
+      </ImageContainer>
+      <ImageContainer>
+      <Image source={imagePlaceholder} />
+    </ImageContainer>
+    <ImageContainer>
+    <Image source={imagePlaceholder} />
+  </ImageContainer>
+  </>
+    )
+  }
+
   return (
     <SlideContainer>
+      <Text>{JSON.stringify(images)}</Text>
       <Swiper
         from={0}
         minDistanceForAction={0.1}
@@ -25,19 +59,7 @@ export default function ImageSwiper({ images }) {
           ),
         }}
       >
-        {images[0] ?
-          images.map((image, index) => {
-            console.log(image.url)
-            return (
-              <ImageContainer key={index}>
-                <Image source={{ uri: image.url }} />
-              </ImageContainer>
-            )
-          }) :
-          <ImageContainer>
-            <Image source={imagePlaceholder} />
-          </ImageContainer>
-        }
+        <Images />
       </Swiper>
     </SlideContainer>
   )
