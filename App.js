@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import ContextProvider from './context/Context';
+import ThemeProvider from './context/ThemeContext';
 import { SafeAreaView } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
-import ContextProvider from './context/Context';
-import { ThemeProvider } from 'react-native-elements';
 import { Provider as PaperProvider } from 'react-native-paper';
 import theme from './theme';
 
@@ -16,6 +16,7 @@ import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 
 import TopBar from './components/TopBar';
+import { ThemeContext } from "styled-components";
 
 const Stack = createStackNavigator();
 
@@ -59,14 +60,14 @@ function App() {
 export default () => {
   return (
     <ContextProvider>
-      <PaperProvider>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider>
+        <PaperProvider>
           <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-            <TopBar />
+            {/* <TopBar /> */}
             <App />
           </SafeAreaView>
-        </ThemeProvider>
-      </PaperProvider>
+        </PaperProvider>
+      </ThemeProvider>
     </ContextProvider>
   )
 }

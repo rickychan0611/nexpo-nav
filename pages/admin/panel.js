@@ -1,14 +1,15 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
+import { ThemeContext } from "../../context/ThemeContext";
 import Sidebar from "react-sidebar";
-import { Appbar } from 'react-native-paper';
+import SideMenu from 'react-native-side-menu'
 
+import { Appbar } from 'react-native-paper';
 import { Input } from 'react-native-elements';
 import { View, TouchableOpacity, Platform, Animated, Button } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
-import SideMenu from 'react-native-side-menu'
 import { db } from "../../firebase";
 
 import BottomBar from "../../components/BottomBar";
@@ -26,6 +27,7 @@ const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
 export default function panel({ ssrData }) {
+  const {theme} = useContext(ThemeContext);
   const { navigate } = useRouting();
   const {
     user, openAdminMenu, openWebAdminMenu, setOpenWebAdminMenu,
@@ -62,7 +64,7 @@ export default function panel({ ssrData }) {
     return (
       <>
         <AdminTopBar />
-        <WebContextArea>
+        <WebContextArea  backgroundColor={theme.backgroundColor}>
           <Sidebar
             sidebar={menu}
             open={openWebAdminMenu}
@@ -70,7 +72,7 @@ export default function panel({ ssrData }) {
             shadow
             styles={{ sidebar: { background: "white", paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170} }}
           >
-            <WebContentColumn>
+            <WebContentColumn   backgroundColor={theme.backgroundColor}>
               <CreateProduct />
             </WebContentColumn>
           </Sidebar>
@@ -82,17 +84,19 @@ export default function panel({ ssrData }) {
   else return (
     <SideMenu
       menu={<View style={{padding: 20, backgroundColor: "#ededed", height: "100%"}}>{menu}</View>}
-      isOpen={openAdminMenu}
+      isOpen={openWebAdminMenu}
+      onChange={()=>{setOpenWebAdminMenu(!openWebAdminMenu)}}
       animationFunction={(prop, value) =>
         Animated.spring(prop, {
           toValue: value,
-          friction: 8,
+          friction: 7,
           useNativeDriver: true,
         })
       }
       >
+      <AdminTopBar />
       <ScrollView>
-        <MobileContextArea>
+        <MobileContextArea backgroundColor={theme.backgroundColor}>
           <CreateProduct />
         </MobileContextArea>
       </ScrollView>
@@ -106,7 +110,7 @@ const MobileContextArea = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      background-color: white;
+      background-color: ${props => props.backgroundColor};
       width: 100%;
       max-width: 900px;
       padding: 0px 10px 20px 10px;
@@ -117,7 +121,7 @@ const WebContextArea = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      background-color: white;
+      background-color: ${props => props.backgroundColor};
       width: 100%;
       max-width: 900px;
       /* padding: 0px 10px 20px 10px; */
@@ -146,7 +150,7 @@ const SideBarColumn = styled.ScrollView`
 const WebContentColumn = styled.ScrollView`
       flex: 3;
       height: 100%;
-      background-color: white;
+      background-color: ${props => props.backgroundColor};
       /* border-right-color: #e8e6e6;
       border-right-width: 4px; */
       padding: 0px 10px 20px 10px;

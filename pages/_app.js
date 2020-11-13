@@ -1,9 +1,7 @@
-import Head from 'next/head'
-
-import ContextProvider from '../context/Context'
-import { ThemeProvider } from 'react-native-elements';
-import theme from '../theme'
-import BottomBar from "../components/BottomBar";
+import Head from 'next/head';
+import '../styles.css';
+import ContextProvider from '../context/Context';
+import ThemeProvider from '../context/ThemeContext';
 import WebContainer from "../components/WebContainer";
 import { Provider as PaperProvider } from 'react-native-paper';
 
@@ -15,13 +13,13 @@ export default function myApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <ContextProvider>
-        <PaperProvider>
-          <ThemeProvider theme={theme}>
+        <ThemeProvider>
+          <PaperProvider>
             <WebContainer>
               <Component {...pageProps} />
             </WebContainer>
-          </ThemeProvider>
-        </PaperProvider>
+          </PaperProvider>
+        </ThemeProvider>
       </ContextProvider>
     </>
   )
