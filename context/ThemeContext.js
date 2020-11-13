@@ -4,16 +4,24 @@ import React, { createContext, useState, useEffect } from "react";
 export const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
+
+  const red = "#ff5c5c"
+  const lightGrey = "#f0f0f0"
+  const darkGrey = "#636363"
+  const lightYellow = "#fffff2"
+
   const theme = {
-    TopBarBackgroundColor: "white",
-    TopBarTitleColor: "#ff5c5c",
+    TopBarBackgroundColor: red,
+    TopBarTitleColor: "white",
 
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "white",
     
-    InputBoxBackgroundColor: "#fffff2", //light yellow
+    InputBoxBackgroundColor: lightYellow,
 
-    titleColor: "#636363",
-    red: "#ff5c5c",
+    titleColor:darkGrey,
+
+    red, lightGrey, darkGrey, lightYellow
+
   }
 
   return (

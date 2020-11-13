@@ -112,7 +112,8 @@ const MobileContextArea = styled.View`
       justify-content: flex-start;
       background-color: ${props => props.backgroundColor};
       width: 100%;
-      max-width: 900px;
+      /* App width */
+      max-width: 500; 
       padding: 0px 10px 20px 10px;
 `;
 const WebContextArea = styled.View`
@@ -123,10 +124,10 @@ const WebContextArea = styled.View`
       justify-content: flex-start;
       background-color: ${props => props.backgroundColor};
       width: 100%;
-      max-width: 900px;
+      /* App width */
+      max-width: 500;
       /* padding: 0px 10px 20px 10px; */
 `;
-
 const ContentWrapper = styled.View`
       flex: 6;
       flex-direction: column;
@@ -135,7 +136,7 @@ const ContentWrapper = styled.View`
       justify-content: flex-start;
       background-color: white;
       width: 100%;
-      padding: 20px;
+      /* padding: 20px; */
       /* padding-bottom: 70px; */
 `;
 
@@ -148,9 +149,9 @@ const SideBarColumn = styled.ScrollView`
       border-right-width: 4px;
 `;
 const WebContentColumn = styled.ScrollView`
-      flex: 3;
+      /* flex: 3; */
       height: 100%;
-      background-color: ${props => props.backgroundColor};
+      background-color: white;
       /* border-right-color: #e8e6e6;
       border-right-width: 4px; */
       padding: 0px 10px 20px 10px;
