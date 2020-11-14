@@ -15,6 +15,8 @@ const ContextProvider = ({ children }) => {
   const [ openWebAdminMenu, setOpenWebAdminMenu] = useState(false);
   const [ categories, setCategories] = useState([]);
   const [ title, setTitle] = useState("Add a product");
+  const [images, setImages] = useState(null);
+  const [swiperControl, setSwiperControl] = useState(null);
 
   // useEffect(() => {
   //   auth.onAuthStateChanged((user) => {
@@ -40,7 +42,9 @@ const ContextProvider = ({ children }) => {
           openAdminMenu, setOpenAdminMenu,
           openWebAdminMenu, setOpenWebAdminMenu,
           categories, setCategories,
-          title, setTitle
+          title, setTitle,
+          images, setImages,
+          swiperControl, setSwiperControl
         }
       }
     >

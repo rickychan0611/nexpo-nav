@@ -8,10 +8,11 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
 import { TextInputMask, MaskService } from 'react-native-masked-text'
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge } from 'react-native-paper';
+import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge, ProgressBar, Colors } from 'react-native-paper';
 import { storage } from '../../firebase';
 import produce from "immer"
 import { useImmer } from 'use-immer';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
@@ -20,8 +21,6 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 
 export default function CreateProduct() {
-
-  const [images, setImages] = useImmer(null);
 
   const { navigate } = useRouting();
   const [selectedCategory, setSelectedCategory] = useState([]);
@@ -39,7 +38,9 @@ export default function CreateProduct() {
   }
 
   const {
-    categories, setCategories
+    categories, setCategories,
+    images, setImages,
+    swiperControl, setSwiperControl
   } = useContext(Context);
 
   const { theme } = useContext(ThemeContext);
@@ -102,47 +103,52 @@ export default function CreateProduct() {
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
 
+  const reSizeImage = async (image) => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      image,
+      [{ resize: { width: 800 } }],
+      { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+    );
+    return manipResult
+  };
 
   const uploadImage = async imgData => {
-    setUploading(true);
     setProgress(0);
     // console.log('image', imgData.uri);
     const task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url');
 
     task.on('state_changed', snap => {
-      setProgress(Math.round(snap.bytesTransferred / snap.totalBytes) * 100);
-      // console.log("snap", snap)
+      setProgress(Math.round(snap.bytesTransferred / snap.totalBytes));
+      console.log("snap", progress)
     });
 
-    try {
-      //get image URL
-      await task
-      let urlRef = storage.ref(imgData.ref)
-      urlRef.getDownloadURL().then(function (downloadURL) {
-        return downloadURL
+    //get image URL
+    await task
+    let urlRef = storage.ref(imgData.ref)
+    urlRef.getDownloadURL().then(function (downloadURL) {
+      return downloadURL
+    })
+      .then((downloadURL) => {
+        console.log('PickFile PROFILE PIC load ' + downloadURL)
+
+        //store returned url in image array
+        setImages(prev => {
+          console.log("run???")
+          if (!prev) {
+            return [{ url: downloadURL }]
+          }
+          else return (
+            [...prev, { url: downloadURL }]
+          )
+        });
+
+        setUploading(false);
+        return;
       })
-        .then((downloadURL) => {
-          console.log('PickFile PROFILE PIC load ' + downloadURL)
-          setUploading(false);
-
-          //store returned url in image array
-          setImages(prev => {
-            if (!prev) {
-              return [{ url: downloadURL}]
-            }
-            else return (
-              [...prev, { url: downloadURL }]
-            )
-          });
-
-          return
-        })
-    } catch (e) {
-      console.error(e);
-    }
   };
 
   const pickImage = async () => {
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -153,16 +159,28 @@ export default function CreateProduct() {
     // console.log(result);
 
     if (!result.cancelled) {
+      setUploading(true);
+
+      const resizedImg = await reSizeImage(result.uri)
+
       let timestamp = moment().format('YYYYMMDDhhmmss');
-      const imgData = { uri: result.uri, id: timestamp, ref: timestamp + '.jpg' };
+      const imgData = { uri: resizedImg.uri, id: timestamp, ref: timestamp + '.jpg' };
       uploadImage(imgData);
     }
+    else setUploading(false);
   };
 
   useEffect(() => {
-    setImages(prev => prev)
     console.log(images)
   }, [images])
+
+  const deleteImage = async (url) => {
+    setUploading(true)
+    await setImages(prev => {
+      return prev.filter(item => item.url !== url)
+    })
+    setUploading(false)
+  }
 
   useEffect(() => {
     (async () => {
@@ -179,16 +197,19 @@ export default function CreateProduct() {
     <>
       <Container>
         <Headline style={{ color: theme.titleColor }}>Add a product</Headline>
-        <Headline style={{ color: theme.titleColor }}>{progress}</Headline>
-
-        <ImageSwiper images={images} setImages={setImages} />
+        <ImageSwiper images={images} uploading={uploading} />
 
         <AddImageContainer>
-          {images && images.map((image) => {
+          {images && images[0] && images.map((image, index) => {
             return (
-              <View>
-                <AddedImage source={{ uri: image.url }} />
-                <Badge style={{ position: "absolute", left: 40, top: -10 }}>X</Badge>
+              <View key={image.url}>
+                <TouchableOpacity onPress={() => { swiperControl.current.goTo(index)}}>
+                  <AddedImage source={{ uri: image.url }} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => { deleteImage(image.url) }}>
+                  <Badge style={{ position: "absolute", top: -20 }}>X</Badge>
+                </TouchableOpacity>
               </View>
             )
           })}
@@ -198,6 +219,8 @@ export default function CreateProduct() {
           </TouchableOpacity>
 
         </AddImageContainer>
+        {uploading && <ProgressBar progress={progress} color={Colors.red800} />}
+
         <MyCard style={{
           shadowColor: "#000",
           shadowOffset: {
