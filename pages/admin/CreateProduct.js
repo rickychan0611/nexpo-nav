@@ -3,22 +3,19 @@ import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
-import { View, Platform, Image, TouchableOpacity } from "react-native";
+import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
 import { TextInputMask, MaskService } from 'react-native-masked-text'
 import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge, ProgressBar, Colors } from 'react-native-paper';
 import { storage } from '../../firebase';
-import produce from "immer"
-import { useImmer } from 'use-immer';
 import * as ImageManipulator from 'expo-image-manipulator';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
 
 import * as ImagePicker from 'expo-image-picker';
-import Constants from 'expo-constants';
 
 export default function CreateProduct() {
 
@@ -94,16 +91,11 @@ export default function CreateProduct() {
     })
   }
 
-  // const images = [
-  //   { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' },
-  //   { url: 'https://blog.depositphotos.com/wp-content/uploads/2017/01/Exquisite-Dishes-Interview-With-Food-Photographer-Natalia-Lisovskaya-5.jpg.webp' },
-  //   { url: 'https://www.adorama.com/alc/wp-content/uploads/2018/05/PRANA7.jpg' }
-  // ]
-
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
 
   const reSizeImage = async (image) => {
+    console.log("resize run!")
     const manipResult = await ImageManipulator.manipulateAsync(
       image,
       [{ resize: { width: 800 } }],
@@ -114,8 +106,18 @@ export default function CreateProduct() {
 
   const uploadImage = async imgData => {
     setProgress(0);
-    // console.log('image', imgData.uri);
-    const task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url');
+    let task;
+    if (Platform.OS === 'web') {
+      let base64 = imgData.base64
+      console.log(base64)
+      task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url')
+    }
+    else {
+      console.log("uri", imgData.uri)
+      const response = await fetch(imgData.uri)
+      const blob = await response.blob()
+      task = storage.ref(imgData.ref).put(blob, {contentType: 'image/jpeg'})
+    }
 
     task.on('state_changed', snap => {
       setProgress(Math.round(snap.bytesTransferred / snap.totalBytes));
@@ -164,7 +166,7 @@ export default function CreateProduct() {
       const resizedImg = await reSizeImage(result.uri)
 
       let timestamp = moment().format('YYYYMMDDhhmmss');
-      const imgData = { uri: resizedImg.uri, id: timestamp, ref: timestamp + '.jpg' };
+      const imgData = { uri: resizedImg.uri, base64: resizedImg.base64, id: timestamp, ref: timestamp + '.jpg' };
       uploadImage(imgData);
     }
     else setUploading(false);
@@ -203,14 +205,17 @@ export default function CreateProduct() {
           {images && images[0] && images.map((image, index) => {
             return (
               <View key={image.url}>
-                <TouchableOpacity onPress={() => { swiperControl.current.goTo(index)}}>
-                  <AddedImage source={{ uri: image.url }} />
+                <TouchableOpacity 
+                style={{backgroundColor: "red", width: 20, height: 20, top: 0, left: -10, zIndex: 1000,
+              justifyContent: "center", alignItems: "center", borderRadius: 50, posoition: "absolute" }} 
+                onPress={() => { deleteImage(image.url) }}>
+                  <Text style={{ position: "absolute", color: "white"}}>X</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => { deleteImage(image.url) }}>
-                  <Badge style={{ position: "absolute", top: -20 }}>X</Badge>
+                <TouchableOpacity style={{posoition: "absolute", top: -10}} onPress={() => { swiperControl.current.goTo(index) }}>
+                  <AddedImage source={{ uri: image.url }} />
                 </TouchableOpacity>
-              </View>
+            </View>
             )
           })}
 
