@@ -217,7 +217,8 @@ export default function Home() {
   useEffect(() => {
     if (Platform.OS !== 'web') {
       import("react-native").then((item) => {
-        item.LogBox.ignoreLogs(['Setting a timer']);
+        item.LogBox.ignoreAllLogs();
+        // item.LogBox.ignoreLogs(['Setting a timer']);
         // item.LogBox.ignoreLogs(['StatusBarIOS']);
       });
     }

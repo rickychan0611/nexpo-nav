@@ -3,6 +3,21 @@ import React, { createContext, useState, useEffect } from "react";
 
 export const Context = createContext();
 
+const productInitValue = {
+  uid: "",
+  createAt: "",
+  chineseName: "",
+  englishName: "",
+  original_price: "",
+  final_price: "",
+  discount_amt: "",
+  discount_precent: "",
+  qty: "",
+  unit: "",
+  description: "",
+  category: [],
+}
+
 const ContextProvider = ({ children }) => {
   const [data, setData] = useState();
   const [user, setUser] = useState("");
@@ -11,12 +26,15 @@ const ContextProvider = ({ children }) => {
   const [total, setTotal] = useState(0);
   const [newOrderProductList, setNewOrderProductList] = useState([]);
   const [selected, setSelected] = useState("home");
-  const [ openAdminMenu, setOpenAdminMenu] = useState(false);
-  const [ openWebAdminMenu, setOpenWebAdminMenu] = useState(false);
-  const [ categories, setCategories] = useState([]);
-  const [ title, setTitle] = useState("Add a product");
+  const [openAdminMenu, setOpenAdminMenu] = useState(false);
+  const [openWebAdminMenu, setOpenWebAdminMenu] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [title, setTitle] = useState("Add a product");
   const [images, setImages] = useState(null);
   const [swiperControl, setSwiperControl] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [product, setProduct] = useState(productInitValue);
+  const [createProductErrMsg, setCreateProductErrMsg] = useState({});
 
   // useEffect(() => {
   //   auth.onAuthStateChanged((user) => {
@@ -44,7 +62,11 @@ const ContextProvider = ({ children }) => {
           categories, setCategories,
           title, setTitle,
           images, setImages,
-          swiperControl, setSwiperControl
+          swiperControl, setSwiperControl,
+          selectedCategory, setSelectedCategory,
+          product, setProduct,
+          productInitValue,
+          createProductErrMsg, setCreateProductErrMsg
         }
       }
     >

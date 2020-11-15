@@ -3,78 +3,101 @@ import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import moment from "moment";
-import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
+import { storage } from '../../firebase';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
 import { TextInputMask, MaskService } from 'react-native-masked-text'
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, Badge, ProgressBar, Colors } from 'react-native-paper';
-import { storage } from '../../firebase';
-import * as ImageManipulator from 'expo-image-manipulator';
+
+import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
+import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors } from 'react-native-paper';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
-
 import * as ImagePicker from 'expo-image-picker';
+
 
 export default function CreateProduct() {
 
   const { navigate } = useRouting();
-  const [selectedCategory, setSelectedCategory] = useState([]);
-
-  const init = {
-    uid: "",
-    createAt: "",
-    chineseName: "",
-    englishName: "",
-    price: "",
-    qty: "",
-    unit: "",
-    description: "",
-    category: [],
-  }
+  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [catErrMsg, setCatErrMsg] = useState("");
+  const [englishNameErr, setEnglishNameErr] = useState("eorr");
+  const [chineseNameErr, setChineseNameErr] = useState("");
+  const [qtyErr, setQtyErr] = useState("");
+  const [unitErr, setUnitErr] = useState("");
+  const [priceErr, setPriceErr] = useState("");
+  const [descriptionErr, setDescriptionErr] = useState("");
 
   const {
     categories, setCategories,
     images, setImages,
-    swiperControl, setSwiperControl
+    swiperControl, setSwiperControl,
+    selectedCategory, setSelectedCategory,
+    product, setProduct
   } = useContext(Context);
 
   const { theme } = useContext(ThemeContext);
-
-  const outline = Platform.OS === 'web' ? { outline: "none" } : null;
-  const [product, setProduct] = useState(init);
-  // const [categories, setCategories] = useState([]);
+  let final_price = 0;
 
   const handleChange = (name, value) => {
-    if (name === "price") {
+
+    if (name === "original_price") {
       var t = value;
       value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+      final_price = +value - +product.discount_amt - (+product.original_price * +value/100)
+    }
+    if (name === "discount_amt") {
+      var t = value;
+      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+      final_price = +product.original_price - +value
+      let discount_precent = (+value / +product.original_price ) * 100
+      setProduct(prev => {
+        return { ...prev, [name]: value, final_price, discount_precent }
+      })
+    }
+    if (name === "discount_precent") {
+      var t = value;
+      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 0)) : t;
+      final_price = +product.original_price - (+product.original_price * +value/100)
+      let discount_amt = (+product.original_price * +value) / 100
+      setProduct(prev => {
+        return { ...prev, [name]: value, final_price, discount_amt }
+      })
     }
 
+
     setProduct(prev => {
-      return { ...prev, [name]: value }
+      return { ...prev, [name]: value, final_price: final_price }
     })
   };
 
-  const onSubmit = () => {
-    const productRef = db.collection("products").doc()
-    const timestamp = new Date()
-    product.price = MaskService.toRawValue('money', product.price)
-    product.category = selectedCategory
-    console.log(product)
+  useEffect(()=>{
+    // setTimeout(()=>{
+      setProduct(prev=>prev)
+      console.log(product)
+    // },[500])
+  },[product])
+  // const onCreateProductSubmit = () => {
+  //   console.log("Clicked")
+  //   const productRef = db.collection("products").doc()
+  //   const timestamp = new Date()
+  //   product.price = MaskService.toRawValue('money', product.price)
+  //   product.category = selectedCategory
+  //   console.log(product)
 
-    productRef.set({
-      ...product,
-      uid: productRef.id,
-      createAt: timestamp,
-    })
-      .then(() => {
-        setProduct(init)
-        setSelectedCategory([])
-      })
-      .catch(error => console.log(error))
-  }
+  //   productRef.set({
+  //     ...product,
+  //     uid: productRef.id,
+  //     createAt: timestamp,
+  //   })
+  //     .then(() => {
+  //       setProduct(init)
+  //       setSelectedCategory([])
+  //     })
+  //     .catch(error => console.log(error))
+  // }
 
   const [cat, setCat] = useState("");
   const onAddCatChange = (value) => {
@@ -116,7 +139,7 @@ export default function CreateProduct() {
       console.log("uri", imgData.uri)
       const response = await fetch(imgData.uri)
       const blob = await response.blob()
-      task = storage.ref(imgData.ref).put(blob, {contentType: 'image/jpeg'})
+      task = storage.ref(imgData.ref).put(blob, { contentType: 'image/jpeg' })
     }
 
     task.on('state_changed', snap => {
@@ -172,10 +195,6 @@ export default function CreateProduct() {
     else setUploading(false);
   };
 
-  useEffect(() => {
-    console.log(images)
-  }, [images])
-
   const deleteImage = async (url) => {
     setUploading(true)
     await setImages(prev => {
@@ -205,17 +224,19 @@ export default function CreateProduct() {
           {images && images[0] && images.map((image, index) => {
             return (
               <View key={image.url}>
-                <TouchableOpacity 
-                style={{backgroundColor: "red", width: 20, height: 20, top: 0, left: -10, zIndex: 1000,
-              justifyContent: "center", alignItems: "center", borderRadius: 50, posoition: "absolute" }} 
-                onPress={() => { deleteImage(image.url) }}>
-                  <Text style={{ position: "absolute", color: "white"}}>X</Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "red", width: 20, height: 20, top: 0, left: -10, zIndex: 1000,
+                    justifyContent: "center", alignItems: "center", borderRadius: 50, posoition: "absolute"
+                  }}
+                  onPress={() => { deleteImage(image.url) }}>
+                  <Text style={{ position: "absolute", color: "white" }}>X</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{posoition: "absolute", top: -10}} onPress={() => { swiperControl.current.goTo(index) }}>
+                <TouchableOpacity style={{ posoition: "absolute", top: -10 }} onPress={() => { swiperControl.current.goTo(index) }}>
                   <AddedImage source={{ uri: image.url }} />
                 </TouchableOpacity>
-            </View>
+              </View>
             )
           })}
 
@@ -237,129 +258,324 @@ export default function CreateProduct() {
           elevation: 5,
         }}>
           <Card.Content>
-            <Input
-              style={{
-                backgroundColor: theme.InputBoxBackgroundColor,
-                outline: "none"
-              }}
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              label="Chinese Name"
-              placeholder='Chinese Name'
-              value={product.chineseName}
-              onChangeText={value => { handleChange("chineseName", value) }}
-            />
-            <Input
-              style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              label="English Name"
-              placeholder='English Name'
-              value={product.englishName}
-              onChangeText={value => { handleChange("englishName", value) }}
-            />
-            <Input
-              style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              label="Quantity"
-              placeholder='Quantity'
-              value={product.qty}
-              keyboardType="number-pad"
-              onChangeText={value => {
-                if (!value || validator.isInt(value)) {
-                  handleChange("qty", value)
-                }
-              }
-              }
-            />
-            <Input
-              style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              label="Unit"
-              dense
-              placeholder='Unit'
-              value={product.unit}
-              keyboardType="number-pad"
-              onChangeText={value => { handleChange("unit", value) }}
-            />
-            <Input
-              style={{ flex: 20, backgroundColor: theme.InputBoxBackgroundColor }}
-              theme={{ colors: { primary: "grey" } }}
-              left={
-                <TextInput.Icon
-                  name="currency-usd" // where <Icon /> is any component from vector-icons or anything else
-                />
-              }
-              mode="outlined"
-              dense
-              label="Price"
-              placeholder='Price'
-              value={product.price}
-              keyboardType="decimal-pad"
-              onChangeText={value => {
-                if (!value || validator.isFloat(value)) {
-                  handleChange("price", value)
-                }
-              }
-              }
-            />
+            <InputView>
+              <TextInput
+                label="Chinese Name"
+                placeholder='Chinese Name'
+                style={{
+                  backgroundColor: theme.InputBoxBackgroundColor,
+                  outline: "none"
+                }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                value={product.chineseName}
+                onChangeText={value => { handleChange("chineseName", value) }}
+              />
+              <HelperText type="error" visible={!!chineseNameErr}>
+                {chineseNameErr}
+              </HelperText>
+            </InputView>
 
-            <Input
-              style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              multiline
-              numberOfLines={3}
-              theme={{ colors: { primary: "grey" } }}
-              label="Description"
-              placeholder='Description'
-              value={product.description}
-              onChangeText={value => { handleChange("description", value) }}
-            />
-            <Subheading>Categories:</Subheading>
-            <View style={{ padding: 0, marginBottom: 20 }}>
-
-              {categories && categories.map((item) => {
-                return (
-                  <>
-                    <Checkbox.Item label={item} status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
-                      onPress={() => {
-                        if (selectedCategory.indexOf(item) === -1) {
-                          setSelectedCategory(prev => [...prev, item])
-                        }
-                        else {
-                          let index = selectedCategory.indexOf(item);
-                          let arr = [...selectedCategory];
-                          arr.splice(index, 1);
-                          setSelectedCategory(arr)
-                        }
-                      }}
-                    />
-                  </>
-                )
-              })}
-              <Input
+            <InputView>
+              <TextInput
                 style={{ backgroundColor: theme.InputBoxBackgroundColor }}
                 theme={{ colors: { primary: "grey" } }}
                 mode="outlined"
                 dense
-                label="Add new Category"
-                placeholder='Category Name'
-                value={cat}
-                onChangeText={value => { onAddCatChange(value) }}
+                label="English Name"
+                placeholder='English Name'
+                value={product.englishName}
+                onChangeText={value => { handleChange("englishName", value) }}
               />
-              <Button onPress={() => onAddCategory()}>+ Add a Category</Button>
+              <HelperText type="error" visible={!!englishNameErr}>
+                {englishNameErr}
+              </HelperText>
+            </InputView>
+
+            <InputView>
+              <TextInput
+                label="Quantity"
+                placeholder='Quantity'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                value={product.qty}
+                keyboardType="number-pad"
+                onChangeText={value => {
+                  if (!value || validator.isInt(value)) {
+                    handleChange("qty", value)
+                  }
+                }
+                }
+              />
+              <HelperText type="error" visible={!!qtyErr}>
+                {qtyErr}
+              </HelperText>
+            </InputView>
+
+            <InputView>
+              <TextInput
+                label="Unit"
+                placeholder='Unit'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                value={product.unit}
+                keyboardType="number-pad"
+                onChangeText={value => { handleChange("unit", value) }}
+              />
+              <HelperText type="error" visible={!!unitErr}>
+                {unitErr}
+              </HelperText>
+            </InputView>
+
+            {/* Price Row */}
+            <View
+              style={{
+                // flex: 1,
+                flexDirection: "row",
+                flexWrap: "nowrap",
+                justifyContent: "space-between",
+              }}>
+
+
+              <InputView style={{ flex: 1 }}>
+                <TextInput
+                  label="Original Price"
+                  placeholder='Original Price'
+                  style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
+                  theme={{ colors: { primary: "grey" } }}
+                  left={
+                    <TextInput.Icon
+                      name="currency-usd"
+                    />
+                  }
+                  mode="outlined"
+                  dense
+                  value={product.original_price}
+                  keyboardType="decimal-pad"
+                  onChangeText={value => {
+                    if (!value || validator.isFloat(value)) {
+                      handleChange("original_price", value)
+                    }
+                  }
+                  }
+                />
+                <HelperText type="error" visible={!!priceErr}>
+                  {priceErr}
+                </HelperText>
+              </InputView>
+
+              <InputView style={{ flex: 1 }}>
+                <TextInput
+                  editable={false}
+                  label="Final Price"
+                  value={(+product.final_price).toFixed(2)}
+                  style={{ backgroundColor: theme.lightGrey, width: "98%", alignSelf: "flex-end" }}
+                  theme={{ colors: { primary: "grey" } }}
+                  left={
+                    <TextInput.Icon
+                      name="currency-usd"
+                    />
+                  }
+                  mode="outlined"
+                  dense
+                  value={(+product.final_price).toFixed(2)}
+                  keyboardType="decimal-pad"
+                  onChangeText={value => {
+                    if (!value || validator.isFloat(value)) {
+                      handleChange("final_price", value)
+                    }
+                  }
+                  }
+                />
+                <HelperText type="error" visible={!!priceErr}>
+                  {priceErr}
+                </HelperText>
+              </InputView>
+
             </View>
-            <Divider />
-            <Button icon="check" mode="contained" onPress={() => onSubmit()}>
-              Submit
-          </Button>
+
+            {/* Discount Row */}
+            <View
+              style={{
+                // flex: 1,
+                flexDirection: "row",
+                flexWrap: "nowrap",
+                justifyContent: "space-between",
+              }}>
+
+
+              <InputView style={{ flex: 1 }}>
+                <TextInput
+                  label="Disount (-$)"
+                  placeholder='Disount Amount'
+                  style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
+                  theme={{ colors: { primary: "grey" } }}
+                  left={
+                    <TextInput.Icon
+                      name="currency-usd"
+                    />
+                  }
+                  mode="outlined"
+                  dense
+                  value={(+product.discount_amt).toString()}
+                  keyboardType="decimal-pad"
+                  onChangeText={value => {
+                    if (!value || validator.isFloat(value)) {
+                      handleChange("discount_amt", value)
+                    }
+                  }
+                  }
+                />
+                <HelperText type="error" visible={!!priceErr}>
+                  {priceErr}
+                </HelperText>
+              </InputView>
+
+              <InputView style={{ flex: 1 }}>
+                <TextInput
+                  label="Discount %"
+                  placeholder='Discount %'
+                  style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%", alignSelf: "flex-end" }}
+                  theme={{ colors: { primary: "grey" } }}
+                  right={
+                    <TextInput.Icon
+                      name="percent"
+                    />
+                  }
+                  mode="outlined"
+                  dense
+                  value={(+product.discount_precent).toFixed(0)}
+                  keyboardType="decimal-pad"
+                  onChangeText={value => {
+                    if (!value || validator.isFloat(value)) {
+                      handleChange("discount_precent", value)
+                    }
+                  }
+                  }
+                />
+                <HelperText type="error" visible={!!priceErr}>
+                  {priceErr}
+                </HelperText>
+              </InputView>
+
+            </View>
+
+            <InputView>
+              <TextInput
+                label="Chinese Description"
+                placeholder='Chinese Description'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                multiline
+                numberOfLines={3}
+                theme={{ colors: { primary: "grey" } }}
+                value={product.description}
+                onChangeText={value => { handleChange("ch_description", value) }}
+              />
+              <HelperText type="error" visible={!!descriptionErr}>
+                {descriptionErr}
+              </HelperText>
+            </InputView>
+
+            <InputView>
+              <TextInput
+                label="English Description"
+                placeholder='English Description'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                multiline
+                numberOfLines={3}
+                theme={{ colors: { primary: "grey" } }}
+                value={product.description}
+                onChangeText={value => { handleChange("en_description", value) }}
+              />
+              <HelperText type="error" visible={!!descriptionErr}>
+                {descriptionErr}
+              </HelperText>
+            </InputView>
+
+            <MyCard>
+              <Card.Content>
+                <Subheading styles={{ marginBottom: 130 }} >Select/Create Categories</Subheading>
+                {/* <Divider /> */}
+
+                <View style={{ padding: 0, marginBottom: 20 }}>
+
+                  {categories && categories.map((item) => {
+                    return (
+                      <View key={item}>
+                        <Checkbox.Item
+                          label={item}
+                          labelStyle={{ color: theme.darkGrey }}
+                          status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
+                          onPress={() => {
+                            if (selectedCategory.indexOf(item) === -1) {
+                              setSelectedCategory(prev => [...prev, item])
+                            }
+                            else {
+                              let index = selectedCategory.indexOf(item);
+                              let arr = [...selectedCategory];
+                              arr.splice(index, 1);
+                              setSelectedCategory(arr)
+                            }
+                          }}
+                        />
+                      </View>
+                    )
+                  })}
+                  <Divider style={{ margin: 20 }} />
+                  {!showNewCategory &&
+                    <Button onPress={() => setShowNewCategory(true)}>
+                      + Add a new category
+                    </Button>}
+                  {showNewCategory &&
+                    <>
+                      <InputView>
+                        <TextInput
+                          label="Enter a new categrory"
+                          placeholder='Category Name'
+                          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                          theme={{ colors: { primary: "grey" } }}
+                          mode="outlined"
+                          dense
+                          value={cat}
+                          onChangeText={value => { onAddCatChange(value) }}
+                        />
+                        <HelperText type="error" visible={!!catErrMsg}>
+                          {catErrMsg}
+                        </HelperText>
+                      </InputView>
+
+                      <Button icon="plus" mode="contained" color={theme.green}
+                        labelStyle={{ color: "white" }}
+                        onPress={() => {
+                          if (cat) {
+                            onAddCategory()
+                            setShowNewCategory(false)
+                            setCat("")
+                          }
+                          else {
+                            setCatErrMsg("Please enter something.")
+                          }
+                        }}>
+                        Add
+                    </Button>
+                    </>
+                  }
+                </View>
+
+              </Card.Content>
+            </MyCard>
+
           </Card.Content>
         </MyCard>
       </Container>
@@ -373,8 +589,8 @@ const Container = styled.View`
   padding: 10px 6px 10px 6px;
 `;
 
-const Input = styled(TextInput)`
-  margin-bottom: 25px;
+const InputView = styled.View`
+  margin-bottom: ${Platform.OS === "web" ? "15px" : 0};
 `;
 const ScrollView = styled.ScrollView`
   height: 100%;
@@ -410,3 +626,12 @@ flex: 1;
   justify-content: center;
   align-items: center;
 `;
+const CategoriesCard = styled.View`
+  flex: 1;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+`;
+

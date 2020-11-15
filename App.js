@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import ContextProvider from './context/Context';
 import ThemeProvider from './context/ThemeContext';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -40,6 +40,18 @@ const options = (name) => {
 }
 
 function App() {
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      import("react-native").then((item) => {
+        item.LogBox.ignoreAllLogs();
+        // item.LogBox.ignoreLogs(['Setting a timer']);
+        // item.LogBox.ignoreLogs(['StatusBarIOS']);
+      });
+    }
+  }, []);
+
+
   return (
     <>
       <NavigationContainer>
@@ -61,12 +73,12 @@ export default () => {
   return (
     <ContextProvider>
       <ThemeProvider>
-        <PaperProvider>
-          <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-            {/* <TopBar /> */}
-            <App />
-          </SafeAreaView>
-        </PaperProvider>
+          <PaperProvider>
+            <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+              {/* <TopBar /> */}
+              <App />
+            </SafeAreaView>
+          </PaperProvider>
       </ThemeProvider>
     </ContextProvider>
   )

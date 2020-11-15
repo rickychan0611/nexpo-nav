@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import Swiper from 'react-native-web-swiper';
 import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 import { Context } from "../../context/Context";
+import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export default function ImageSwiper({ images, uploading }) {
   const swiperRef = useRef(null);
@@ -47,7 +48,7 @@ export default function ImageSwiper({ images, uploading }) {
         </Swiper>
         :
         <ImageContainer>
-          {uploading ? <ActivityIndicator size="large"/> : <Image source={imagePlaceholder} />}
+          {uploading ? <ActivityIndicator size="large" animating={true} /> : <Image source={imagePlaceholder} />}
         </ImageContainer>
       }
 

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { db } from "../../firebase";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Context } from "../../context/Context";
 
@@ -8,11 +9,62 @@ import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import { Title } from 'react-native-paper';
 
+// import onCreateProductSubmit from 'onCreateProductSubmit';
+
 export default function AdminTopBar() {
   const { theme } = useContext(ThemeContext);
   const { title } = useContext(Context);
 
-  const { setOpenWebAdminMenu, openWebAdminMenu } = useContext(Context);
+  const { 
+    setOpenWebAdminMenu, openWebAdminMenu,
+    product, setProduct,
+    selectedCategory, setSelectedCategory,
+    productInitValue,
+    createProductErrMsg, setCreateProductErrMsg
+  } = useContext(Context);
+
+  const onCreateProductSubmit = () => {
+    console.log("Clicked")
+    const productRef = db.collection("products").doc()
+    const timestamp = new Date()
+    product.category = selectedCategory
+    console.log(product)
+    
+    //handle Errors
+    if (!product.chineseName){
+      setCreateProductErrMsg(prev => ({ ...prev, chineseName : "Cannot be empty"}))
+    }
+    if (!product.englishName){
+      setCreateProductErrMsg(prev => ({ ...prev, englishName : "Cannot be empty"}))
+    }
+    if (!product.qty){
+      setCreateProductErrMsg(prev => ({ ...prev, qty : "Cannot be empty"}))
+    }
+    if (!product.price){
+      setCreateProductErrMsg(prev => ({ ...prev, price : "Cannot be empty"}))
+    }
+    if (!product.unit){
+      setCreateProductErrMsg(prev => ({ ...prev, unit : "Cannot be empty"}))
+    }
+    if (!product.ch_description){
+      setCreateProductErrMsg(prev => ({ ...prev, ch_description : "Cannot be empty"}))
+    }
+    if (!product.en_description){
+      setCreateProductErrMsg(prev => ({ ...prev, englishName : "Cannot be empty"}))
+    }
+
+    productRef.set({
+      ...product,
+      uid: productRef.id,
+      createAt: timestamp,
+    })
+      .then(() => {
+        setProduct(productInitValue)
+        setSelectedCategory([])
+      })
+      .catch(error => console.log(error))
+  }
+
   return (
     <>
       <Container theme={theme} style={{
@@ -41,16 +93,20 @@ export default function AdminTopBar() {
           <Header theme={theme}>Admin Panel </Header>
 
         </View>
+
+        {/* save button */}
         <IconWrapper>
-          <TouchableOpacity
-            onPress={() => { setOpenWebAdminMenu(true) }}>
+          <TouchableOpacity style={{flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center"}}
+            onPress={() => { onCreateProductSubmit() }}>
+            <Text style={{fontSize: 22, color: "white"}}>Save </Text>
             <Icon
-              name='bars'
-              type='font-awesome'
-              color={theme.TopBarTitleColor}
-            />
+                name='save'
+                type='font-awesome'
+                color={theme.TopBarTitleColor}
+              />
           </TouchableOpacity>
         </IconWrapper>
+
       </Container>
     </>
   )

@@ -9,6 +9,7 @@ const ThemeProvider = ({ children }) => {
   const lightGrey = "#f0f0f0"
   const darkGrey = "#636363"
   const lightYellow = "#fffff2"
+  const green = "#4db6ac"
 
   const theme = {
     TopBarBackgroundColor: red,
@@ -20,7 +21,7 @@ const ThemeProvider = ({ children }) => {
 
     titleColor:darkGrey,
 
-    red, lightGrey, darkGrey, lightYellow
+    red, lightGrey, darkGrey, lightYellow, green
 
   }
 

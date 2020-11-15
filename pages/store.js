@@ -49,7 +49,7 @@ export default function Store({ ssrData }) {
             // value={"search"}
             lightTheme
             platform="ios"
-            containerStyle={{ width: "100%", maxWidth: 500, backgroundColor: "white" }}
+            containerStyle={{ width: "100%", maxWidth: "500px", backgroundColor: "white" }}
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           />
