@@ -8,7 +8,6 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import validator from 'validator';
-import { TextInputMask, MaskService } from 'react-native-masked-text'
 
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors } from 'react-native-paper';
@@ -29,6 +28,9 @@ export default function CreateProduct() {
   const [unitErr, setUnitErr] = useState("");
   const [priceErr, setPriceErr] = useState("");
   const [descriptionErr, setDescriptionErr] = useState("");
+  const [discount_amt_err, setDiscount_amt_err] = useState("");
+  const [discount_precent_err, setDiscount_precent_err] = useState("");
+  const [original_price_err, setOriginal_price_err] = useState("");
 
   const {
     categories, setCategories,
@@ -44,41 +46,85 @@ export default function CreateProduct() {
   const handleChange = (name, value) => {
 
     if (name === "original_price") {
-      var t = value;
-      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
-      final_price = +value - +product.discount_amt - (+product.original_price * +value/100)
-    }
-    if (name === "discount_amt") {
-      var t = value;
-      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
-      final_price = +product.original_price - +value
-      let discount_precent = (+value / +product.original_price ) * 100
+      setOriginal_price_err("")
+      setDiscount_amt_err("")
+      setDiscount_precent_err("")
       setProduct(prev => {
-        return { ...prev, [name]: value, final_price, discount_precent }
+        return { ...prev, discount_precent: "0", discount_amt: "0" }
       })
-    }
-    if (name === "discount_precent") {
+
       var t = value;
-      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 0)) : t;
-      final_price = +product.original_price - (+product.original_price * +value/100)
-      let discount_amt = (+product.original_price * +value) / 100
+      value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+
       setProduct(prev => {
-        return { ...prev, [name]: value, final_price, discount_amt }
+        return { ...prev, [name]: value, final_price: value }
       })
     }
 
+    else if (name === "discount_amt") {
+      if (+value <= +product.original_price && +value >= 0) {
+        setDiscount_amt_err("")
 
-    setProduct(prev => {
-      return { ...prev, [name]: value, final_price: final_price }
+        var t = value;
+        value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
+        final_price = +product.original_price - +value
+        let discount_precent = ((+value / +product.original_price) * 100).toFixed(0)
+
+        setProduct(prev => {
+          return { ...prev, [name]: value, final_price, discount_precent }
+        })
+      }
+
+      if (+value > +product.original_price) {
+        setDiscount_amt_err("Cannot be greater than original price")
+      }
+      if (+value < 0) {
+        setDiscount_amt_err("Cannot be smaller than zero")
+      }
+      if (!product.original_price) {
+        setDiscount_amt_err("Please enter the original price 1st.")
+        setOriginal_price_err("Price cannot be empty.")
+      }
+    }
+
+    else if (name === "discount_precent") {
+      if (+value <= 100 && +value >= 0) {
+        setDiscount_precent_err("")
+
+        var t = value;
+        value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 0)) : t;
+        final_price = +product.original_price - (+product.original_price * +value / 100)
+        let discount_amt = ((+product.original_price * +value) / 100).toFixed(2)
+
+        setProduct(prev => {
+          return { ...prev, [name]: value, final_price, discount_amt }
+        })
+      }
+
+      if (+value > 100) {
+        setDiscount_precent_err("Cannot be greater than 100%")
+      }
+      if (+value < 0) {
+        setDiscount_precent_err("Cannot be smaller than zero")
+      }
+      if (!product.original_price) {
+        setDiscount_precent_err("Please enter the original price 1st.")
+        setOriginal_price_err("Price cannot be empty.")
+      }
+    }
+
+
+    else setProduct(prev => {
+      return { ...prev, [name]: value }
     })
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     // setTimeout(()=>{
-      setProduct(prev=>prev)
-      console.log(product)
+    setProduct(prev => prev)
+    console.log(product)
     // },[500])
-  },[product])
+  }, [product])
   // const onCreateProductSubmit = () => {
   //   console.log("Clicked")
   //   const productRef = db.collection("products").doc()
@@ -345,7 +391,7 @@ export default function CreateProduct() {
               <InputView style={{ flex: 1 }}>
                 <TextInput
                   label="Original Price"
-                  placeholder='Original Price'
+                  placeholder='Enter a price'
                   style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
                   theme={{ colors: { primary: "grey" } }}
                   left={
@@ -363,9 +409,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
+                  error={original_price_err}
                 />
-                <HelperText type="error" visible={!!priceErr}>
-                  {priceErr}
+                <HelperText type="error" visible={original_price_err}>
+                  {original_price_err}
                 </HelperText>
               </InputView>
 
@@ -412,7 +459,7 @@ export default function CreateProduct() {
               <InputView style={{ flex: 1 }}>
                 <TextInput
                   label="Disount (-$)"
-                  placeholder='Disount Amount'
+                  placeholder={product.discount_amt}
                   style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
                   theme={{ colors: { primary: "grey" } }}
                   left={
@@ -422,7 +469,7 @@ export default function CreateProduct() {
                   }
                   mode="outlined"
                   dense
-                  value={(+product.discount_amt).toString()}
+                  value={product.discount_amt}
                   keyboardType="decimal-pad"
                   onChangeText={value => {
                     if (!value || validator.isFloat(value)) {
@@ -430,9 +477,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
+                  error={discount_amt_err}
                 />
-                <HelperText type="error" visible={!!priceErr}>
-                  {priceErr}
+                <HelperText type="error" visible={discount_amt_err}>
+                  {discount_amt_err}
                 </HelperText>
               </InputView>
 
@@ -457,9 +505,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
+                  error={discount_precent_err}
                 />
-                <HelperText type="error" visible={!!priceErr}>
-                  {priceErr}
+                <HelperText type="error" visible={discount_precent_err}>
+                  {discount_precent_err}
                 </HelperText>
               </InputView>
 
