@@ -16,6 +16,8 @@ const productInitValue = {
   unit: "",
   description: "",
   category: [],
+  featured: false,
+  activated: true
 }
 
 const ContextProvider = ({ children }) => {

@@ -10,7 +10,7 @@ import styled from "styled-components/native";
 import validator from 'validator';
 
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors } from 'react-native-paper';
+import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch  } from 'react-native-paper';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
@@ -112,7 +112,6 @@ export default function CreateProduct() {
         setOriginal_price_err("Price cannot be empty.")
       }
     }
-
 
     else setProduct(prev => {
       return { ...prev, [name]: value }
@@ -304,6 +303,10 @@ export default function CreateProduct() {
           elevation: 5,
         }}>
           <Card.Content>
+            <Row><Subheading >Activate</Subheading ><Switch value={product.activated} onValueChange={()=>handleChange("activated", !product.activated)} /></Row>
+            <Divider style={{ margin: 20 }} />
+            <Row><Subheading >Featured product</Subheading ><Switch value={product.featured} onValueChange={()=>handleChange("featured", !product.featured)} /></Row>
+            <Divider style={{ margin: 20 }} />
             <InputView>
               <TextInput
                 label="Chinese Name"
@@ -342,7 +345,7 @@ export default function CreateProduct() {
             <InputView>
               <TextInput
                 label="Quantity"
-                placeholder='Quantity'
+                placeholder='How many in stock?'
                 style={{ backgroundColor: theme.InputBoxBackgroundColor }}
                 theme={{ colors: { primary: "grey" } }}
                 mode="outlined"
@@ -364,7 +367,7 @@ export default function CreateProduct() {
             <InputView>
               <TextInput
                 label="Unit"
-                placeholder='Unit'
+                placeholder='Eg. each, lbs, 6pcs or 4/pack'
                 style={{ backgroundColor: theme.InputBoxBackgroundColor }}
                 theme={{ colors: { primary: "grey" } }}
                 mode="outlined"
@@ -379,15 +382,7 @@ export default function CreateProduct() {
             </InputView>
 
             {/* Price Row */}
-            <View
-              style={{
-                // flex: 1,
-                flexDirection: "row",
-                flexWrap: "nowrap",
-                justifyContent: "space-between",
-              }}>
-
-
+            <Row>
               <InputView style={{ flex: 1 }}>
                 <TextInput
                   label="Original Price"
@@ -444,21 +439,14 @@ export default function CreateProduct() {
                 </HelperText>
               </InputView>
 
-            </View>
+            </Row>
 
             {/* Discount Row */}
-            <View
-              style={{
-                // flex: 1,
-                flexDirection: "row",
-                flexWrap: "nowrap",
-                justifyContent: "space-between",
-              }}>
-
+            <Row>
 
               <InputView style={{ flex: 1 }}>
                 <TextInput
-                  label="Disount (-$)"
+                  label="Discount (-$)"
                   placeholder={product.discount_amt}
                   style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
                   theme={{ colors: { primary: "grey" } }}
@@ -512,7 +500,7 @@ export default function CreateProduct() {
                 </HelperText>
               </InputView>
 
-            </View>
+              </Row>
 
             <InputView>
               <TextInput
@@ -682,5 +670,10 @@ const CategoriesCard = styled.View`
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: flex-start;
+`;
+const Row = styled.View`
+ flex-direction: row;
+ flex-wrap: nowrap;
+ justify-content: space-between;
 `;
 
