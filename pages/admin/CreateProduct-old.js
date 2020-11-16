@@ -10,7 +10,7 @@ import styled from "styled-components/native";
 import validator from 'validator';
 
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch  } from 'react-native-paper';
+import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption } from 'react-native-paper';
 
 import { db } from "../../firebase";
 import ImageSwiper from "../../components/ImageSwiper";
@@ -21,6 +21,7 @@ export default function CreateProduct() {
 
   const { navigate } = useRouting();
   const [showNewCategory, setShowNewCategory] = useState(false);
+  const [error, setError] = useState({});
   const [catErrMsg, setCatErrMsg] = useState("");
   const [englishNameErr, setEnglishNameErr] = useState("eorr");
   const [chineseNameErr, setChineseNameErr] = useState("");
@@ -28,7 +29,7 @@ export default function CreateProduct() {
   const [unitErr, setUnitErr] = useState("");
   const [priceErr, setPriceErr] = useState("");
   const [descriptionErr, setDescriptionErr] = useState("");
-  const [discount_amt_err, setDiscount_amt_err] = useState("");
+  // const [discount_amt_err, setDiscount_amt_err] = useState("");
   const [discount_precent_err, setDiscount_precent_err] = useState("");
   const [original_price_err, setOriginal_price_err] = useState("");
 
@@ -49,16 +50,12 @@ export default function CreateProduct() {
       setOriginal_price_err("")
       setDiscount_amt_err("")
       setDiscount_precent_err("")
-      setProduct(prev => {
-        return { ...prev, discount_precent: "0", discount_amt: "0" }
-      })
+      setProduct(prev => ({ ...prev, discount_precent: "0", discount_amt: "0" }))
 
       var t = value;
       value = (t.indexOf(".") >= 0) ? (t.substr(0, t.indexOf(".")) + t.substr(t.indexOf("."), 3)) : t;
 
-      setProduct(prev => {
-        return { ...prev, [name]: value, final_price: value }
-      })
+      setProduct(prev => ({ ...prev, [name]: value, final_price: value }) )
     }
 
     else if (name === "discount_amt") {
@@ -70,20 +67,18 @@ export default function CreateProduct() {
         final_price = +product.original_price - +value
         let discount_precent = ((+value / +product.original_price) * 100).toFixed(0)
 
-        setProduct(prev => {
-          return { ...prev, [name]: value, final_price, discount_precent }
-        })
+        setProduct(prev => ({ ...prev, [name]: value, final_price, discount_precent }))
       }
 
       if (+value > +product.original_price) {
-        setDiscount_amt_err("Cannot be greater than original price")
+        setError(prev=>({...prev, discount_amt_err: "Cannot be greater than original price"}))
       }
       if (+value < 0) {
-        setDiscount_amt_err("Cannot be smaller than zero")
+        setError(prev=>({...prev, discount_amt_err: "Cannot be smaller than zero"}))
       }
       if (!product.original_price) {
-        setDiscount_amt_err("Please enter the original price 1st.")
-        setOriginal_price_err("Price cannot be empty.")
+        setError(prev=>({...prev, discount_amt_err: "Please enter the original price 1st."}))
+        setError(prev=>({...prev, original_price_err: "Price cannot be empty."}))
       }
     }
 
@@ -96,20 +91,18 @@ export default function CreateProduct() {
         final_price = +product.original_price - (+product.original_price * +value / 100)
         let discount_amt = ((+product.original_price * +value) / 100).toFixed(2)
 
-        setProduct(prev => {
-          return { ...prev, [name]: value, final_price, discount_amt }
-        })
+        setProduct(prev => ({ ...prev, [name]: value, final_price, discount_amt }))
       }
 
       if (+value > 100) {
-        setDiscount_precent_err("Cannot be greater than 100%")
+        setError(prev=>({...prev, discount_precent_err: "Cannot be greater than 100%"}))
       }
       if (+value < 0) {
-        setDiscount_precent_err("Cannot be smaller than zero")
+        setError(prev=>({...prev, discount_precent_err: "Cannot be smaller than zero"}))
       }
       if (!product.original_price) {
-        setDiscount_precent_err("Please enter the original price 1st.")
-        setOriginal_price_err("Price cannot be empty.")
+        setError(prev=>({...prev, discount_precent_err: "Please enter the original price 1st."}))
+        setError(prev=>({...prev, original_price_err: "Price cannot be empty."}))
       }
     }
 
@@ -305,7 +298,7 @@ export default function CreateProduct() {
           <Card.Content>
             <Row><Subheading >Activate</Subheading ><Switch value={product.activated} onValueChange={()=>handleChange("activated", !product.activated)} /></Row>
             <Divider style={{ margin: 20 }} />
-            <Row><Subheading >Featured product</Subheading ><Switch value={product.featured} onValueChange={()=>handleChange("featured", !product.featured)} /></Row>
+            <Row><Subheading >Featured Product</Subheading ><Switch value={product.featured} onValueChange={()=>handleChange("featured", !product.featured)} /></Row>
             <Divider style={{ margin: 20 }} />
             <InputView>
               <TextInput
@@ -321,8 +314,8 @@ export default function CreateProduct() {
                 value={product.chineseName}
                 onChangeText={value => { handleChange("chineseName", value) }}
               />
-              <HelperText type="error" visible={!!chineseNameErr}>
-                {chineseNameErr}
+              <HelperText type="error" visible={error.chineseNameErr}>
+                {error.chineseNameErr}
               </HelperText>
             </InputView>
 
@@ -337,8 +330,8 @@ export default function CreateProduct() {
                 value={product.englishName}
                 onChangeText={value => { handleChange("englishName", value) }}
               />
-              <HelperText type="error" visible={!!englishNameErr}>
-                {englishNameErr}
+              <HelperText type="error" visible={error.englishNameErr}>
+                {error.englishNameErr}
               </HelperText>
             </InputView>
 
@@ -359,8 +352,8 @@ export default function CreateProduct() {
                 }
                 }
               />
-              <HelperText type="error" visible={!!qtyErr}>
-                {qtyErr}
+              <HelperText type="error" visible={error.qtyErr}>
+                {error.qtyErr}
               </HelperText>
             </InputView>
 
@@ -376,8 +369,8 @@ export default function CreateProduct() {
                 keyboardType="number-pad"
                 onChangeText={value => { handleChange("unit", value) }}
               />
-              <HelperText type="error" visible={!!unitErr}>
-                {unitErr}
+              <HelperText type="error" visible={error.unitErr}>
+                {error.unitErr}
               </HelperText>
             </InputView>
 
@@ -404,10 +397,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
-                  error={original_price_err}
+                  error={error.original_price_err}
                 />
-                <HelperText type="error" visible={original_price_err}>
-                  {original_price_err}
+                <HelperText type="error" visible={error.original_price_err}>
+                  {error.original_price_err}
                 </HelperText>
               </InputView>
 
@@ -434,8 +427,8 @@ export default function CreateProduct() {
                   }
                   }
                 />
-                <HelperText type="error" visible={!!priceErr}>
-                  {priceErr}
+                <HelperText type="error" visible={error.priceErr}>
+                  {error.priceErr}
                 </HelperText>
               </InputView>
 
@@ -465,10 +458,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
-                  error={discount_amt_err}
+                  error={error.discount_amt_err}
                 />
-                <HelperText type="error" visible={discount_amt_err}>
-                  {discount_amt_err}
+                <HelperText type="error" visible={error.discount_amt_err}>
+                  {error.discount_amt_err}
                 </HelperText>
               </InputView>
 
@@ -493,10 +486,10 @@ export default function CreateProduct() {
                     }
                   }
                   }
-                  error={discount_precent_err}
+                  error={error.discount_precent_err}
                 />
-                <HelperText type="error" visible={discount_precent_err}>
-                  {discount_precent_err}
+                <HelperText type="error" visible={error.discount_precent_err}>
+                  {error.discount_precent_err}
                 </HelperText>
               </InputView>
 
@@ -516,8 +509,8 @@ export default function CreateProduct() {
                 value={product.description}
                 onChangeText={value => { handleChange("ch_description", value) }}
               />
-              <HelperText type="error" visible={!!descriptionErr}>
-                {descriptionErr}
+              <HelperText type="error" visible={error.descriptionErr}>
+                {error.descriptionErr}
               </HelperText>
             </InputView>
 

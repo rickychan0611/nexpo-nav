@@ -36,7 +36,7 @@ const ContextProvider = ({ children }) => {
   const [swiperControl, setSwiperControl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [product, setProduct] = useState(productInitValue);
-  const [createProductErrMsg, setCreateProductErrMsg] = useState({});
+  const [error, setError] = useState({});
 
   // useEffect(() => {
   //   auth.onAuthStateChanged((user) => {
@@ -68,8 +68,7 @@ const ContextProvider = ({ children }) => {
           selectedCategory, setSelectedCategory,
           product, setProduct,
           productInitValue,
-          createProductErrMsg, setCreateProductErrMsg
-        }
+          error, setError        }
       }
     >
       {children}

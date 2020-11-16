@@ -17,7 +17,7 @@ import ProductCard from "../../components/ProductCard";
 import AppContainer from "../../components/AppContainer";
 import AdminTopBar from "../../components/AdminTopBar";
 import AdminSideBar from "../../components/AdminSideBar";
-import CreateProduct from "./CreateProduct";
+import CreateProduct from "./CreateProduct/CreateProduct";
 
 import dataJson from '../../public/db.json';
 import CartCheckoutBar from "../../components/CartCheckoutBar";
