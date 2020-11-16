@@ -13,14 +13,10 @@ import onCreateProductSubmit from './onCreateProductSubmit';
 
 export default function AdminTopBar() {
   const { theme } = useContext(ThemeContext);
-  const { title } = useContext(Context);
+  const { error } = useContext(Context);
 
-  const { 
-    setOpenWebAdminMenu, openWebAdminMenu,
-    product, setProduct,
-    selectedCategory, setSelectedCategory,
-    productInitValue,
-    createProductErrMsg, setCreateProductErrMsg
+  const {
+    setOpenWebAdminMenu
   } = useContext(Context);
 
   const ctx = useContext(Context);
@@ -37,7 +33,7 @@ export default function AdminTopBar() {
         shadowRadius: 5,
         elevation: 5,
       }}>
-        <View style={{flex:1, flexDirection: "row", flexWrap: "nowrap"}}>
+        <View style={{ flex: 1, flexDirection: "row", flexWrap: "nowrap" }}>
 
           <IconWrapper>
             <TouchableOpacity
@@ -56,14 +52,19 @@ export default function AdminTopBar() {
 
         {/* save button */}
         <IconWrapper>
-          <TouchableOpacity style={{flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center"}}
-            onPress={() => { onCreateProductSubmit(ctx) }}>
-            <Text style={{fontSize: 22, color: "white"}}>SAVE </Text>
+          <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
+            onPress={() => {
+              onCreateProductSubmit(ctx)
+              if (error) {
+                alert("Some fields contain errors. Please check and try again." )
+              }
+            }}>
+            <Text style={{ fontSize: 22, color: "white" }}>SAVE </Text>
             <Icon
-                name='save'
-                type='font-awesome'
-                color={theme.TopBarTitleColor}
-              />
+              name='save'
+              type='font-awesome'
+              color={theme.TopBarTitleColor}
+            />
           </TouchableOpacity>
         </IconWrapper>
 

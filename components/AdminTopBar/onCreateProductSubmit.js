@@ -7,7 +7,7 @@ const onCreateProductSubmit = (ctx) => {
   const timestamp = new Date()
   
   console.log("Clicked")
-  setError({})
+  setError()
 
   product.category = selectedCategory
   console.log(product)
