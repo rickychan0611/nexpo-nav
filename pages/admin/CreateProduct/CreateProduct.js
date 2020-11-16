@@ -213,7 +213,7 @@ export default function CreateProduct() {
             <Divider style={{ margin: 20 }} />
 
             <Row>
-              <Subheading>Featured Product</Subheading >
+              <Subheading>Feature Product</Subheading >
               <Switch value={product.featured} onValueChange={() => handleChange("featured", !product.featured, ctx)} />
             </Row>
             <Divider style={{ margin: 20 }} />
