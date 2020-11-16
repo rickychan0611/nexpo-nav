@@ -7,7 +7,7 @@ import { storage } from '../../../firebase';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
-import handleChange from "./handleChange";
+import onCreateProductInputChange from "../../../hooks/onCreateProductInputChange";
 
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption } from 'react-native-paper';
@@ -19,7 +19,7 @@ import ImageSwiper from "../../../components/ImageSwiper";
 import * as ImagePicker from 'expo-image-picker';
 
 export default function CreateProduct() {
-
+  
   const { navigate } = useRouting();
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [catErrMsg, setCatErrMsg] = useState("");
@@ -207,14 +207,14 @@ export default function CreateProduct() {
 
             <Row>
               <Subheading>Activate</Subheading >
-              <Switch value={product.activated} onValueChange={() => handleChange("activated", !product.activated, ctx)} />
+              <Switch value={product.activated} onValueChange={() => onCreateProductInputChange("activated", !product.activated, ctx)} />
             </Row>
 
             <Divider style={{ margin: 20 }} />
 
             <Row>
               <Subheading>Feature Product</Subheading >
-              <Switch value={product.featured} onValueChange={() => handleChange("featured", !product.featured, ctx)} />
+              <Switch value={product.featured} onValueChange={() => onCreateProductInputChange("featured", !product.featured, ctx)} />
             </Row>
             <Divider style={{ margin: 20 }} />
 

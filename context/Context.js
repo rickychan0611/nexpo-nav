@@ -14,7 +14,8 @@ const productInitValue = {
   discount_precent: "0",
   qty: "",
   unit: "",
-  description: "",
+  ch_description: "",
+  en_description: "",
   category: [],
   featured: false,
   activated: true

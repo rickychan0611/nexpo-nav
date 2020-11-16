@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
-import { Context } from "../../../context/Context";
-import handleChange from "./handleChange";
-import styled from "styled-components/native";
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption } from 'react-native-paper';
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
+import { Context } from "../../../context/Context";
+import onCreateProductInputChange from "../../../hooks/onCreateProductInputChange";
+import styled from "styled-components/native";
+import { TextInput, HelperText  } from 'react-native-paper';
 import { ThemeContext } from "../../../context/ThemeContext";
 import validator from 'validator';
 
@@ -16,7 +16,8 @@ export default function InputFields() {
 
   const { theme } = useContext(ThemeContext);
 
-  
+  // const onCreateProductInputChange = useonCreateProductInputChange(name, value, ctx);
+
   return (
     <>
       <InputView>
@@ -31,7 +32,7 @@ export default function InputFields() {
           mode="outlined"
           dense
           value={product.chineseName}
-          onChangeText={value => { handleChange("chineseName", value, ctx) }}
+          onChangeText={value => { onCreateProductInputChange("chineseName", value, ctx) }}
           error={error.chineseName}
         />
         <HelperText type="error" visible={error.chineseName}>
@@ -48,7 +49,7 @@ export default function InputFields() {
           label="English Name"
           placeholder='English Name'
           value={product.englishName}
-          onChangeText={value => { handleChange("englishName", value, ctx) }}
+          onChangeText={value => { onCreateProductInputChange("englishName", value, ctx) }}
           error={error.englishName}
         />
         <HelperText type="error" visible={error.englishName}>
@@ -68,7 +69,7 @@ export default function InputFields() {
           keyboardType="number-pad"
           onChangeText={value => {
             if (!value || validator.isInt(value)) {
-              handleChange("qty", value)
+              onCreateProductInputChange("qty", value, ctx)
             }
           }
           }
@@ -89,7 +90,7 @@ export default function InputFields() {
           dense
           value={product.unit}
           keyboardType="number-pad"
-          onChangeText={value => { handleChange("unit", value, ctx) }}
+          onChangeText={value => { onCreateProductInputChange("unit", value, ctx) }}
           error={error.unit}
         />
         <HelperText type="error" visible={error.unit}>
@@ -116,7 +117,7 @@ export default function InputFields() {
             keyboardType="decimal-pad"
             onChangeText={value => {
               if (!value || validator.isFloat(value)) {
-                handleChange("original_price", value, ctx)
+                onCreateProductInputChange("original_price", value, ctx)
               }
             }
             }
@@ -145,7 +146,7 @@ export default function InputFields() {
             keyboardType="decimal-pad"
             onChangeText={value => {
               if (!value || validator.isFloat(value)) {
-                handleChange("final_price", value, ctx)
+                onCreateProductInputChange("final_price", value, ctx)
               }
             }
             }
@@ -177,7 +178,7 @@ export default function InputFields() {
             keyboardType="decimal-pad"
             onChangeText={value => {
               if (!value || validator.isFloat(value)) {
-                handleChange("discount_amt", value, ctx)
+                onCreateProductInputChange("discount_amt", value, ctx)
               }
             }
             }
@@ -205,7 +206,7 @@ export default function InputFields() {
             keyboardType="decimal-pad"
             onChangeText={value => {
               if (!value || validator.isFloat(value)) {
-                handleChange("discount_precent", value, ctx)
+                onCreateProductInputChange("discount_precent", value, ctx)
               }
             }
             }
@@ -229,8 +230,8 @@ export default function InputFields() {
           multiline
           numberOfLines={3}
           theme={{ colors: { primary: "grey" } }}
-          value={product.description}
-          onChangeText={value => { handleChange("ch_description", value, ctx) }}
+          value={product.ch_description}
+          onChangeText={value => { onCreateProductInputChange("ch_description", value, ctx) }}
           error={error.ch_description}
         />
         <HelperText type="error" visible={error.ch_description}>
@@ -249,8 +250,8 @@ export default function InputFields() {
           multiline
           numberOfLines={3}
           theme={{ colors: { primary: "grey" } }}
-          value={product.description}
-          onChangeText={value => { handleChange("en_description", value, ctx) }}
+          value={product.en_description}
+          onChangeText={value => { onCreateProductInputChange("en_description", value, ctx) }}
           error={error.en_description}
         />
         <HelperText type="error" visible={error.en_description}>

@@ -1,5 +1,4 @@
-const handleChange = (name, value, ctx) => {
-
+export default function onCreateProductInputChange (name, value, ctx) {
   let final_price = 0;
 
   const { setError, product, setProduct } = ctx;
@@ -72,9 +71,5 @@ const handleChange = (name, value, ctx) => {
     }
   }
 
-  else setProduct(prev => {
-    return { ...prev, [name]: value }
-  })
+  else setProduct(prev => ( { ...prev, [name]: value } ))
 };
-
-export default handleChange;
