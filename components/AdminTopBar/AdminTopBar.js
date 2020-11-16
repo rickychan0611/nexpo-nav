@@ -9,7 +9,7 @@ import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import { Title } from 'react-native-paper';
 
-// import onCreateProductSubmit from 'onCreateProductSubmit';
+import onCreateProductSubmit from './onCreateProductSubmit';
 
 export default function AdminTopBar() {
   const { theme } = useContext(ThemeContext);
@@ -23,9 +23,7 @@ export default function AdminTopBar() {
     createProductErrMsg, setCreateProductErrMsg
   } = useContext(Context);
 
-
-  
-
+  const ctx = useContext(Context);
 
   return (
     <>
@@ -59,8 +57,8 @@ export default function AdminTopBar() {
         {/* save button */}
         <IconWrapper>
           <TouchableOpacity style={{flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center"}}
-            onPress={() => { onCreateProductSubmit() }}>
-            <Text style={{fontSize: 22, color: "white"}}>Save </Text>
+            onPress={() => { onCreateProductSubmit(ctx) }}>
+            <Text style={{fontSize: 22, color: "white"}}>SAVE </Text>
             <Icon
                 name='save'
                 type='font-awesome'

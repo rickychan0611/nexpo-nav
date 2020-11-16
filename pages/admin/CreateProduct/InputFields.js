@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import React, {useContext} from "react";
 import { Context } from "../../../context/Context";
 import handleChange from "./handleChange";
 import styled from "styled-components/native";
@@ -32,9 +32,10 @@ export default function InputFields() {
           dense
           value={product.chineseName}
           onChangeText={value => { handleChange("chineseName", value, ctx) }}
+          error={error.chineseName}
         />
-        <HelperText type="error" visible={error.chineseNameErr}>
-          {error.chineseNameErr}
+        <HelperText type="error" visible={error.chineseName}>
+          {error.chineseName}
         </HelperText>
       </InputView>
 
@@ -48,9 +49,10 @@ export default function InputFields() {
           placeholder='English Name'
           value={product.englishName}
           onChangeText={value => { handleChange("englishName", value, ctx) }}
+          error={error.englishName}
         />
-        <HelperText type="error" visible={error.englishNameErr}>
-          {error.englishNameErr}
+        <HelperText type="error" visible={error.englishName}>
+          {error.englishName}
         </HelperText>
       </InputView>
 
@@ -70,9 +72,10 @@ export default function InputFields() {
             }
           }
           }
+          error={error.qty}
         />
-        <HelperText type="error" visible={error.qtyErr}>
-          {error.qtyErr}
+        <HelperText type="error" visible={error.qty}>
+          {error.qty}
         </HelperText>
       </InputView>
 
@@ -87,9 +90,10 @@ export default function InputFields() {
           value={product.unit}
           keyboardType="number-pad"
           onChangeText={value => { handleChange("unit", value, ctx) }}
+          error={error.unit}
         />
-        <HelperText type="error" visible={error.unitErr}>
-          {error.unitErr}
+        <HelperText type="error" visible={error.unit}>
+          {error.unit}
         </HelperText>
       </InputView>
 
@@ -227,9 +231,10 @@ export default function InputFields() {
           theme={{ colors: { primary: "grey" } }}
           value={product.description}
           onChangeText={value => { handleChange("ch_description", value, ctx) }}
+          error={error.ch_description}
         />
-        <HelperText type="error" visible={error.descriptionErr}>
-          {error.descriptionErr}
+        <HelperText type="error" visible={error.ch_description}>
+          {error.ch_description}
         </HelperText>
       </InputView>
 
@@ -246,9 +251,10 @@ export default function InputFields() {
           theme={{ colors: { primary: "grey" } }}
           value={product.description}
           onChangeText={value => { handleChange("en_description", value, ctx) }}
+          error={error.en_description}
         />
-        <HelperText type="error" visible={error.descriptionErr}>
-          {error.descriptionErr}
+        <HelperText type="error" visible={error.en_description}>
+          {error.en_description}
         </HelperText>
       </InputView>
     </>)

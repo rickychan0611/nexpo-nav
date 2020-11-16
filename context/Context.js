@@ -34,7 +34,7 @@ const ContextProvider = ({ children }) => {
   const [title, setTitle] = useState("Add a product");
   const [images, setImages] = useState(null);
   const [swiperControl, setSwiperControl] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(["other"]);
   const [product, setProduct] = useState(productInitValue);
   const [error, setError] = useState({});
 

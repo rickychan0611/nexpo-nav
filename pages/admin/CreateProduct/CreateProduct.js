@@ -22,7 +22,6 @@ export default function CreateProduct() {
 
   const { navigate } = useRouting();
   const [showNewCategory, setShowNewCategory] = useState(false);
-  const [error, setError] = useState({});
   const [catErrMsg, setCatErrMsg] = useState("");
 
   const {
@@ -30,7 +29,7 @@ export default function CreateProduct() {
     images, setImages,
     swiperControl, setSwiperControl,
     selectedCategory, setSelectedCategory,
-    product, setProduct
+    product, setProduct, error
   } = useContext(Context);
 
   const ctx = useContext(Context);
@@ -42,6 +41,7 @@ export default function CreateProduct() {
     // setTimeout(()=>{
     setProduct(prev => prev)
     console.log(product)
+    console.log(error)
     // },[500])
   }, [product])
 
@@ -221,10 +221,31 @@ export default function CreateProduct() {
             <MyCard>
               <Card.Content>
                 <InputFields />
-
-                <Subheading styles={{ marginBottom: 130 }} >Select/Create Categories</Subheading>
-
+                <Headline styles={{ marginBottom: 130 }} >Category:</Headline>
+                {/* <Subheading styles={{ marginBottom: 130 }} >Select at least one category or create one.</Subheading> */}
+                <Text style={{color: "red"}}>
+                  {error.category_err}
+                </Text>
                 <View style={{ padding: 0, marginBottom: 20 }}>
+
+                  <View >
+                    <Checkbox.Item
+                      label="No Category / Other"
+                      labelStyle={{ color: theme.darkGrey }}
+                      status={selectedCategory.indexOf("other") === -1 ? "unchecked" : "checked"}
+                      onPress={() => {
+                        if (selectedCategory.indexOf("other") === -1) {
+                          setSelectedCategory(prev => [...prev, "other"])
+                        }
+                        else {
+                          let index = selectedCategory.indexOf("other");
+                          let arr = [...selectedCategory];
+                          arr.splice(index, 1);
+                          setSelectedCategory(arr)
+                        }
+                      }}
+                    />
+                  </View>
 
                   {categories && categories.map((item) => {
                     return (
