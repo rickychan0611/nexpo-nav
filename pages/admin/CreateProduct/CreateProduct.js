@@ -49,7 +49,7 @@ export default function CreateProduct() {
   const [cat, setCat] = useState({});
 
   const onAddCatChange = (name, value) => {
-    setCatErrMsg(prev => ({...prev, [name] : ""}))
+    setCatErrMsg(prev => ({ ...prev, [name]: "" }))
     setCat(prev => ({ ...prev, [name]: value }))
   }
 
@@ -57,27 +57,27 @@ export default function CreateProduct() {
     console.log("cat")
     console.log(cat)
 
-    let validate = new Promise((resolve, reject)=>{
+    let validate = new Promise((resolve, reject) => {
       if (!cat.chineseName) {
-        setCatErrMsg(prev => ({...prev, chineseName: "必須填寫"}))
+        setCatErrMsg(prev => ({ ...prev, chineseName: "必須填寫" }))
         reject()
       }
       if (!cat.englishName) {
-        setCatErrMsg(prev => ({...prev, englishName: "Required. Please enter a name."}))
+        setCatErrMsg(prev => ({ ...prev, englishName: "Required. Please enter a name." }))
         reject()
       }
       if (categories.some(obj => obj.chineseName.toLowerCase() === (cat.chineseName + "").toLowerCase().trim())) {
-        setCatErrMsg(prev => ({...prev, chineseName : "名字已被用，請重新輸入."}))
+        setCatErrMsg(prev => ({ ...prev, chineseName: "名字已被用，請重新輸入." }))
         reject()
       }
       if (categories.some(obj => obj.englishName.toLowerCase() === (cat.englishName + "").toLowerCase().trim())) {
-        setCatErrMsg(prev => ({...prev,englishName : "This name is taken. Please use another name."}))
+        setCatErrMsg(prev => ({ ...prev, englishName: "This name is taken. Please use another name." }))
         reject()
       }
       else resolve()
-    }) 
+    })
 
-    validate.then(()=>{
+    validate.then(() => {
       setButtonDisabled(true)
       db.collection("categories").doc().set({
         chineseName: cat.chineseName.trim(),
@@ -251,52 +251,67 @@ export default function CreateProduct() {
         </AddImageContainer>
         {uploading && <ProgressBar progress={progress} color={Colors.red800} />}
 
-        <MyCard style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.4,
-          shadowRadius: 5,
-          elevation: 5,
-        }}>
-          <Card.Content>
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
-            <Row>
-              <Subheading>Activate</Subheading >
-              <Switch value={product.activated} onValueChange={() => onCreateProductInputChange("activated", !product.activated, ctx)} />
-            </Row>
+        <Row>
+          <Subheading>Activate</Subheading >
+          <Switch value={product.activated} onValueChange={() => onCreateProductInputChange("activated", !product.activated, ctx)} />
+        </Row>
 
-            <Divider style={{ margin: 20 }} />
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
-            <Row>
-              <Subheading>Feature Product</Subheading >
-              <Switch value={product.featured} onValueChange={() => onCreateProductInputChange("featured", !product.featured, ctx)} />
-            </Row>
-            <Divider style={{ margin: 20 }} />
+        <Row>
+          <Subheading>Feature Product</Subheading >
+          <Switch value={product.featured} onValueChange={() => onCreateProductInputChange("featured", !product.featured, ctx)} />
+        </Row>
 
-            <MyCard>
-              <Card.Content>
-                <InputFields />
-                <Headline styles={{ marginBottom: 130 }} >Category:</Headline>
-                {/* <Subheading styles={{ marginBottom: 130 }} >Select at least one category or create one.</Subheading> */}
-                <Text style={{ color: "red" }}>
-                  {error.category_err}
-                </Text>
-                <View style={{ padding: 0, marginBottom: 20 }}>
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
-                  <View >
+        <InputFields />
+
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
+
+        <Title styles={{ marginBottom: 130 }} >Category:</Title>
+        {/* <Subheading styles={{ marginBottom: 130 }} >Select at least one category or create one.</Subheading> */}
+        <Text style={{ color: "red" }}>
+          {error.category_err}
+        </Text>
+        <View style={{ padding: 0, marginBottom: 20 }}>
+
+          <View >
+            <Checkbox.Item
+              label="其它 / Others"
+              labelStyle={{ color: theme.darkGrey }}
+              status={selectedCategory.indexOf("other") === -1 ? "unchecked" : "checked"}
+              onPress={() => {
+                if (selectedCategory.indexOf("other") === -1) {
+                  setSelectedCategory(prev => [...prev, "other"])
+                }
+                else {
+                  let index = selectedCategory.indexOf("other");
+                  let arr = [...selectedCategory];
+                  arr.splice(index, 1);
+                  setSelectedCategory(arr)
+                }
+              }}
+            />
+          </View>
+
+          {categories && categories.map((item) => {
+            return (
+              <>
+                {item.id !== "Others" &&
+                  <View key={item.id}>
                     <Checkbox.Item
-                      label="其它 / Others"
+                      label={item.chineseName + " / " + item.englishName}
                       labelStyle={{ color: theme.darkGrey }}
-                      status={selectedCategory.indexOf("other") === -1 ? "unchecked" : "checked"}
+                      status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
                       onPress={() => {
-                        if (selectedCategory.indexOf("other") === -1) {
-                          setSelectedCategory(prev => [...prev, "other"])
+                        if (selectedCategory.indexOf(item) === -1) {
+                          setSelectedCategory(prev => [...prev, item])
                         }
                         else {
-                          let index = selectedCategory.indexOf("other");
+                          let index = selectedCategory.indexOf(item);
                           let arr = [...selectedCategory];
                           arr.splice(index, 1);
                           setSelectedCategory(arr)
@@ -304,88 +319,61 @@ export default function CreateProduct() {
                       }}
                     />
                   </View>
+                }
+              </>
+            )
+          })}
 
-                  {categories && categories.map((item) => {
-                    return (
-                      <>
-                        {item.id !== "Others" &&
-                          <View key={item.id}>
-                            <Checkbox.Item
-                              label={item.chineseName + " / " + item.englishName}
-                              labelStyle={{ color: theme.darkGrey }}
-                              status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
-                              onPress={() => {
-                                if (selectedCategory.indexOf(item) === -1) {
-                                  setSelectedCategory(prev => [...prev, item])
-                                }
-                                else {
-                                  let index = selectedCategory.indexOf(item);
-                                  let arr = [...selectedCategory];
-                                  arr.splice(index, 1);
-                                  setSelectedCategory(arr)
-                                }
-                              }}
-                            />
-                          </View>
-                        }
-                      </>
-                    )
-                  })}
-                  <Divider style={{ margin: 20 }} />
-                  {!showNewCategory &&
-                    <Button onPress={() => setShowNewCategory(true)}>
-                      + Add a new category
-                    </Button>}
-                  {showNewCategory &&
-                    <>
-                      <InputView>
-                        <TextInput
-                          label="請輸入中文類別名字*"
-                          placeholder='中文名字'
-                          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-                          theme={{ colors: { primary: "grey" } }}
-                          mode="outlined"
-                          dense
-                          value={cat.chineseName}
-                          onChangeText={value => { onAddCatChange("chineseName", value) }}
-                          error={catErrMsg.chineseName}
-                        />
-                        <HelperText type="error" visible={catErrMsg.chineseName}>
-                          {catErrMsg.chineseName}
-                        </HelperText>
-                      </InputView>
-                      <InputView>
-                        <TextInput
-                          label="English Name*"
-                          placeholder='English Name'
-                          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-                          theme={{ colors: { primary: "grey" } }}
-                          mode="outlined"
-                          dense
-                          value={cat.englishName}
-                          onChangeText={value => { onAddCatChange("englishName", value) }}
-                          error={catErrMsg.englishName}
-                        />
-                        <HelperText type="error" visible={catErrMsg.englishName}>
-                          {catErrMsg.englishName}
-                        </HelperText>
-                      </InputView>
+          {!showNewCategory &&
+            <Button onPress={() => setShowNewCategory(true)}
+            style={{marginTop: 20}}>
+              + Add a new category
+            </Button>}
+          {showNewCategory &&
+            <>
+              <InputView>
+                <TextInput
+                  label="請輸入中文類別名字*"
+                  placeholder='中文名字'
+                  style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={cat.chineseName}
+                  onChangeText={value => { onAddCatChange("chineseName", value) }}
+                  error={catErrMsg.chineseName}
+                />
+                <HelperText type="error" visible={catErrMsg.chineseName}>
+                  {catErrMsg.chineseName}
+                </HelperText>
+              </InputView>
+              <InputView>
+                <TextInput
+                  label="English Name*"
+                  placeholder='English Name'
+                  style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={cat.englishName}
+                  onChangeText={value => { onAddCatChange("englishName", value) }}
+                  error={catErrMsg.englishName}
+                />
+                <HelperText type="error" visible={catErrMsg.englishName}>
+                  {catErrMsg.englishName}
+                </HelperText>
+              </InputView>
 
-                      <Button icon="plus" mode="contained" color={theme.green}
-                        disabled={buttonDisabled}
-                        labelStyle={{ color: "white" }}
-                        onPress={() => onAddCategory()}>
-                        Add
-                    </Button>
-                    </>
-                  }
-                </View>
+              <Button icon="plus" mode="contained" color={theme.green}
+                disabled={buttonDisabled}
+                labelStyle={{ color: "white" }}
+                onPress={() => onAddCategory()}>
+                Add
+               </Button>
+            </>
+          }
 
-              </Card.Content>
-            </MyCard>
-
-          </Card.Content>
-        </MyCard>
+        </View>
       </Container>
     </>
   );
