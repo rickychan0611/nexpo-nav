@@ -44,13 +44,14 @@ export default function panel({ ssrData }) {
     })
   };
 
+  //get categories from server
   useEffect(() => {
     db.collection("categories").get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          console.log(doc.id)
+          console.log(doc.data())
           setCategories(prev => {
-            return [...prev, doc.id]
+            return [...prev, doc.data()]
           })
         })
       })

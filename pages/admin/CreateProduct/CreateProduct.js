@@ -19,10 +19,11 @@ import ImageSwiper from "../../../components/ImageSwiper";
 import * as ImagePicker from 'expo-image-picker';
 
 export default function CreateProduct() {
-  
+
   const { navigate } = useRouting();
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [catErrMsg, setCatErrMsg] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const {
     categories, setCategories,
@@ -45,18 +46,56 @@ export default function CreateProduct() {
     // },[500])
   }, [product])
 
-  const [cat, setCat] = useState("");
-  const onAddCatChange = (value) => {
-    setCat(value)
+  const [cat, setCat] = useState({});
+
+  const onAddCatChange = (name, value) => {
+    setCatErrMsg(prev => ({...prev, [name] : ""}))
+    setCat(prev => ({ ...prev, [name]: value }))
   }
 
   const onAddCategory = () => {
-    setCategories(prev => {
-      return [...prev, cat]
-    })
-    db.collection("categories").doc(cat).set({
-      englishName: cat,
-      createAt: new Date()
+    console.log("cat")
+    console.log(cat)
+
+    let validate = new Promise((resolve, reject)=>{
+      if (!cat.chineseName) {
+        setCatErrMsg(prev => ({...prev, chineseName: "必須填寫"}))
+        reject()
+      }
+      if (!cat.englishName) {
+        setCatErrMsg(prev => ({...prev, englishName: "Required. Please enter a name."}))
+        reject()
+      }
+      if (categories.some(obj => obj.chineseName.toLowerCase() === (cat.chineseName + "").toLowerCase().trim())) {
+        setCatErrMsg(prev => ({...prev, chineseName : "名字已被用，請重新輸入."}))
+        reject()
+      }
+      if (categories.some(obj => obj.englishName.toLowerCase() === (cat.englishName + "").toLowerCase().trim())) {
+        setCatErrMsg(prev => ({...prev,englishName : "This name is taken. Please use another name."}))
+        reject()
+      }
+      else resolve()
+    }) 
+
+    validate.then(()=>{
+      setButtonDisabled(true)
+      db.collection("categories").doc().set({
+        chineseName: cat.chineseName.trim(),
+        englishName: cat.englishName.trim(),
+        createAt: new Date()
+      })
+        .then(() => {
+          setCat({})
+          setShowNewCategory(false)
+          setCategories(prev => {
+            return [...prev, cat]
+          })
+          setButtonDisabled(false)
+        })
+        .catch(err => {
+          console.log(err)
+          setButtonDisabled(false)
+        })
     })
   }
 
@@ -160,6 +199,25 @@ export default function CreateProduct() {
     })();
   }, []);
 
+  useEffect(() => {
+    console.log("selectedCategory:")
+    console.log(selectedCategory)
+  }, [selectedCategory])
+
+  // //get categories from server
+  // useEffect(() => {
+  //   db.collection("categories").get()
+  //     .then((snapshot) => {
+  //       snapshot.forEach((doc) => {
+  //         console.log(doc.data())
+  //         setCategories(prev => {
+  //           return [...prev, doc.data()]
+  //         })
+  //       })
+  //     })
+  //     .catch((err) => console.log(err))
+  // }, [])
+
   return (
     <>
       <Container>
@@ -223,14 +281,14 @@ export default function CreateProduct() {
                 <InputFields />
                 <Headline styles={{ marginBottom: 130 }} >Category:</Headline>
                 {/* <Subheading styles={{ marginBottom: 130 }} >Select at least one category or create one.</Subheading> */}
-                <Text style={{color: "red"}}>
+                <Text style={{ color: "red" }}>
                   {error.category_err}
                 </Text>
                 <View style={{ padding: 0, marginBottom: 20 }}>
 
                   <View >
                     <Checkbox.Item
-                      label="No Category / Other"
+                      label="其它 / Others"
                       labelStyle={{ color: theme.darkGrey }}
                       status={selectedCategory.indexOf("other") === -1 ? "unchecked" : "checked"}
                       onPress={() => {
@@ -249,24 +307,28 @@ export default function CreateProduct() {
 
                   {categories && categories.map((item) => {
                     return (
-                      <View key={item}>
-                        <Checkbox.Item
-                          label={item}
-                          labelStyle={{ color: theme.darkGrey }}
-                          status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
-                          onPress={() => {
-                            if (selectedCategory.indexOf(item) === -1) {
-                              setSelectedCategory(prev => [...prev, item])
-                            }
-                            else {
-                              let index = selectedCategory.indexOf(item);
-                              let arr = [...selectedCategory];
-                              arr.splice(index, 1);
-                              setSelectedCategory(arr)
-                            }
-                          }}
-                        />
-                      </View>
+                      <>
+                        {item.id !== "Others" &&
+                          <View key={item.id}>
+                            <Checkbox.Item
+                              label={item.chineseName + " / " + item.englishName}
+                              labelStyle={{ color: theme.darkGrey }}
+                              status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
+                              onPress={() => {
+                                if (selectedCategory.indexOf(item) === -1) {
+                                  setSelectedCategory(prev => [...prev, item])
+                                }
+                                else {
+                                  let index = selectedCategory.indexOf(item);
+                                  let arr = [...selectedCategory];
+                                  arr.splice(index, 1);
+                                  setSelectedCategory(arr)
+                                }
+                              }}
+                            />
+                          </View>
+                        }
+                      </>
                     )
                   })}
                   <Divider style={{ margin: 20 }} />
@@ -278,32 +340,41 @@ export default function CreateProduct() {
                     <>
                       <InputView>
                         <TextInput
-                          label="Enter a new categrory"
-                          placeholder='Category Name'
+                          label="請輸入中文類別名字*"
+                          placeholder='中文名字'
                           style={{ backgroundColor: theme.InputBoxBackgroundColor }}
                           theme={{ colors: { primary: "grey" } }}
                           mode="outlined"
                           dense
-                          value={cat}
-                          onChangeText={value => { onAddCatChange(value) }}
+                          value={cat.chineseName}
+                          onChangeText={value => { onAddCatChange("chineseName", value) }}
+                          error={catErrMsg.chineseName}
                         />
-                        <HelperText type="error" visible={!!catErrMsg}>
-                          {catErrMsg}
+                        <HelperText type="error" visible={catErrMsg.chineseName}>
+                          {catErrMsg.chineseName}
+                        </HelperText>
+                      </InputView>
+                      <InputView>
+                        <TextInput
+                          label="English Name*"
+                          placeholder='English Name'
+                          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                          theme={{ colors: { primary: "grey" } }}
+                          mode="outlined"
+                          dense
+                          value={cat.englishName}
+                          onChangeText={value => { onAddCatChange("englishName", value) }}
+                          error={catErrMsg.englishName}
+                        />
+                        <HelperText type="error" visible={catErrMsg.englishName}>
+                          {catErrMsg.englishName}
                         </HelperText>
                       </InputView>
 
                       <Button icon="plus" mode="contained" color={theme.green}
+                        disabled={buttonDisabled}
                         labelStyle={{ color: "white" }}
-                        onPress={() => {
-                          if (cat) {
-                            onAddCategory()
-                            setShowNewCategory(false)
-                            setCat("")
-                          }
-                          else {
-                            setCatErrMsg("Please enter something.")
-                          }
-                        }}>
+                        onPress={() => onAddCategory()}>
                         Add
                     </Button>
                     </>
