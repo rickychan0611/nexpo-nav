@@ -229,7 +229,6 @@ export default function InputFields() {
           dense
           multiline
           numberOfLines={3}
-          theme={{ colors: { primary: "grey" } }}
           value={product.ch_description}
           onChangeText={value => { onCreateProductInputChange("ch_description", value, ctx) }}
           error={error.ch_description}
@@ -249,7 +248,6 @@ export default function InputFields() {
           dense
           multiline
           numberOfLines={3}
-          theme={{ colors: { primary: "grey" } }}
           value={product.en_description}
           onChangeText={value => { onCreateProductInputChange("en_description", value, ctx) }}
           error={error.en_description}
