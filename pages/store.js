@@ -49,7 +49,7 @@ export default function Store({ ssrData }) {
       queryProducts()
     }
   }, [selectedCat])
-  
+
   useEffect(() => {
     console.log(newOrderProductList)
   }, [newOrderProductList])
@@ -142,7 +142,8 @@ const CategoryScrollView = styled.ScrollView`
 `;
 const ProductContainer = styled.ScrollView`
       flex: 5;
-      background-color: #e8e6e6;
+      background-color: white;
+      /* background-color: #e8e6e6; */
       height: 100%;
       flex-direction: column;
 `;
