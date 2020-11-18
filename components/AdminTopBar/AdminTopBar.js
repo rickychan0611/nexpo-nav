@@ -9,17 +9,14 @@ import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import { Title } from 'react-native-paper';
 
-import onCreateProductSubmit from './onCreateProductSubmit';
+import SaveProductButton from '../../components/SaveProductButton';
 
 export default function AdminTopBar() {
   const { theme } = useContext(ThemeContext);
-  const { error } = useContext(Context);
 
   const {
     setOpenWebAdminMenu
   } = useContext(Context);
-
-  const ctx = useContext(Context);
 
   return (
     <>
@@ -51,7 +48,8 @@ export default function AdminTopBar() {
         </View>
 
         {/* save button */}
-        <IconWrapper>
+        <SaveProductButton />
+        {/* <IconWrapper>
           <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
             onPress={() => {
               onCreateProductSubmit(ctx)
@@ -59,14 +57,14 @@ export default function AdminTopBar() {
                 alert("Some fields contain errors. Please check and try again." )
               }
             }}>
-            <Text style={{ fontSize: 22, color: "white" }}>SAVE </Text>
+            <Text style={{ fontSize: 20, color: "white" }}>Save </Text>
             <Icon
               name='save'
               type='font-awesome'
               color={theme.TopBarTitleColor}
             />
           </TouchableOpacity>
-        </IconWrapper>
+        </IconWrapper> */}
 
       </Container>
     </>

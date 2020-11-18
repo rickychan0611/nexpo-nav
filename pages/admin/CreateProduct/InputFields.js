@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import { Context } from "../../../context/Context";
 import onCreateProductInputChange from "../../../hooks/onCreateProductInputChange";
@@ -17,12 +17,15 @@ export default function InputFields() {
   const { theme } = useContext(ThemeContext);
 
   // const onCreateProductInputChange = useonCreateProductInputChange(name, value, ctx);
-
+  useEffect(()=>{
+    console.log(error)
+  },[error])
+  
   return (
     <>
       <InputView>
         <TextInput
-          label="Chinese Name"
+          label="Chinese Name*"
           placeholder='Chinese Name'
           style={{
             backgroundColor: theme.InputBoxBackgroundColor,
@@ -46,7 +49,7 @@ export default function InputFields() {
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
-          label="English Name"
+          label="English Name*"
           placeholder='English Name'
           value={product.englishName}
           onChangeText={value => { onCreateProductInputChange("englishName", value, ctx) }}
@@ -59,7 +62,7 @@ export default function InputFields() {
 
       <InputView>
         <TextInput
-          label="Quantity"
+          label="Quantity*"
           placeholder='How many in stock?'
           style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
@@ -82,7 +85,7 @@ export default function InputFields() {
 
       <InputView>
         <TextInput
-          label="Unit"
+          label="Unit*"
           placeholder='Eg. each, lbs, 6pcs or 4/pack'
           style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
@@ -102,7 +105,7 @@ export default function InputFields() {
       <Row>
         <InputView style={{ flex: 1 }}>
           <TextInput
-            label="Original Price"
+            label="Original Price*"
             placeholder='Enter a price'
             style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
             theme={{ colors: { primary: "grey" } }}

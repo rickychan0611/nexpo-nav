@@ -56,11 +56,11 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="home" component={home} options={options("Home")} />
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
-          <Stack.Screen name="home" component={home} options={options("Home")} />
-          <Stack.Screen name="user" component={user} options={options("My Account")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
+          <Stack.Screen name="user" component={user} options={options("My Account")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
           <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />
         </Stack.Navigator>

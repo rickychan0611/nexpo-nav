@@ -1,29 +1,27 @@
-import React, {useContext} from "react";
-import { TouchableOpacity } from "react-native";
+import React, { useContext } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 
-export default function CategoryNames({data}) {
+export default function CategoryNames() {
 
-  const { setSelectedCat } = useContext(Context);
+  const { setSelectedCat, categories } = useContext(Context);
 
   return (
     <CategoryContainer>
-    {data && data.map((category) => {
-      return (
-        <TouchableOpacity key={category.id}>
-          <Name
-            onPress={() => {
-              setSelectedCat((category.id - 1).toString())
-            }}
-            key={category.id} setSelectedCat={setSelectedCat}>
-            {category.name}
-          </Name>
-        </TouchableOpacity>
-      )
-    })}
-  </CategoryContainer>
-    )
+      {categories && categories.map((category) => {
+        return (
+          <NamesContainer key={category.uid} onPress={() => { setSelectedCat(category.uid) }}>
+            <Name>
+              {category.chineseName}
+            </Name>
+            <Name>
+              {category.englishName}
+            </Name>
+          </NamesContainer>
+        )
+      })}
+    </CategoryContainer>
+  )
 };
 
 const CategoryContainer = styled.View`
@@ -32,11 +30,15 @@ const CategoryContainer = styled.View`
       flex-wrap: nowrap;
       align-items: center;
       justify-content: flex-start;
+      width: 100%;
+
+`;
+const NamesContainer = styled.TouchableOpacity`
+      /* flex: 1; */
+      margin: 10px 0px 10px 0px;
+      align-items: center;
+      justify-content: center;
 `;
 const Name = styled.Text`
       text-transform: capitalize;
-      background-color: white;
-      width: 100%;
-      margin: 10px 0 10px 0;
-
 `;

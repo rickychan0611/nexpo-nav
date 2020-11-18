@@ -1,4 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
+import { db } from "../firebase";
+
 // import {firebase, db, auth} from "../firebase";
 
 export const Context = createContext();
@@ -23,9 +25,10 @@ const productInitValue = {
 
 const ContextProvider = ({ children }) => {
   const [data, setData] = useState();
+  const [productData, setProductData] = useState([]);
   const [user, setUser] = useState("");
   const [selectedItem, setSelectedItem] = useState();
-  const [selectedCat, setSelectedCat] = useState("0");
+  const [selectedCat, setSelectedCat] = useState("");
   const [total, setTotal] = useState(0);
   const [newOrderProductList, setNewOrderProductList] = useState([]);
   const [selected, setSelected] = useState("home");
@@ -35,7 +38,7 @@ const ContextProvider = ({ children }) => {
   const [title, setTitle] = useState("Add a product");
   const [images, setImages] = useState(null);
   const [swiperControl, setSwiperControl] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(["other"]);
+  const [selectedCategory, setSelectedCategory] = useState(["Others"]);
   const [product, setProduct] = useState(productInitValue);
   const [error, setError] = useState({});
 
@@ -48,6 +51,35 @@ const ContextProvider = ({ children }) => {
   //     else console.log("Not logged in")
   //   })
   // }, [])
+
+  const fetchData = async () => {
+
+    const snapshot = await db.collection("categories").get()
+    
+    snapshot.forEach((doc) => {
+      console.log(doc.data())
+      setCategories(prev => {
+        return [...prev, doc.data()]
+      })
+    })
+
+    console.log(snapshot.docs[0].data().uid)
+    const productSnapshot = await db.collection("products").where("category", "array-contains", snapshot.docs[0].data().uid).get()
+    console.log(productSnapshot)
+
+    productSnapshot.forEach((doc) => {
+      console.log(doc.data())
+      setProductData(prev => {
+        return [...prev, doc.data()]
+      })
+    })
+
+  }
+
+  useEffect(() => {
+    fetchData()
+    .catch((err) => console.log(err))
+  }, [])
 
   return (
     <Context.Provider
@@ -69,7 +101,9 @@ const ContextProvider = ({ children }) => {
           selectedCategory, setSelectedCategory,
           product, setProduct,
           productInitValue,
-          error, setError        }
+          error, setError,
+          productData, setProductData
+        }
       }
     >
       {children}

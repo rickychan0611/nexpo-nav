@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { Icon } from 'react-native-elements'
+import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 
 import styled from "styled-components/native";
 import ProductContent from "../ProductContent";
@@ -12,9 +13,13 @@ export default function ProductCard({ item }) {
         item && <>
           <Container>
             <ImageWrapper>
+              {item.images && item.images[0] ?
               <Image source={{
-                uri: item.image[0].url
+                uri: item.images[0].url
               }} />
+              :
+              <Image source={imagePlaceholder} />
+              }
             </ImageWrapper>
 
             <RightSideContentWrapper>

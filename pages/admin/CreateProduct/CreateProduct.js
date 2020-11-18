@@ -38,13 +38,13 @@ export default function CreateProduct() {
   const { theme } = useContext(ThemeContext);
 
 
-  useEffect(() => {
-    // setTimeout(()=>{
-    setProduct(prev => prev)
-    console.log(product)
-    console.log(error)
-    // },[500])
-  }, [product])
+  // useEffect(() => {
+  //   // setTimeout(()=>{
+  //   setProduct(prev => prev)
+  //   console.log(product)
+  //   console.log(error)
+  //   // },[500])
+  // }, [product])
 
   const [cat, setCat] = useState({});
 
@@ -79,10 +79,13 @@ export default function CreateProduct() {
 
     validate.then(() => {
       setButtonDisabled(true)
-      db.collection("categories").doc().set({
+      const uid = cat.chineseName.trim()+cat.englishName.trim()
+      db.collection("categories").doc(uid).set({
+        uid,
         chineseName: cat.chineseName.trim(),
         englishName: cat.englishName.trim(),
-        createAt: new Date()
+        createAt: new Date(),
+        productId: []
       })
         .then(() => {
           setCat({})
@@ -117,7 +120,6 @@ export default function CreateProduct() {
     let task;
     if (Platform.OS === 'web') {
       let base64 = imgData.base64
-      console.log(base64)
       task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url')
     }
     else {
@@ -199,10 +201,10 @@ export default function CreateProduct() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("selectedCategory:")
-    console.log(selectedCategory)
-  }, [selectedCategory])
+  // useEffect(() => {
+  //   console.log("selectedCategory:")
+  //   console.log(selectedCategory)
+  // }, [selectedCategory])
 
   // //get categories from server
   // useEffect(() => {
@@ -282,13 +284,13 @@ export default function CreateProduct() {
             <Checkbox.Item
               label="其它 / Others"
               labelStyle={{ color: theme.darkGrey }}
-              status={selectedCategory.indexOf("other") === -1 ? "unchecked" : "checked"}
+              status={selectedCategory.indexOf("Others") === -1 ? "unchecked" : "checked"}
               onPress={() => {
-                if (selectedCategory.indexOf("other") === -1) {
-                  setSelectedCategory(prev => [...prev, "other"])
+                if (selectedCategory.indexOf("Others") === -1) {
+                  setSelectedCategory(prev => [...prev, "Others"])
                 }
                 else {
-                  let index = selectedCategory.indexOf("other");
+                  let index = selectedCategory.indexOf("Others");
                   let arr = [...selectedCategory];
                   arr.splice(index, 1);
                   setSelectedCategory(arr)
@@ -297,21 +299,25 @@ export default function CreateProduct() {
             />
           </View>
 
-          {categories && categories.map((item) => {
+          {categories && categories.map((category) => {
+
+            const uid = category.chineseName+category.englishName
             return (
               <>
-                {item.id !== "Others" &&
-                  <View key={item.id}>
+                {category.id !== "Others" &&
+                  <View key={uid}>
                     <Checkbox.Item
-                      label={item.chineseName + " / " + item.englishName}
+                      label={category.chineseName + " / " + category.englishName}
                       labelStyle={{ color: theme.darkGrey }}
-                      status={selectedCategory.indexOf(item) === -1 ? "unchecked" : "checked"}
+                      status={selectedCategory.indexOf(uid) === -1 ? "unchecked" : "checked"}
+
+                      // check category and save the uid into an array
                       onPress={() => {
-                        if (selectedCategory.indexOf(item) === -1) {
-                          setSelectedCategory(prev => [...prev, item])
+                        if (selectedCategory.indexOf(uid) === -1) {
+                          setSelectedCategory(prev => [...prev, uid])
                         }
                         else {
-                          let index = selectedCategory.indexOf(item);
+                          let index = selectedCategory.indexOf(uid);
                           let arr = [...selectedCategory];
                           arr.splice(index, 1);
                           setSelectedCategory(arr)

@@ -106,15 +106,16 @@ export default function ProductContent({item}) {
 
   return (
         <View>
-        <Name>{item.name}</Name>
-        <Description>{item.description}</Description>
+        <Name>{item.chineseName + " / " + item.englishName}</Name>
+        <Description>{item.ch_description}</Description>
+        <Description>{item.en_description}</Description>
         <Description>Stock: {item.qty}</Description>
 
         <PriceQtyWrapper>
 
             <PricesWrapper>
-              <RegPrice>${(+item.price).toFixed(2)}</RegPrice>
-              <DisPrice>${(+item.price).toFixed(2)}</DisPrice>
+              <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
+              <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
             </PricesWrapper>
 
             <QtyWrapper>

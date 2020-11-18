@@ -5,62 +5,73 @@ import { SearchBar, Button } from 'react-native-elements';
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
+import { db } from "../firebase";
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
 import AppContainer from "../components/AppContainer";
 import CategoryNames from "../components/CategoryNames";
-
-import dataJson from '../public/db.json';
 import CartCheckoutBar from "../components/CartCheckoutBar";
 
-const API_URL = `https://strapi-ric.herokuapp.com/categories`
+import dataJson from '../public/db.json';
+
+// const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
 export default function Store({ ssrData }) {
   const { navigate } = useRouting();
   const {
-    selectedItem, data, setData, total,
+     productData, setProductData,
     setSelectedItem, selectedCat,
-    newOrderProductList, setNewOrderProductList,
+    newOrderProductList,
   } = useContext(Context);
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
-  const query = async () => {
+  const queryProducts = async () => {
+    setProductData([])
     // const res = await fetch(API_URL)
     // const data = await res.json()
-
+    const productSnapshot = await db.collection("products").where("category", "array-contains", selectedCat).get()
+    productSnapshot.forEach((doc) => {
+      console.log(doc.data())
+      setProductData(prev => {
+        return [...prev, doc.data()]
+      })
+    })
     // ssrData ? setData(ssrData) : setData(data)
-    ssrData ? setData(dataJson) : setData(dataJson)
+    // ssrData ? setData(dataJson) : setData(dataJson)
   }
 
   useEffect(() => {
-    query()
-  }, [])
+    console.log(selectedCat)
+    if (selectedCat) {
+      queryProducts()
+    }
+  }, [selectedCat])
 
   return (
     <>
       <CartBarWrapper>
-        {data && <>
+        {productData && <>
           <SearchBar
             placeholder="Search"
             // onChangeText={this.updateSearch}
             // value={"search"}
             lightTheme
             platform="ios"
-            containerStyle={{ width: "100%", maxWidth: "500px", backgroundColor: "white" }}
+            containerStyle={{ width: "100%", maxWidth: 500, backgroundColor: "white" }}
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           />
           <ContextArea>
 
             <CategoryScrollView>
-              <CategoryNames data={data} />
+              <CategoryNames />
             </CategoryScrollView>
 
             <ProductContainer>
-              {data && data[selectedCat].products.map((item) => {
+              {productData && productData[0] && productData.map((item) => {
                 return (
                   <TouchableOpacity key={item.id}
                     onPress={() => {
