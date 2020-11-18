@@ -1,90 +1,25 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { Icon } from 'react-native-elements'
-import produce from "immer";
 
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 
+import {handleMinus, handlePlus} from  "../../hooks/onPlusMinusQty";
+
 export default function ProductContent({item}) {
-  const [counter, setCounter] = useState(0);
-  const { newOrderProductList, setNewOrderProductList, total, setTotal } = useContext(Context);
+  const { newOrderProductList, setNewOrderProductList, counter, setCounter } = useContext(Context);
+  const ctx = useContext(Context);
+
   let idArray = [];
+  let index;
 
-  const handlePlus = () => {
-    
-    if (newOrderProductList[0]) {
-      newOrderProductList.forEach(item => {
-        idArray.push(item.productId);
-      });
-    }
-
-    if (counter < item.qty) {
-      setCounter(prev => prev + 1);
-      setTotal(prev => prev + +item.price)
-
-      setNewOrderProductList(
-        //update state object in nested array
-        produce(
-          prev => {
-            if (prev[0]) {
-              // check if current state contains the same id
-              if (idArray.indexOf(item.id) === -1) {
-                // if the ID is not found, push the new object into the state
-                return [...prev, { item, productId: item.id, quantity: counter + 1, price: item.price }];
-              }
-              else {
-                // if the ID is found, get the index and update prev state
-
-                let index = idArray.indexOf(item.id)
-                if (index !== -1) {
-                  prev[idArray.indexOf(item.id)] = { item, productId: item.id, quantity: counter + 1, price: item.price };
-                }
-              }
-            }
-            // if state is empty, just return the value
-            else return [{ item, productId: item.id, quantity: counter + 1, price: item.price }];
-          }
-        )
-      );
-    }
-    else alert("Sorry, not enough stock.")
+  if (newOrderProductList[0]) {
+    newOrderProductList.forEach(id => {
+      idArray.push(id.productId);
+    });
+    index = idArray.indexOf(item.uid)
   }
-
-  const handleMinus = () => {
-    if (counter > 0) {
-      setCounter(prev => prev - 1);
-      setTotal(prev => prev - +item.price)
-
-      // remove object if it is the last one
-      if (counter === 1) {
-        setNewOrderProductList(
-          produce(prev => prev.filter(e => e.productId !== item.id))
-        );
-      }
-
-      // update quantity if it is not the last one
-      else if (counter > 1) {
-        if (newOrderProductList[0]) {
-          newOrderProductList.forEach(item => {
-            idArray.push(item.productId);
-          });
-        }
-        setNewOrderProductList(
-          produce(prev => {
-            if (prev[0]) {
-              let index = idArray.indexOf(item.id)
-              if (index !== -1) {
-                prev[index] = { item, productId: item.id, quantity: counter - 1, price: item.price };
-                return
-              }
-            };
-          })
-        )
-      }
-    };
-  };
-
 
   useEffect(() => {
     if (newOrderProductList[0]) {
@@ -125,17 +60,17 @@ export default function ProductContent({item}) {
                 type='font-awesome-5'
                 color='red'
                 size={20}
-                onPress={() => { handlePlus() }}
+                onPress={() => { handlePlus(item, ctx) }}
               />
-              {counter > 0 ?
+              {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
               <>
-              <Qty>{counter}</Qty>
+              <Qty>{newOrderProductList[index].quantity}</Qty>
               <Icon
                 name='minus-circle'
                 type='font-awesome-5'
                 color='grey'
                 size={20}
-                onPress={() => { handleMinus() }}
+                onPress={() => { handleMinus(item, ctx) }}
               />
               </>: null }
             </QtyWrapper>

@@ -6,12 +6,12 @@ import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 import styled from "styled-components/native";
 import ProductContent from "../ProductContent";
 
-export default function ProductCard({ item }) {
+export default function ProductCard({ key, item }) {
   return (
     <>
       {
         item && <>
-          <Container>
+          <Container key={key}>
             <ImageWrapper>
               {item.images && item.images[0] ?
               <Image source={{

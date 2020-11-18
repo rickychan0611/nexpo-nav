@@ -49,6 +49,10 @@ export default function Store({ ssrData }) {
       queryProducts()
     }
   }, [selectedCat])
+  
+  useEffect(() => {
+    console.log(newOrderProductList)
+  }, [newOrderProductList])
 
   return (
     <>
@@ -73,13 +77,13 @@ export default function Store({ ssrData }) {
             <ProductContainer>
               {productData && productData[0] && productData.map((item) => {
                 return (
-                  <TouchableOpacity key={item.id}
+                  <TouchableOpacity key={item.uid}
                     onPress={() => {
                       setSelectedItem(item)
                       navigate({
                         routeName: "product",
-                        params: { id: item.id },
-                        web: { as: `/product/${item.name}` },
+                        params: { id: item.uid },
+                        web: { as: `/product/${item.englishName}` },
                       })
                     }}>
                     <ProductCard item={item} />

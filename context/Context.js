@@ -41,6 +41,8 @@ const ContextProvider = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState(["Others"]);
   const [product, setProduct] = useState(productInitValue);
   const [error, setError] = useState({});
+  const [counter, setCounter] = useState(0);
+
 
   // useEffect(() => {
   //   auth.onAuthStateChanged((user) => {
@@ -102,7 +104,8 @@ const ContextProvider = ({ children }) => {
           product, setProduct,
           productInitValue,
           error, setError,
-          productData, setProductData
+          productData, setProductData,
+          counter, setCounter
         }
       }
     >

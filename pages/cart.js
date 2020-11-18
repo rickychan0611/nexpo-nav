@@ -16,6 +16,8 @@ export default function Cart() {
   
   useEffect(()=>{
     setNewOrderProductList(prev => prev)
+    console.log("newOrderProductList::::")
+    console.log(newOrderProductList)
   },[newOrderProductList])
 
   return (
@@ -25,7 +27,7 @@ export default function Cart() {
         <ProductContainer>
           {newOrderProductList && newOrderProductList.map((item) => {
             return (
-              <ProductCard key={item.id} item={item.item} />
+              <ProductCard key={item.uid} item={item.item} />
             )
           })}
         </ProductContainer>
