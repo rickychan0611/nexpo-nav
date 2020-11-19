@@ -11,7 +11,7 @@ export default function CartItems() {
       {newOrderProductList.map(item=>{
         return(
           <>
-          <ItemsContainer>
+          <ItemsContainer key={item.uid}>
             <Qty>
               <Text style={{color:"green"}}>{item.quantity}X</Text>
             </Qty>
@@ -33,25 +33,25 @@ export default function CartItems() {
 };
 
 const ItemsContainer = styled.View`
-  flex: 1;
+  width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
-  margin: 20px;
-  margin-top: 15px;
-  align-items: flex-end;
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
   max-width: 500px;
+  padding: 15px;
 `;
 
 const Qty = styled.View`
   flex: 1;
-  margin-bottom: 2px;
+  justify-content: center;
+  align-items: flex-start;
 `;
 const Content = styled.View`
   flex: 10;
+  justify-content: center;
+  align-items: flex-start;
 `;
 const Price = styled.View`
   flex: 2;
-  justify-content: flex-end;
-  margin-bottom: 2px;
+  justify-content: center;
+  align-items: flex-end;
 `;

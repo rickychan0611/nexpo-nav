@@ -71,8 +71,8 @@ const ViewCart = styled.Text`
   font-weight: bold;
 `;
 const Wrapper = styled.TouchableOpacity`
-  /* position: absolute; */
-  /* bottom: 0; */
+  position: absolute;
+  bottom: 65;
   height: 55px;
   width: 100%;
   /* flex: 1; */
