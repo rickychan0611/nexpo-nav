@@ -42,6 +42,7 @@ const ContextProvider = ({ children }) => {
   const [product, setProduct] = useState(productInitValue);
   const [error, setError] = useState({});
   const [counter, setCounter] = useState(0);
+  const [redeemPoint, setRedeemPoint] = useState("");
 
 
   // useEffect(() => {
@@ -105,7 +106,8 @@ const ContextProvider = ({ children }) => {
           productInitValue,
           error, setError,
           productData, setProductData,
-          counter, setCounter
+          counter, setCounter,
+          redeemPoint, setRedeemPoint
         }
       }
     >

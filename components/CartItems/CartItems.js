@@ -16,7 +16,7 @@ export default function CartItems() {
               <Text style={{color:"green"}}>{item.quantity}X</Text>
             </Qty>
             <Content>
-            <Text style={{fontSize: 18}}>
+            <Text style={{fontSize: 16}}>
               {item.item.chineseName + " " + item.item.englishName}
               </Text>
             </Content>
@@ -37,7 +37,7 @@ const ItemsContainer = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 500px;
-  padding: 15px;
+  padding: 15px 25px 15px 25px;
 `;
 
 const Qty = styled.View`

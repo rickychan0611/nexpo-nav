@@ -68,7 +68,7 @@ export default function Store({ ssrData }) {
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           />
-          <ContextArea>
+          <ContextArea up={newOrderProductList.length > 0}>
 
             <CategoryScrollView>
               <CategoryNames />
@@ -121,7 +121,6 @@ const CartBarWrapper = styled.View`
       align-items: flex-start;
       width: 100%;
       max-width: 500px;
-      padding-bottom: 62px;
 `;
 const ContextArea = styled.View`
       flex: 1;
@@ -132,7 +131,8 @@ const ContextArea = styled.View`
       background-color: white;
       width: 100%;
       max-width: 500px;
-      /* padding-bottom: 70px; */
+      padding-bottom: ${props => props.up ? `124px` : `62px`};
+
 `;
 const CategoryScrollView = styled.ScrollView`
       height: 100%;
