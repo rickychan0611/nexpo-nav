@@ -1,20 +1,29 @@
 
 import React, { useContext, useEffect } from "react";
+import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
 import { Card, Button } from 'react-native-elements';
+import { Divider, TextInput } from "react-native-paper";
+
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
-import styled from "styled-components/native";
+
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
 import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
-import { Divider, TextInput } from "react-native-paper";
+import ShippingAddress from "../components/ShippingAddress";
 
 export default function Cart() {
   const { navigate } = useRouting();
-  const { total, newOrderProductList, setNewOrderProductList, redeemPoint, setRedeemPoint } = useContext(Context);
+  const { 
+    total, 
+    newOrderProductList, setNewOrderProductList, 
+    redeemPoint, setRedeemPoint,
+    shippingAddress, setShippingAddress
+  } = useContext(Context);
+
   const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
@@ -64,29 +73,30 @@ export default function Cart() {
           </View>
           <Divider />
 
-            <TotalContainer style={{ paddingTop: 20 }}>
-              <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-              <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
-            </TotalContainer>
-            <TotalContainer >
-              <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-              <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
-            </TotalContainer>
-            <TotalContainer >
-              <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-              <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
-            </TotalContainer>
-            <TotalContainer style={{ paddingBottom: 20 }}>
-              <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-              <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
-            </TotalContainer>
+          <TotalContainer style={{ paddingTop: 20 }}>
+            <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
+            <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
+          </TotalContainer>
+          <TotalContainer >
+            <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
+            <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
+          </TotalContainer>
+          <TotalContainer >
+            <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
+            <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
+          </TotalContainer>
+          <TotalContainer style={{ paddingBottom: 20 }}>
+            <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
+            <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
+          </TotalContainer>
 
-            <Divider />
+          <Divider />
+
+          <ShippingAddress/>      
+
         </ScrollView>
-      <CartCheckoutBar />
       </ContextArea>
-
-
+      <CartCheckoutBar />
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {
@@ -120,16 +130,16 @@ const Price = styled.View`
   align-items: flex-end;
 `;
 const Title = styled.Text`
-    font-size: 18px;
-    width: 100%;
-    padding: 15px;
-    background-color: white;   
+  font-size: 18px;
+  width: 100%;
+  padding: 15px;
+  background-color: white;   
 `;
 const ContextArea = styled.View`
-      /* flex: 1; */
-      width: ${Platform.OS === "web" ? `100vw` : `100%`};
-      height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
-      max-width: 500px;
-      background-color: white;
-      padding-bottom: ${Platform.OS === "web" ? `124px` : `190px`};
+  /* flex: 1; */
+  width: ${Platform.OS === "web" ? `100vw` : `100%`};
+  height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
+  max-width: 500px;
+  background-color: white;
+  padding-bottom: ${Platform.OS === "web" ? `124px` : `190px`};
 `;

@@ -43,6 +43,16 @@ const ContextProvider = ({ children }) => {
   const [error, setError] = useState({});
   const [counter, setCounter] = useState(0);
   const [redeemPoint, setRedeemPoint] = useState("");
+  const [shippingAddress, setShippingAddress] = useState(
+    {
+      address1 : "",
+      address2 : "",
+      city : "",
+      province : "BC",
+      country: "Canada",
+      postalCode: "",
+      phoneNumber: ""
+    });
 
 
   // useEffect(() => {
@@ -107,7 +117,8 @@ const ContextProvider = ({ children }) => {
           error, setError,
           productData, setProductData,
           counter, setCounter,
-          redeemPoint, setRedeemPoint
+          redeemPoint, setRedeemPoint,
+          shippingAddress, setShippingAddress
         }
       }
     >

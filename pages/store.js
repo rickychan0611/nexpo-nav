@@ -11,7 +11,7 @@ import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
 import AppContainer from "../components/AppContainer";
 import CategoryNames from "../components/CategoryNames";
-import CartCheckoutBar from "../components/CartCheckoutBar";
+import ViewCartBar from "../components/ViewCartBar";
 
 import dataJson from '../public/db.json';
 
@@ -21,7 +21,7 @@ import dataJson from '../public/db.json';
 export default function Store({ ssrData }) {
   const { navigate } = useRouting();
   const {
-     productData, setProductData,
+    productData, setProductData,
     setSelectedItem, selectedCat,
     newOrderProductList,
   } = useContext(Context);
@@ -56,7 +56,7 @@ export default function Store({ ssrData }) {
 
   return (
     <>
-      <CartBarWrapper>
+      <CartBarWrapper up={newOrderProductList.length > 0}>
         {productData && <>
           <SearchBar
             placeholder="Search"
@@ -70,8 +70,9 @@ export default function Store({ ssrData }) {
           />
           <ContextArea up={newOrderProductList.length > 0}>
 
-            <CategoryScrollView>
+            <CategoryScrollView up={newOrderProductList.length > 0}>
               <CategoryNames />
+              <View style={{ height: 150 }}></View>
             </CategoryScrollView>
 
             <ProductContainer>
@@ -90,15 +91,26 @@ export default function Store({ ssrData }) {
                   </TouchableOpacity>
                 )
               })}
+              <View style={{ height: 150 }}></View>
             </ProductContainer>
           </ContextArea>
         </>
         }
-        {newOrderProductList.length > 0 ?
-          <CartCheckoutBar />
-          : null}
       </CartBarWrapper>
-      <BottomBar />
+      {newOrderProductList.length > 0 ?
+        <ViewCartBar />
+        : null}
+
+      <BottomBar style={{
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 5,
+        elevation: 10,
+      }} />
     </>
   );
 }
@@ -131,7 +143,6 @@ const ContextArea = styled.View`
       background-color: white;
       width: 100%;
       max-width: 500px;
-      padding-bottom: ${props => props.up ? `124px` : `62px`};
 
 `;
 const CategoryScrollView = styled.ScrollView`
@@ -139,6 +150,18 @@ const CategoryScrollView = styled.ScrollView`
       background-color: white;
       border-right-color: #e8e6e6;
       border-right-width: 4px;
+`;
+
+const CategoryContainer = styled.View`
+      /* flex: 2;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: yellow;
+      width: 100%;
+      padding-bottom: 200px;
+      height: ${Platform.OS === 'web' ? `calc(100vh - 160px)` : `100%`}; */
 `;
 const ProductContainer = styled.ScrollView`
       flex: 5;

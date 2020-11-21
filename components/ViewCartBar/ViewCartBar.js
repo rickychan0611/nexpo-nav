@@ -27,7 +27,7 @@ export default function CartCheckoutBar() {
       }}>
           <Margin theme={theme}>
           <Total>
-          Place Order  ●  ${(+total).toFixed(2)}
+          View Cart  ●  ${(+total).toFixed(2)}
           </Total>
           </Margin>
           {/* <Qty>{qty}</Qty> */}
@@ -59,7 +59,7 @@ const Margin = styled.View`
   color: white;
   font-size: 16px;
   font-weight: bold;
-  background-color: ${props => props.theme.green}; 
+  background-color: ${props => props.theme.black}; 
   height: 40px;
   width: 90%
 `;

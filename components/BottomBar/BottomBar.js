@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
 import useQty from '../../hooks/useQty';
@@ -106,7 +106,7 @@ const Button = styled.TouchableOpacity`
   justify-content: center;
 `;
 const Wrapper = styled.View`
-  position: absolute;
+  position: ${Platform.OS === "web" ? `fixed` : `absolute`};
   bottom: 0;
   height: 65px;
   width: 100%;
@@ -119,7 +119,7 @@ const Wrapper = styled.View`
 
 `;
 const ContentArea = styled.View`
-  position: absolute;
+  position: ${Platform.OS === "web" ? `fixed` : `absolute`};
   bottom: 0;
   height: 60px;
   width: 100%;

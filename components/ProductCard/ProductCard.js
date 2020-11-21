@@ -11,7 +11,18 @@ export default function ProductCard({ key, item }) {
     <>
       {
         item && <>
-          <Container key={key}>
+          <Container key={key} 
+           style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 0.15,
+            shadowRadius: 10,
+            elevation: 10,
+            zIndex: 1000
+          }}>
             <ImageWrapper>
               {item.images && item.images[0] ?
               <Image source={{
@@ -38,18 +49,20 @@ const Container = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      width: 100%;
+      width: 93%;
       max-width: 500px;
-      padding: 0 10px 0 5px;
+      padding: 10px;
       background-color: white;
-      margin-bottom: ${Platform.OS === 'web' ? "5px" : "5px"};
+      margin: 10px;
+      border-radius:10px;
+      border:1px solid #d4d4d4;
 `;
 
 const ImageWrapper = styled.View`
       flex: 2;
-      padding: 20px 0 0px 0 ;
-      width: 110px;
-      height: 110px;
+      padding: 5px 0 5px 0 ;
+      width: 100px;
+      height: 100px;
 `;
 const Image = styled.Image`
       flex: 1;
@@ -60,7 +73,7 @@ const Image = styled.Image`
 `;
 
 const RightSideContentWrapper = styled.View`
-      flex: 3;
+      flex: 4;
       flex-direction: column;
       /* flex-wrap: nowrap;
       align-items: flex-start;
@@ -68,5 +81,5 @@ const RightSideContentWrapper = styled.View`
       background-color: white;
       width: 100%;
       min-height: 100px;
-      padding: 0 10px 5px 10px;
+      padding: 14px 10px 5px 10px;
 `;

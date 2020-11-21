@@ -42,9 +42,9 @@ export default function ProductContent({item}) {
   return (
         <View>
         <Name>{item.chineseName + " / " + item.englishName}</Name>
-        <Description>{item.ch_description}</Description>
-        <Description>{item.en_description}</Description>
-        <Description>Stock: {item.qty}</Description>
+        {/* <Description>{item.ch_description}</Description>
+        <Description>{item.en_description}</Description> */}
+        {/* <Description>Stock: {item.qty}</Description> */}
 
         <PriceQtyWrapper>
 
@@ -102,10 +102,10 @@ const PricesWrapper = styled.View`
   justify-content: flex-end;
 `;
 const Name = styled.Text`
-  font-size: 18px;
+  font-size: 15px;
   margin-top: 6px;
   margin-bottom: 5px;
-  /* font-weight: bold; */
+  font-weight: bold;
 `;
 const Qty = styled.Text`
   color: black;

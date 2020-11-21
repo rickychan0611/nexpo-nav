@@ -4,6 +4,7 @@ import ContextProvider from '../context/Context';
 import ThemeProvider from '../context/ThemeContext';
 import WebContainer from "../components/WebContainer";
 import { Provider as PaperProvider } from 'react-native-paper';
+import BottomBar from "../components/BottomBar";
 
 export default function myApp({ Component, pageProps }) {
   return (

@@ -15,7 +15,7 @@ import cart from "./pages/cart";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 
-import TopBar from './components/TopBar';
+import BottomBar from './components/BottomBar';
 import { ThemeContext } from "styled-components";
 
 const Stack = createStackNavigator();
