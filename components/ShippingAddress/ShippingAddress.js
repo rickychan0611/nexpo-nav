@@ -151,7 +151,7 @@ export default function ShippingAddress() {
           </InputView>
         </Row>
 
-        <Divider style={{ marginBottom: "10px" }} />
+        <Divider style={{ marginBottom: 10 }} />
 
         <InputView>
           <TextInput
