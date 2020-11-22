@@ -20,9 +20,9 @@ export default function CartCheckoutBar() {
   return (
     <>
       <Wrapper onPress={() => {
-        setSelected("cart")
+        setSelected("login")
         navigate({
-          routeName: "cart",
+          routeName: "login",
         })
       }}>
           <Margin theme={theme}>

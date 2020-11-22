@@ -1,8 +1,8 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { ThemeProvider, Button } from 'react-native-elements';
-import { TextInput, Platform } from "react-native";
+import { Platform, Image, View, Dimensions } from "react-native";
+import { TextInput, HelperText, Title, Button, Divider, Caption } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -12,14 +12,19 @@ import * as WebBrowser from 'expo-web-browser';
 // import * as Facebook from 'expo-auth-session/providers/facebook';
 // import { ResponseType } from 'expo-auth-session';
 import * as Facebook from 'expo-facebook';
+import poster from "../public/poster.jpeg"
+import siginBanner from "../public/siginBanner.png"
+import { ThemeContext } from "../context/ThemeContext";
 
 
 // WebBrowser.maybeCompleteAuthSession();
 
-export default function Login() {
+export default function login() {
   const { navigate } = useRouting();
-  const { user, setUser, newOrderProductList } = useContext(Context);
-
+  const { user, setUser, selected, setSelected } = useContext(Context);
+  const { theme } = useContext(ThemeContext);
+  const vw = Dimensions.get('window').width;
+  const vh = Dimensions.get('window').height;
 
 
   // const [request, response, promptAsync] = useAuthRequest({
@@ -40,7 +45,8 @@ export default function Login() {
 
 
   const [login, setLogin] = useState({});
-  const onChangeText = (name, value) => {
+
+  const handleChange = (name, value) => {
     setLogin(prev => {
       return (
         { ...prev, [name]: value }
@@ -48,26 +54,29 @@ export default function Login() {
     })
   }
 
-  const emaillogin = () => {
+  const emailLogin = () => {
     console.log(login)
-    auth.createUserWithEmailAndPassword(login.email, login.password)
+    // auth.createUserWithEmailAndPassword(login.email, login.password)
+    auth.signInWithEmailAndPassword(login.email, login.password)
       .then((doc) => {
-        const fff = { ...doc, admin: true }
-        console.log('logging in... wait' + JSON.stringify(fff))
-        db.collection("users").doc(doc.user.uid).set({
+        db.collection("users").doc(doc.user.email).set({
           uid: doc.user.uid,
           email: doc.user.email,
-          isAdmin: true
+          password: login.password
         })
-        .catch(function (error) {
-          // Handle Errors here.
-          console.log(error)
-          // ...
-        });
+          .catch(function (error) {
+            // Handle Errors here.
+            console.log(error)
+            // ...
+          });
+        setSelected("cart")
+        navigate({
+          routeName: "cart"
+        })
       })
       .catch(function (error) {
         // Handle Errors here.
-        console.log("error")
+        console.log("error", error)
         var errorCode = error.code;
         var errorMessage = error.message;
         // ...
@@ -168,51 +177,7 @@ export default function Login() {
       });
   }
 
-  const storeDB = () => {
-    var citiesRef = db.collection("cities");
 
-    citiesRef.doc("SF").set({
-      name: "San Francisco", state: "CA", country: "USA",
-      capital: false, population: 860000,
-      regions: ["west_coast", "norcal"]
-    });
-    citiesRef.doc("LA").set({
-      name: "Los Angeles", state: "CA", country: "USA",
-      capital: false, population: 3900000,
-      regions: ["west_coast", "socal"]
-    });
-    citiesRef.doc("DC").set({
-      name: "Washington, D.C.", state: null, country: "USA",
-      capital: true, population: 680000,
-      regions: ["east_coast"]
-    });
-    citiesRef.doc("TOK").set({
-      name: "Tokyo", state: null, country: "Japan",
-      capital: true, population: 9000000,
-      regions: ["kanto", "honshu"]
-    });
-    citiesRef.doc("BJ").set({
-      name: "Beijing", state: null, country: "China",
-      capital: true, population: 21500000,
-      regions: ["jingjinji", "hebei"]
-    });
-  }
-
-  const getDB = () => {
-    console.log("pressed");
-    var docRef = db.collection("cities").doc("SF");
-
-    docRef.get().then(function (doc) {
-      if (doc.exists) {
-        console.log("Document data:", doc.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
-  }
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -239,10 +204,110 @@ export default function Login() {
 
   return (
     <>
-      <CartBarWrapper>
+      <View style={{
+        flex: 1,
+        width: Platform.OS === "web" ? '100vw' : '100%',
+        maxWidth: 500,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+        paddingBottom: 60
+      }}>
+        <View style={{ flex: 1.2 }}>
+          <Image
+            style={{
+              width: "100%",
+              height: "100%",
+              resizeMode: "cover"
+            }}
+            source={poster} />
+        </View>
 
-        <ContextArea>
-          <MyText>Welcome, 🥳 {user && user.displayName} </MyText>
+        <View style={{
+          flex: 1,
+          flexDirection: "column",
+          backgroundColor: 'white',
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          <Title>Sign In</Title>
+          <InputView>
+            <TextInput
+              label="Email*"
+              placeholder='Enter your email'
+              style={{
+                // backgroundColor: theme.InputBoxBackgroundColor,
+                // width: "100%",
+                width: Platform.OS === "web" ? "90vw" : vw - 60,
+                maxWidth: 400,
+                outline: "none"
+              }}
+              theme={{ colors: { primary: "grey" } }}
+              mode="outlined"
+              dense
+              value={login.email}
+              onChangeText={value => { handleChange("email", value) }}
+            // error={error.email}
+            />
+            {/* <HelperText type="error" visible={error.chineseName}>
+          {error.email}
+        </HelperText> */}
+          </InputView>
+
+          <InputView style={{ marginBottom: 30 }}>
+            <TextInput
+              label="Password*"
+              placeholder='Enter your password'
+              style={{
+                // backgroundColor: theme.InputBoxBackgroundColor,
+                // width: "100%",
+                width: Platform.OS === "web" ? "90vw" : vw - 60,
+                maxWidth: 400,
+                outline: "none"
+              }}
+              theme={{ colors: { primary: "grey" } }}
+              mode="outlined"
+              dense
+              value={login.password}
+              onChangeText={value => { handleChange("password", value) }}
+            // error={error.password}
+            />
+            {/* <HelperText type="error" visible={error.password}>
+          {error.password}
+        </HelperText> */}
+          </InputView>
+          <Button contain color="white" style={{ backgroundColor: theme.black }}
+            onPress={() => emailLogin()}>Submit</Button>
+          <Divider />
+          <InputView></InputView>
+          <Caption>Forgot Password? | Don't have an account? Sign up</Caption>
+          <InputView>
+          </InputView>
+        </View>
+      </View>
+
+      {/* <ContextArea> */}
+      {/* <View style={{
+        flex: 1,
+        width: Platform.OS === "web" ? '100vw' : '100%',
+        // height: 500,
+        justifyContent: "flex-start",
+        alignItems: "center"
+      }}>
+        <Image
+          style={{
+            // width: Platform.OS === "web" ? '100vw' : '100%',
+            width: "100%",
+            // maxWidth: 100,
+            height: 500,
+            resizeMode: "contain"
+            // height: "100%"
+          }}
+          source={poster} />
+      </View> */}
+      {/* <CartBarWrapper> */}
+      {/* </CartBarWrapper> */}
+      {/* <MyText>Welcome, 🥳 {user && user.displayName} </MyText>
           <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
             onChangeText={text => onChangeText("email", text)}
@@ -288,13 +353,22 @@ export default function Login() {
                 // An error happened.
               })
             }
-          />
-        </ContextArea>
-        {newOrderProductList.length > 0 ?
+          /> */}
+      {/* </ContextArea> */}
+      {/* {newOrderProductList.length > 0 ?
           <CartCheckoutBar />
           : null}
-      </CartBarWrapper>
-      <BottomBar />
+      </CartBarWrapper> */}
+      <BottomBar style={{
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 5,
+        elevation: 10,
+      }} />
     </>
   );
 }
@@ -303,24 +377,6 @@ const Button1 = styled(Button)`
   margin-bottom: 5px;
   `;
 
-const CartBarWrapper = styled.View`
-      flex: 1;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      width: 100%;
-      max-width: 500px;
-      padding-bottom: 62px;
-`;
-const ContextArea = styled.View`
-      flex: 1;
-      align-items: center;
-      background-color: white;
-      width: 100%;
-      max-width: 500px;
-`;
-const MyText = styled.Text`
-      font-size: 20px;
-      margin: 20px;
+const InputView = styled.View`
+  margin-bottom: 15px;
 `;
