@@ -260,18 +260,8 @@ export default function signIn() {
         // flexWrap: 'wrap',
         justifyContent: 'flex-start',
         // alignItems: 'stretch',
-        paddingBottom: 60
+        // paddingBottom: 60
       }}>
-        {/* <View style={{ flex: 1 }}>
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover"
-            }}
-            source={poster} />
-        </View> */}
-
         <View style={{
           flex: 1.2,
           flexDirection: "column",
@@ -285,7 +275,7 @@ export default function signIn() {
               paddingTop: 20
             }}>
               <Title>Sign In </Title>
-              <InputView style={{ paddingLeft: 30, paddingRight: 30 }}>
+              <InputView>
                 <TextInput
                   label="Email*"
                   placeholder='Enter your email'
@@ -316,7 +306,7 @@ export default function signIn() {
                 </HelperText>
               </InputView>
 
-              <InputView style={{ marginBottom: 30, paddingLeft: 30, paddingRight: 30 }}>
+              <InputView>
                 <TextInput
                 icon="camera"
                   secureTextEntry={true}
@@ -358,80 +348,6 @@ export default function signIn() {
           </ScrollView>
         </View>
       </View>
-
-      {/* <ContextArea> */}
-      {/* <View style={{
-        flex: 1,
-        width: Platform.OS === "web" ? '100vw' : '100%',
-        // height: 500,
-        justifyContent: "flex-start",
-        alignItems: "center"
-      }}>
-        <Image
-          style={{
-            // width: Platform.OS === "web" ? '100vw' : '100%',
-            width: "100%",
-            // maxWidth: 100,
-            height: 500,
-            resizeMode: "contain"
-            // height: "100%"
-          }}
-          source={poster} />
-      </View> */}
-      {/* <CartBarWrapper> */}
-      {/* </CartBarWrapper> */}
-      {/* <MyText>Welcome, 🥳 {user && user.displayName} </MyText>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={text => onChangeText("email", text)}
-            value={login.email}
-          />
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={text => onChangeText("password", text)}
-            value={login.password}
-            name={"password"}
-          />
-          <Button1
-            title="submit"
-            onPress={() =>
-              emaillogin()
-            }
-          />
-          <Button1
-            title="facebook Login"
-            onPress={() =>
-              loginWithFacebook()
-            }
-          />
-          <Button1
-            title="google Login"
-            onPress={() =>
-              googlelogin()
-            }
-          />
-          <Button1
-            title="facebook Login"
-            onPress={() =>
-              loginWithFacebook()
-            }
-          />
-          <Button1
-            title="Sign out"
-            onPress={() =>
-              auth.signOut().then(function () {
-                console.log("Sign-out successful")
-                setUser("")
-              }).catch(function (error) {
-                // An error happened.
-              })
-            }
-          /> */}
-      {/* </ContextArea> */}
-      {/* {newOrderProductList.length > 0 ?
-          <CartCheckoutBar />
-          : null}
-      </CartBarWrapper> */}
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {

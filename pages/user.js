@@ -7,16 +7,23 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import AppContainer from "../components/AppContainer";
+import {db, auth} from "../firebase";
 
 export default function user() {
   const { navigate, goBack } = useRouting();
-  const { user } = useContext(Context);
+  const { user, setUser } = useContext(Context);
 
   return (
     <>
       <ContextArea>
-        <MyText>Profile! 🏋️‍♀️</MyText>
-        <Button title="👈 Go back" onPress={() => goBack()} />  
+        <MyText>{user.email}</MyText>
+        <MyText>{user.password}</MyText>
+        <Button title="👈 logout" onPress={() => {
+          auth.signOut().then(()=>{
+            navigate({routeName: "login"})
+            setUser("")
+          })
+        }} />  
       </ContextArea>
       <BottomBar />
     </>

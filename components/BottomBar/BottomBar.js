@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
@@ -11,12 +11,12 @@ import { Context } from "../../context/Context";
 export default function BottomBar() {
   const { navigate } = useRouting();
 
-  const { selected, setSelected } = useContext(Context);
+  const { user, selected, setSelected } = useContext(Context);
   const qty = useQty();
 
   const BadgedIcon = qty > 0 ? withBadge(qty)(Icon) : Icon
 
-    return (
+  return (
     <>
       <Wrapper style={Elevations[6]}>
         <ContentArea>
@@ -29,18 +29,18 @@ export default function BottomBar() {
             <Icon
               name='home'
               type='font-awesome-5'
-              color={selected==="home" ? 'black' : '#ababab'}
+              color={selected === "home" ? 'black' : '#ababab'}
             />
-            <Name selected={selected==="home" ? 'black' : '#ababab'}>Home</Name>
+            <Name selected={selected === "home" ? 'black' : '#ababab'}>Home</Name>
           </Button>
 
           <Button>
             <Icon
               name='star'
               type='font-awesome-5'
-              color={selected==="star" ? 'black' : '#ababab'}
+              color={selected === "star" ? 'black' : '#ababab'}
             />
-            <Name selected={selected==="star" ? 'black' : '#ababab'}>Special</Name>
+            <Name selected={selected === "star" ? 'black' : '#ababab'}>Special</Name>
           </Button>
 
           <Button onPress={() => {
@@ -53,9 +53,9 @@ export default function BottomBar() {
             <Icon
               name='store'
               type='font-awesome-5'
-              color={selected==="store" ? 'black' : '#ababab'}
+              color={selected === "store" ? 'black' : '#ababab'}
             />
-            <Name selected={selected==="store" ? 'black' : '#ababab'}>Shop</Name>
+            <Name selected={selected === "store" ? 'black' : '#ababab'}>Shop</Name>
           </Button>
 
           <Button onPress={() => {
@@ -65,26 +65,33 @@ export default function BottomBar() {
             })
           }}>
 
-            <BadgedIcon 
+            <BadgedIcon
               name='shopping-cart'
               type='font-awesome-5'
-              color={selected==="cart" ? 'black' : '#ababab'}
+              color={selected === "cart" ? 'black' : '#ababab'}
             />
-            <Name selected={selected==="cart" ? 'black' : '#ababab'}>Cart</Name>
+            <Name selected={selected === "cart" ? 'black' : '#ababab'}>Cart</Name>
           </Button>
 
           <Button onPress={() => {
             setSelected("user")
-            navigate({
-              routeName: "user",
-            })
+            if (user) {
+              navigate({
+                routeName: "user",
+              })
+            }
+            else {
+              navigate({
+                routeName: "login",
+              })
+            }
           }}>
             <Icon
               name='user-circle'
               type='font-awesome-5'
-              color={selected==="user" ? 'black' : '#ababab'}
+              color={selected === "user" ? 'black' : '#ababab'}
             />
-            <Name selected={selected==="user" ? 'black' : '#ababab'}>Me</Name>
+            <Name selected={selected === "user" ? 'black' : '#ababab'}>Me</Name>
           </Button>
 
         </ContentArea>

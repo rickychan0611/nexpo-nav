@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
 
 // import {firebase, db, auth} from "../firebase";
 
@@ -55,15 +55,19 @@ const ContextProvider = ({ children }) => {
     });
 
 
-  // useEffect(() => {
-  //   auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       console.log("logged in", user);
-  //       setUser(user);
-  //     }
-  //     else console.log("Not logged in")
-  //   })
-  // }, [])
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("logged in", user);
+        db.collection("users").doc(user.email).get()
+        .then((doc)=>{
+          setUser(doc.data());
+        })
+        .catch((err)=>console.log(err))
+      }
+      else console.log("Not logged in")
+    })
+  }, [])
 
   const fetchData = async () => {
 

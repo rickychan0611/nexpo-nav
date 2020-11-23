@@ -168,7 +168,7 @@ export default function forgotPassword() {
               paddingTop: 20
             }}>
               <Title>Reset password</Title>
-              <InputView style={{ paddingLeft: 30, paddingRight: 30 }}>
+              <InputView>
                 <TextInput
                   label="Email*"
                   placeholder='Enter your email'
