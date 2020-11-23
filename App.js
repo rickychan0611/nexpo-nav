@@ -17,6 +17,7 @@ import panel from "./pages/admin/panel";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
 import signUp from "./pages/signUp";
+import forgotPassword from "./pages/forgotPassword";
 
 import BottomBar from './components/BottomBar';
 import { ThemeContext } from "styled-components";
@@ -60,6 +61,7 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="signIn" component={signIn} options={options("signIn")} />
+          <Stack.Screen name="forgotPassword" component={forgotPassword} options={options("Forgot Password")} />
           <Stack.Screen name="login" component={login} options={options("Login")} />
           <Stack.Screen name="signUp" component={signUp} options={options("signUp")} />
           <Stack.Screen name="home" component={home} options={options("Home")} />

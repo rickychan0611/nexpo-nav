@@ -62,7 +62,6 @@ export default function Cart() {
             <TextInput
               label="Redeem your point"
               placeholder='Enter the number of points that you want to redeem'
-              style={{ backgroundColor: theme.InputBoxBackgroundColor }}
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
@@ -96,7 +95,9 @@ export default function Cart() {
 
         </ScrollView>
       </ContextArea>
+
       <CartCheckoutBar />
+
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {
@@ -107,6 +108,7 @@ export default function Cart() {
         shadowRadius: 5,
         elevation: 10,
       }} />
+
     </>
   );
 }

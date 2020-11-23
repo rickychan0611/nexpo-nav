@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { Platform, Text, View, Dimensions } from "react-native";
-import { Modal, Portal, TextInput, HelperText, Title, Button, Divider, Caption, ActivityIndicator } from 'react-native-paper';
+import { Modal, Portal, TextInput, HelperText, Title, Button, Divider, Caption, Dialog } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -18,6 +18,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { ScrollView } from "react-native-gesture-handler";
 import validator from 'validator';
 import passwordValidator from 'password-validator';
+import Loader from "../components/Loader";
 
 var schema = new passwordValidator();
 schema
@@ -38,10 +39,12 @@ export default function signIn() {
   const vh = Dimensions.get('window').height;
   const [login, setLogin] = useState({ email: "", password: "" });
   const [errMsg, setErrMsg] = useState({});
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
   const handleChange = (name, value) => {
     setErrMsg({ email: "", password: "" })
 
@@ -55,20 +58,20 @@ export default function signIn() {
   const emailLogin = () => {
     setErrMsg({ email: "", password: "" })
     if (validator.isEmpty(login.email)) {
-      setErrMsg(prev => ({ ...prev, email: "Reqruied. Please eneter an email." }))
+      setErrMsg(prev => ({ ...prev, email: "Required. Please eneter an email." }))
     }
     if (!validator.isEmail(login.email)) {
       setErrMsg(prev => ({ ...prev, email: "Email address is not valid" }))
     }
     if (validator.isEmpty(login.password)) {
-      setErrMsg(prev => ({ ...prev, password: "Reqruied. Please eneter a password." }))
+      setErrMsg(prev => ({ ...prev, password: "Required. Please eneter a password." }))
     }
     // if (!schema.validate(login.password)) {
     //   setErrMsg(prev => ({ ...prev, password: "Must contain 6 characters with 1 uppercase letter and 2 digits" }))
     // }
     // auth.createUserWithEmailAndPassword(login.email, login.password)
     else {
-      showModal()
+      setLoading(true)
       auth.signInWithEmailAndPassword(login.email, login.password)
         .then((doc) => {
           db.collection("users").doc(doc.user.email).set({
@@ -77,21 +80,22 @@ export default function signIn() {
             password: login.password
           })
             .then(() => {
-              hideModal()
+              setLoading(false)
+              showModal()
               setSelected("cart")
               navigate({
                 routeName: "cart"
               })
             })
             .catch(function (error) {
-              hideModal()
               console.log(error)
               setErrMsg(prev => ({ ...prev, email: error }))
             });
         })
         .catch(function (error) {
+          setLoading(false)
           // Handle Errors here.
-          hideModal()
+          setLoading(false)
           setErrMsg(prev => ({ ...prev, email: error.message }))
           // ...
         });
@@ -226,10 +230,26 @@ export default function signIn() {
 
   return (
     <>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-        <ActivityIndicator size="large" color="white"/>
-        </Modal>
+    {loading && <Loader/>}
+    <Portal>
+        <Dialog visible={visible} onDismiss={hideModal}>
+          <Dialog.Title>Login Successful</Dialog.Title>
+          <Dialog.Actions>
+          <Button 
+            contained
+            color="white"
+              style={{
+                backgroundColor: theme.black,
+                borderWidth: 1,
+                borderRadius: 25,
+                width: 80,
+                marginBottom: 10
+              }}
+              onPress={() => {
+                hideModal()}}>
+              OK</Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>
 
       <View style={{
@@ -298,6 +318,8 @@ export default function signIn() {
 
               <InputView style={{ marginBottom: 30, paddingLeft: 30, paddingRight: 30 }}>
                 <TextInput
+                icon="camera"
+                  secureTextEntry={true}
                   label="Password*"
                   placeholder='Enter your password'
                   style={{
@@ -325,11 +347,10 @@ export default function signIn() {
                 </HelperText>
               </InputView>
 
-              <Button contain color="white" style={{ backgroundColor: theme.black }}
+              <Button contain color="white" style={{ backgroundColor: theme.black, marginBottom: 40 }}
                 onPress={() => emailLogin()}>Submit</Button>
               <Divider />
-              <InputView></InputView>
-              <Caption>Forgot Password?</Caption>
+              <Link routeName="forgotPassword" style={{marginBottom: 20}}><Caption>Forgot Password?</Caption></Link>
               <Link routeName="signUp"><Caption>Don't have an account? Sign up</Caption></Link>
               <InputView>
               </InputView>

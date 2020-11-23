@@ -27,10 +27,6 @@ export default function InputFields() {
         <TextInput
           label="Chinese Name*"
           placeholder='Chinese Name'
-          style={{
-            backgroundColor: theme.InputBoxBackgroundColor,
-            outline: "none"
-          }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
@@ -45,7 +41,6 @@ export default function InputFields() {
 
       <InputView>
         <TextInput
-          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
@@ -64,7 +59,6 @@ export default function InputFields() {
         <TextInput
           label="Quantity*"
           placeholder='How many in stock?'
-          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
@@ -87,7 +81,6 @@ export default function InputFields() {
         <TextInput
           label="Unit*"
           placeholder='Eg. each, lbs, 6pcs or 4/pack'
-          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
@@ -107,7 +100,7 @@ export default function InputFields() {
           <TextInput
             label="Original Price*"
             placeholder='Enter a price'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
+            style={{ width: "98%" }}
             theme={{ colors: { primary: "grey" } }}
             left={
               <TextInput.Icon
@@ -168,7 +161,7 @@ export default function InputFields() {
           <TextInput
             label="Discount (-$)"
             placeholder={product.discount_amt}
-            style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%" }}
+            style={{ width: "98%" }}
             theme={{ colors: { primary: "grey" } }}
             left={
               <TextInput.Icon
@@ -196,7 +189,7 @@ export default function InputFields() {
           <TextInput
             label="Discount %"
             placeholder='Discount %'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "98%", alignSelf: "flex-end" }}
+            style={{ width: "98%", alignSelf: "flex-end" }}
             theme={{ colors: { primary: "grey" } }}
             right={
               <TextInput.Icon
@@ -226,7 +219,6 @@ export default function InputFields() {
         <TextInput
           label="Chinese Description"
           placeholder='Chinese Description'
-          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense
@@ -245,7 +237,6 @@ export default function InputFields() {
         <TextInput
           label="English Description"
           placeholder='English Description'
-          style={{ backgroundColor: theme.InputBoxBackgroundColor }}
           theme={{ colors: { primary: "grey" } }}
           mode="outlined"
           dense

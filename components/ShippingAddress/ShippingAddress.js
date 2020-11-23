@@ -23,7 +23,7 @@ export default function ShippingAddress() {
         <Row>
           <InputView style={{ flex: 1 }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{ width: "96%" }}
               label="Frist Name"
               placeholder='Frist Name'
               theme={{ colors: { primary: "grey" } }}
@@ -37,7 +37,7 @@ export default function ShippingAddress() {
 
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{width: "96%" }}
               label="Last Name"
               placeholder='Last Name'
               theme={{ colors: { primary: "grey" } }}
@@ -54,7 +54,6 @@ export default function ShippingAddress() {
           <TextInput
             label="Phone Numner"
             placeholder='Phone Numner'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor }}
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
@@ -68,7 +67,6 @@ export default function ShippingAddress() {
           <TextInput
             label="Address Line 1"
             placeholder='Address Line 1'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor }}
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
@@ -82,7 +80,6 @@ export default function ShippingAddress() {
           <TextInput
             label="Address Line 2"
             placeholder='Address Line 2'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor }}
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
@@ -95,7 +92,7 @@ export default function ShippingAddress() {
         <Row>
           <InputView style={{ flex: 1 }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{ width: "96%" }}
               label="City"
               placeholder='City'
               theme={{ colors: { primary: "grey" } }}
@@ -109,7 +106,7 @@ export default function ShippingAddress() {
 
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{ width: "96%" }}
               label="Postal Code"
               placeholder='Postal Code'
               theme={{ colors: { primary: "grey" } }}
@@ -125,7 +122,7 @@ export default function ShippingAddress() {
         <Row>
           <InputView style={{ flex: 1 }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{ width: "96%" }}
               label="Province"
               placeholder='Province'
               theme={{ colors: { primary: "grey" } }}
@@ -138,7 +135,7 @@ export default function ShippingAddress() {
           </InputView>
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>
             <TextInput
-              style={{ backgroundColor: theme.InputBoxBackgroundColor, width: "96%" }}
+              style={{ width: "96%" }}
               label="Country"
               placeholder='Country'
               theme={{ colors: { primary: "grey" } }}
@@ -157,7 +154,6 @@ export default function ShippingAddress() {
           <TextInput
             label="Message"
             placeholder='Message'
-            style={{ backgroundColor: theme.InputBoxBackgroundColor }}
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
