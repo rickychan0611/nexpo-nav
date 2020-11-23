@@ -1,8 +1,8 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { Platform, Image, View, Dimensions, KeyboardAvoidingView } from "react-native";
-import { TextInput, HelperText, Title, Button, Divider, Caption } from 'react-native-paper';
+import { Platform, Text, View, Dimensions } from "react-native";
+import { Modal, Portal, TextInput, HelperText, Title, Button, Divider, Caption, ActivityIndicator } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
@@ -16,8 +16,18 @@ import poster from "../public/poster.jpeg"
 import siginBanner from "../public/siginBanner.png"
 import { ThemeContext } from "../context/ThemeContext";
 import { ScrollView } from "react-native-gesture-handler";
+import validator from 'validator';
+import passwordValidator from 'password-validator';
 
-
+var schema = new passwordValidator();
+schema
+  .is().min(6)                                    // Minimum length 8
+  .is().max(100)                                  // Maximum length 100
+  .has().uppercase()                              // Must have uppercase letters
+  .has().lowercase()                              // Must have lowercase letters
+  .has().digits(2)                                // Must have at least 2 digits
+  .has().not().spaces()                           // Should not have spaces
+// .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 // WebBrowser.maybeCompleteAuthSession();
 
 export default function signIn() {
@@ -26,25 +36,15 @@ export default function signIn() {
   const { theme } = useContext(ThemeContext);
   const vw = Dimensions.get('window').width;
   const vh = Dimensions.get('window').height;
+  const [login, setLogin] = useState({ email: "", password: "" });
+  const [errMsg, setErrMsg] = useState({});
+  const [visible, setVisible] = React.useState(false);
 
-  // const [request, response, promptAsync] = useAuthRequest({
-  //   responseType: ResponseType.Token,
-  //   clientId: '271243993866963',
-  // });
-
-  // React.useEffect(() => {
-  //   if (response?.type === 'success') {
-  //     const { access_token } = response.params;
-
-  //     const credential = firebase.auth.FacebookAuthProvider.credential(access_token);
-  //     // Sign in with the credential from the Facebook user.
-  //     Firebase.auth().signInWithCredential(credential);
-  //   }
-  // }, [response]);
-
-  const [login, setLogin] = useState({});
-
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
   const handleChange = (name, value) => {
+    setErrMsg({ email: "", password: "" })
+
     setLogin(prev => {
       return (
         { ...prev, [name]: value }
@@ -53,127 +53,144 @@ export default function signIn() {
   }
 
   const emailLogin = () => {
-    console.log(login)
-    // auth.createUserWithEmailAndPassword(login.email, login.password)
-    auth.signInWithEmailAndPassword(login.email, login.password)
-      .then((doc) => {
-        db.collection("users").doc(doc.user.email).set({
-          uid: doc.user.uid,
-          email: doc.user.email,
-          password: login.password
-        })
-          .catch(function (error) {
-            // Handle Errors here.
-            console.log(error)
-            // ...
-          });
-        setSelected("cart")
-        navigate({
-          routeName: "cart"
-        })
-      })
-      .catch(function (error) {
-        // Handle Errors here.
-        console.log("error", error)
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-  }
-
-  const googlelogin = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
-
-    auth.signInWithPopup(provider).then(function (result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      setUser(result.user)
-      // ...
-    }).catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
-  }
-
-  async function loginWithFacebook() {
-
-    //Facebook login with AAPP
-    if (Platform.OS !== "web") {
-      //I guess this have to change to APP
-      await Facebook.initializeAsync({ appId: '271243993866963', appName: "tintin-store" });
-
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
-      });
-
-      if (type === 'success') {
-        // Build Firebase credential with the Facebook access token.
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-        // Sign in with credential from the Facebook user.
-        auth.signInWithCredential(credential)
-          .then(function (result) {
-            console.log(result)
-            setUser(result.user)
-          })
-          .catch(error => {
-            // Handle Errors here.
-          });
-      }
+    setErrMsg({ email: "", password: "" })
+    if (validator.isEmpty(login.email)) {
+      setErrMsg(prev => ({ ...prev, email: "Reqruied. Please eneter an email." }))
     }
-
-    //Facebook login with WEB
+    if (!validator.isEmail(login.email)) {
+      setErrMsg(prev => ({ ...prev, email: "Email address is not valid" }))
+    }
+    if (validator.isEmpty(login.password)) {
+      setErrMsg(prev => ({ ...prev, password: "Reqruied. Please eneter a password." }))
+    }
+    // if (!schema.validate(login.password)) {
+    //   setErrMsg(prev => ({ ...prev, password: "Must contain 6 characters with 1 uppercase letter and 2 digits" }))
+    // }
+    // auth.createUserWithEmailAndPassword(login.email, login.password)
     else {
-      var provider = new firebase.auth.FacebookAuthProvider();
-
-      auth.signInWithPopup(provider)
-        .then(function (result) {
-          var token = result.credential.accessToken;
-          var user = result.user;
-          setUser(result.user)
-          // ...
-        }).catch(function (error) {
+      showModal()
+      auth.signInWithEmailAndPassword(login.email, login.password)
+        .then((doc) => {
+          db.collection("users").doc(doc.user.email).set({
+            uid: doc.user.uid,
+            email: doc.user.email,
+            password: login.password
+          })
+            .then(() => {
+              hideModal()
+              setSelected("cart")
+              navigate({
+                routeName: "cart"
+              })
+            })
+            .catch(function (error) {
+              hideModal()
+              console.log(error)
+              setErrMsg(prev => ({ ...prev, email: error }))
+            });
+        })
+        .catch(function (error) {
           // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
+          hideModal()
+          setErrMsg(prev => ({ ...prev, email: error.message }))
           // ...
         });
     }
   }
 
-  const facebookloginWEB = () => {
-    var provider = new firebase.auth.FacebookAuthProvider();
+  // const googlelogin = () => {
+  //   var provider = new firebase.auth.GoogleAuthProvider();
 
-    auth.signInWithPopup(provider)
-      .then(function (result) {
-        var token = result.credential.accessToken;
-        var user = result.user;
-        setUser(result.user)
+  //   auth.signInWithPopup(provider).then(function (result) {
+  //     // This gives you a Google Access Token. You can use it to access the Google API.
+  //     var token = result.credential.accessToken;
+  //     // The signed-in user info.
+  //     var user = result.user;
+  //     setUser(result.user)
+  //     // ...
+  //   }).catch(function (error) {
+  //     // Handle Errors here.
+  //     var errorCode = error.code;
+  //     var errorMessage = error.message;
+  //     // The email of the user's account used.
+  //     var email = error.email;
+  //     // The firebase.auth.AuthCredential type that was used.
+  //     var credential = error.credential;
+  //     // ...
+  //   });
+  // }
 
-        // ...
-      }).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
-      });
-  }
+  // async function loginWithFacebook() {
+
+  //   //Facebook login with AAPP
+  //   if (Platform.OS !== "web") {
+  //     //I guess this have to change to APP
+  //     await Facebook.initializeAsync({ appId: '271243993866963', appName: "tintin-store" });
+
+  //     const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+  //       permissions: ['public_profile'],
+  //     });
+
+  //     if (type === 'success') {
+  //       // Build Firebase credential with the Facebook access token.
+  //       const credential = firebase.auth.FacebookAuthProvider.credential(token);
+
+  //       // Sign in with credential from the Facebook user.
+  //       auth.signInWithCredential(credential)
+  //         .then(function (result) {
+  //           console.log(result)
+  //           setUser(result.user)
+  //         })
+  //         .catch(error => {
+  //           // Handle Errors here.
+  //         });
+  //     }
+  //   }
+
+  //   //Facebook login with WEB
+  //   else {
+  //     var provider = new firebase.auth.FacebookAuthProvider();
+
+  //     auth.signInWithPopup(provider)
+  //       .then(function (result) {
+  //         var token = result.credential.accessToken;
+  //         var user = result.user;
+  //         setUser(result.user)
+  //         // ...
+  //       }).catch(function (error) {
+  //         // Handle Errors here.
+  //         var errorCode = error.code;
+  //         var errorMessage = error.message;
+  //         // The email of the user's account used.
+  //         var email = error.email;
+  //         // The firebase.auth.AuthCredential type that was used.
+  //         var credential = error.credential;
+  //         // ...
+  //       });
+  //   }
+  // }
+
+  // const facebookloginWEB = () => {
+  //   var provider = new firebase.auth.FacebookAuthProvider();
+
+  //   auth.signInWithPopup(provider)
+  //     .then(function (result) {
+  //       var token = result.credential.accessToken;
+  //       var user = result.user;
+  //       setUser(result.user)
+
+  //       // ...
+  //     }).catch(function (error) {
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       var email = error.email;
+  //       // The firebase.auth.AuthCredential type that was used.
+  //       var credential = error.credential;
+  //       // ...
+  //     });
+  // }
 
 
 
@@ -200,8 +217,20 @@ export default function signIn() {
     };
   }, []);
 
+  const containerStyle = {
+    // backgroundColor: 'white', 
+    padding: 20,
+    width: "100%",
+    height: "100%"
+  };
+
   return (
     <>
+      <Portal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+        <ActivityIndicator size="large" color="white"/>
+        </Modal>
+      </Portal>
 
       <View style={{
         flex: 1,
@@ -236,7 +265,7 @@ export default function signIn() {
               paddingTop: 20
             }}>
               <Title>Sign In </Title>
-              <InputView>
+              <InputView style={{ paddingLeft: 30, paddingRight: 30 }}>
                 <TextInput
                   label="Email*"
                   placeholder='Enter your email'
@@ -253,14 +282,21 @@ export default function signIn() {
                   dense
                   value={login.email}
                   onChangeText={value => { handleChange("email", value) }}
-                // error={error.email}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  keyboardType="email-address"
+                  error={errMsg.email}
                 />
-                {/* <HelperText type="error" visible={error.chineseName}>
-          {error.email}
-        </HelperText> */}
+                <HelperText type="error" visible={errMsg.email}>
+                  {errMsg.email}
+                </HelperText>
               </InputView>
 
-              <InputView style={{ marginBottom: 30 }}>
+              <InputView style={{ marginBottom: 30, paddingLeft: 30, paddingRight: 30 }}>
                 <TextInput
                   label="Password*"
                   placeholder='Enter your password'
@@ -276,12 +312,19 @@ export default function signIn() {
                   dense
                   value={login.password}
                   onChangeText={value => { handleChange("password", value) }}
-                // error={error.password}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  error={errMsg.password}
                 />
-                {/* <HelperText type="error" visible={error.password}>
-          {error.password}
-        </HelperText> */}
+                <HelperText type="error" visible={errMsg.password}>
+                  {errMsg.password}
+                </HelperText>
               </InputView>
+
               <Button contain color="white" style={{ backgroundColor: theme.black }}
                 onPress={() => emailLogin()}>Submit</Button>
               <Divider />

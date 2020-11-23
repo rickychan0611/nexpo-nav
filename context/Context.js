@@ -70,18 +70,14 @@ const ContextProvider = ({ children }) => {
     const snapshot = await db.collection("categories").get()
     
     snapshot.forEach((doc) => {
-      console.log(doc.data())
       setCategories(prev => {
         return [...prev, doc.data()]
       })
     })
 
-    console.log(snapshot.docs[0].data().uid)
     const productSnapshot = await db.collection("products").where("category", "array-contains", snapshot.docs[0].data().uid).get()
-    console.log(productSnapshot)
 
     productSnapshot.forEach((doc) => {
-      console.log(doc.data())
       setProductData(prev => {
         return [...prev, doc.data()]
       })

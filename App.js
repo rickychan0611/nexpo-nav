@@ -59,8 +59,8 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="login" component={login} options={options("Login")} />
           <Stack.Screen name="signIn" component={signIn} options={options("signIn")} />
+          <Stack.Screen name="login" component={login} options={options("Login")} />
           <Stack.Screen name="signUp" component={signUp} options={options("signUp")} />
           <Stack.Screen name="home" component={home} options={options("Home")} />
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
