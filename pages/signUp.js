@@ -1,23 +1,28 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { Platform, Image, View, Dimensions, KeyboardAvoidingView } from "react-native";
-import { TextInput, HelperText, Title, Button, Divider, Caption } from 'react-native-paper';
+import { Platform, Text, View, Dimensions } from "react-native";
+import { Modal, Portal, TextInput, HelperText, Title, Button, Divider, Paragraph, Dialog } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import CartCheckoutBar from "../components/CartCheckoutBar";
-import { firebase, db, auth } from "../firebase";
-import * as WebBrowser from 'expo-web-browser';
-// import * as Facebook from 'expo-auth-session/providers/facebook';
-// import { ResponseType } from 'expo-auth-session';
-import * as Facebook from 'expo-facebook';
-import poster from "../public/poster.jpeg"
-import siginBanner from "../public/siginBanner.png"
+import { db, auth } from "../firebase";
 import { ThemeContext } from "../context/ThemeContext";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import validator from 'validator';
+import passwordValidator from 'password-validator';
+import Loader from "../components/Loader";
 
-
+var schema = new passwordValidator();
+schema
+  .is().min(6)                                    // Minimum length 8
+  .is().max(100)                                  // Maximum length 100
+  .has().uppercase()                              // Must have uppercase letters
+  .has().lowercase()                              // Must have lowercase letters
+  .has().digits(2)                                // Must have at least 2 digits
+  .has().not().spaces()                           // Should not have spaces
+// .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
 // WebBrowser.maybeCompleteAuthSession();
 
 export default function signUp() {
@@ -26,25 +31,18 @@ export default function signUp() {
   const { theme } = useContext(ThemeContext);
   const vw = Dimensions.get('window').width;
   const vh = Dimensions.get('window').height;
+  const [login, setLogin] = useState({ email: "", password: "", fristName: "", lastName: "" });
+  const [errMsg, setErrMsg] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [openEye, setOpenEye] = useState(false);
 
-  // const [request, response, promptAsync] = useAuthRequest({
-  //   responseType: ResponseType.Token,
-  //   clientId: '271243993866963',
-  // });
-
-  // React.useEffect(() => {
-  //   if (response?.type === 'success') {
-  //     const { access_token } = response.params;
-
-  //     const credential = firebase.auth.FacebookAuthProvider.credential(access_token);
-  //     // Sign in with the credential from the Facebook user.
-  //     Firebase.auth().signInWithCredential(credential);
-  //   }
-  // }, [response]);
-
-  const [login, setLogin] = useState({});
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
 
   const handleChange = (name, value) => {
+    setErrMsg({ email: "", password: "", fristName: "", lastName: "" })
+
     setLogin(prev => {
       return (
         { ...prev, [name]: value }
@@ -53,129 +51,74 @@ export default function signUp() {
   }
 
   const emailLogin = () => {
-    console.log(login)
-    // auth.createUserWithEmailAndPassword(login.email, login.password)
-    auth.signInWithEmailAndPassword(login.email, login.password)
-      .then((doc) => {
-        db.collection("users").doc(doc.user.email).set({
-          uid: doc.user.uid,
-          email: doc.user.email,
-          password: login.password
-        })
-          .catch(function (error) {
-            // Handle Errors here.
-            console.log(error)
-            // ...
-          });
-        setSelected("cart")
-        navigate({
-          routeName: "cart"
-        })
-      })
-      .catch(function (error) {
-        // Handle Errors here.
-        console.log("error", error)
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-  }
+    setErrMsg({ email: "", password: "", fristName: "", lastName: "" })
 
-  const googlelogin = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
-
-    auth.signInWithPopup(provider).then(function (result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      setUser(result.user)
-      // ...
-    }).catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
-  }
-
-  async function loginWithFacebook() {
-
-    //Facebook login with AAPP
-    if (Platform.OS !== "web") {
-      //I guess this have to change to APP
-      await Facebook.initializeAsync({ appId: '271243993866963', appName: "tintin-store" });
-
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ['public_profile'],
-      });
-
-      if (type === 'success') {
-        // Build Firebase credential with the Facebook access token.
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-        // Sign in with credential from the Facebook user.
-        auth.signInWithCredential(credential)
-          .then(function (result) {
-            console.log(result)
-            setUser(result.user)
-          })
-          .catch(error => {
-            // Handle Errors here.
-          });
+    let validate = new Promise((resolve, reject) => {
+      if (validator.isEmpty(login.fristName)) {
+        setErrMsg(prev => ({ ...prev, fristName: "Required. Please eneter an frist name." }))
+        reject()
       }
-    }
+      if (validator.isEmpty(login.lastName)) {
+        setErrMsg(prev => ({ ...prev, lastName: "Required. Please eneter a last name." }))
+        reject()
+      }
+      if (validator.isEmpty(login.email)) {
+        setErrMsg(prev => ({ ...prev, email: "Required. Please eneter an email." }))
+        reject()
+      }
+      if (validator.isEmpty(login.password)) {
+        setErrMsg(prev => ({ ...prev, password: "Required. Please eneter a password." }))
+        reject()
+      }
+      if (!validator.isEmail(login.email)) {
+        setErrMsg(prev => ({ ...prev, email: "Email address is not valid" }))
+        reject()
+      }
+      if (!schema.validate(login.password)) {
+        setErrMsg(prev => ({ ...prev, password: "Must be at least 6 characters with 1 uppercase letter and 2 digits" }))
+        reject()
+      }
+      else resolve()
+    })
 
-    //Facebook login with WEB
-    else {
-      var provider = new firebase.auth.FacebookAuthProvider();
+    validate.then(() => {
+      setLoading(true)
+      auth.createUserWithEmailAndPassword(login.email, login.password)
+        .then((doc) => {
+          auth.currentUser.sendEmailVerification({
+            url: 'http://localhost:3000/cart'
+            // url: 'http://localhost:3000/?email=' + auth.currentUser.email
+          })
+            .then(function () {
+              db.collection("users").doc(doc.user.email).set({
+                uid: doc.user.uid,
+                email: doc.user.email,
+                password: login.password
+              })
+                .then(() => {
+                  setLoading(false)
+                  showModal()
+                })
+                .catch(function (error) {
+                  console.log(error)
+                  setErrMsg(prev => ({ ...prev, password: error.message }))
+                });
+            })
+            .catch(function (error) {
+              setLoading(false)
+              setErrMsg(prev => ({ ...prev, password: error.message }))
+            });
 
-      auth.signInWithPopup(provider)
-        .then(function (result) {
-          var token = result.credential.accessToken;
-          var user = result.user;
-          setUser(result.user)
-          // ...
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
+          setLoading(false)
           // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
+          setLoading(false)
+          setErrMsg(prev => ({ ...prev, password: error.message }))
           // ...
         });
-    }
+    })
   }
-
-  const facebookloginWEB = () => {
-    var provider = new firebase.auth.FacebookAuthProvider();
-
-    auth.signInWithPopup(provider)
-      .then(function (result) {
-        var token = result.credential.accessToken;
-        var user = result.user;
-        setUser(result.user)
-
-        // ...
-      }).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        // ...
-      });
-  }
-
-
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
@@ -187,21 +130,45 @@ export default function signUp() {
     }
   }, []);
 
-  useEffect(() => {
-    if (Platform.OS !== "web") {
-      WebBrowser.warmUpAsync()
-    }
-
-    return () => {
-      if (Platform.OS !== "web") {
-        WebBrowser.coolDownAsync();
-      }
-
-    };
-  }, []);
+  const containerStyle = {
+    // backgroundColor: 'white', 
+    padding: 20,
+    width: "100%",
+    height: "100%"
+  };
 
   return (
     <>
+      {loading && <Loader />}
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideModal}>
+          <Dialog.Title>Pease verify your email</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>You're almost there! We sent an email to {login.email}. </Paragraph>
+            <Paragraph>Just click on the link in that email to complete your signup. </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              contained
+              color="white"
+              style={{
+                backgroundColor: theme.black,
+                borderWidth: 1,
+                borderRadius: 25,
+                width: 80,
+                marginBottom: 10
+              }}
+              onPress={() => {
+                hideModal()
+                setSelected("cart")
+                navigate({
+                  routeName: "cart"
+                })
+              }}>
+              OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
       <View style={{
         flex: 1,
@@ -211,58 +178,120 @@ export default function signUp() {
         // flexWrap: 'wrap',
         justifyContent: 'flex-start',
         // alignItems: 'stretch',
-        paddingBottom: 60
+        // paddingBottom: 60
       }}>
-        <View style={{ flex: 1 }}>
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover"
-            }}
-            source={poster} />
-        </View>
-
-        <View style={{
-          flex: 1.2,
-          flexDirection: "column",
-          backgroundColor: 'white',
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-          <ScrollView>
+        <ScrollView>
+          <View style={{
+            flex: 1.2,
+            flexDirection: "column",
+            backgroundColor: 'white',
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
             <View style={{
               alignItems: "center",
               paddingTop: 20
             }}>
-              <Title>Sign In </Title>
+
+              <Title>Sign Up 註冊</Title>
+
+
               <InputView>
                 <TextInput
-                  label="Email*"
-                  placeholder='Enter your email'
+                  label="Frist Name 名字*"
+                  placeholder='Frist Name 名字'
                   style={{
                     // backgroundColor: theme.InputBoxBackgroundColor,
                     // width: "100%",
                     width: Platform.OS === "web" ? "90vw" : vw - 60,
                     maxWidth: 400,
-                    outline: "none"
+                    outline: "none",
+                    marginTop: 20
+                  }}
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={login.fristName}
+                  onChangeText={value => { handleChange("fristName", value) }}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  keyboardType="default"
+                  error={errMsg.fristName}
+                />
+                <HelperText type="error" visible={errMsg.fristName}>
+                  {errMsg.fristName}
+                </HelperText>
+              </InputView>
+
+              <InputView>
+                <TextInput
+                  label="Last Name 姓氏*"
+                  placeholder='Last Name 姓氏'
+                  style={{
+                    // backgroundColor: theme.InputBoxBackgroundColor,
+                    // width: "100%",
+                    width: Platform.OS === "web" ? "90vw" : vw - 60,
+                    maxWidth: 400,
+                    outline: "none",
+                  }}
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={login.lastName}
+                  onChangeText={value => { handleChange("lastName", value) }}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  keyboardType="default"
+                  error={errMsg.lastName}
+                />
+                <HelperText type="error" visible={errMsg.lastName}>
+                  {errMsg.lastName}
+                </HelperText>
+              </InputView>
+
+              <InputView>
+                <TextInput
+                  label="Email 電郵*"
+                  placeholder='Email 電郵'
+                  style={{
+                    // backgroundColor: theme.InputBoxBackgroundColor,
+                    // width: "100%",
+                    width: Platform.OS === "web" ? "90vw" : vw - 60,
+                    maxWidth: 400,
+                    outline: "none",
                   }}
                   theme={{ colors: { primary: "grey" } }}
                   mode="outlined"
                   dense
                   value={login.email}
                   onChangeText={value => { handleChange("email", value) }}
-                // error={error.email}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  keyboardType="email-address"
+                  error={errMsg.email}
                 />
-                {/* <HelperText type="error" visible={error.chineseName}>
-          {error.email}
-        </HelperText> */}
+                <HelperText type="error" visible={errMsg.email}>
+                  {errMsg.email}
+                </HelperText>
               </InputView>
 
-              <InputView style={{ marginBottom: 30 }}>
+              <InputView>
                 <TextInput
-                  label="Password*"
-                  placeholder='Enter your password'
+                  secureTextEntry={!openEye ? true : false}
+                  label="Password 密碼*"
+                  placeholder='Password 密碼'
                   style={{
                     // backgroundColor: theme.InputBoxBackgroundColor,
                     // width: "100%",
@@ -270,102 +299,44 @@ export default function signUp() {
                     maxWidth: 400,
                     outline: "none"
                   }}
+                  right={
+                    <TextInput.Icon
+                      onPress={() => {
+                        setOpenEye(!openEye)
+                      }}
+                      name={openEye ? "eye" : "eye-off"}
+                    />
+                  }
                   theme={{ colors: { primary: "grey" } }}
                   mode="outlined"
                   dense
                   value={login.password}
                   onChangeText={value => { handleChange("password", value) }}
-                // error={error.password}
+                  onKeyPress={e => {
+                    if (e.key === "Enter") {
+                      console.log(e.key)
+                      emailLogin()
+                    }
+                  }}
+                  error={errMsg.password}
                 />
-                {/* <HelperText type="error" visible={error.password}>
-          {error.password}
-        </HelperText> */}
+                <HelperText type="error" visible={errMsg.password}>
+                  {errMsg.password}
+                </HelperText>
               </InputView>
-              <Button contain color="white" style={{ backgroundColor: theme.black }}
-                onPress={() => emailLogin()}>Submit</Button>
+
+              <Button contain color="white" style={{ backgroundColor: theme.black, marginBottom: 40 }}
+                onPress={() => emailLogin()}>Submit 提交</Button>
               <Divider />
-              <InputView></InputView>
-              <Caption>Forgot Password? | Don't have an account? Sign up</Caption>
               <InputView>
               </InputView>
             </View>
-          </ScrollView>
-        </View>
+            <View style={{ height: 100 }} />
+
+          </View>
+        </ScrollView>
       </View>
 
-      {/* <ContextArea> */}
-      {/* <View style={{
-        flex: 1,
-        width: Platform.OS === "web" ? '100vw' : '100%',
-        // height: 500,
-        justifyContent: "flex-start",
-        alignItems: "center"
-      }}>
-        <Image
-          style={{
-            // width: Platform.OS === "web" ? '100vw' : '100%',
-            width: "100%",
-            // maxWidth: 100,
-            height: 500,
-            resizeMode: "contain"
-            // height: "100%"
-          }}
-          source={poster} />
-      </View> */}
-      {/* <CartBarWrapper> */}
-      {/* </CartBarWrapper> */}
-      {/* <MyText>Welcome, 🥳 {user && user.displayName} </MyText>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={text => onChangeText("email", text)}
-            value={login.email}
-          />
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            onChangeText={text => onChangeText("password", text)}
-            value={login.password}
-            name={"password"}
-          />
-          <Button1
-            title="submit"
-            onPress={() =>
-              emaillogin()
-            }
-          />
-          <Button1
-            title="facebook Login"
-            onPress={() =>
-              loginWithFacebook()
-            }
-          />
-          <Button1
-            title="google Login"
-            onPress={() =>
-              googlelogin()
-            }
-          />
-          <Button1
-            title="facebook Login"
-            onPress={() =>
-              loginWithFacebook()
-            }
-          />
-          <Button1
-            title="Sign out"
-            onPress={() =>
-              auth.signOut().then(function () {
-                console.log("Sign-out successful")
-                setUser("")
-              }).catch(function (error) {
-                // An error happened.
-              })
-            }
-          /> */}
-      {/* </ContextArea> */}
-      {/* {newOrderProductList.length > 0 ?
-          <CartCheckoutBar />
-          : null}
-      </CartBarWrapper> */}
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {
