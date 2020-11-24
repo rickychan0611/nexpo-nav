@@ -25,11 +25,11 @@ export default function CartCheckoutBar() {
           routeName: "login",
         })
       }}>
-          <Margin theme={theme}>
+          <Bar theme={theme}>
           <Total>
           Place Order  ●  ${(+total).toFixed(2)}
           </Total>
-          </Margin>
+          </Bar>
           {/* <Qty>{qty}</Qty> */}
       </Wrapper>
     </>
@@ -51,7 +51,7 @@ const Qty = styled.Text`
   font-size: 13px;
   margin: 0 30px;
 `;
-const Margin = styled.View`
+const Bar = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
@@ -61,7 +61,8 @@ const Margin = styled.View`
   font-weight: bold;
   background-color: ${props => props.theme.green}; 
   height: 40px;
-  width: 90%
+  width: 90%;
+  border-radius: 25px;
 `;
 const Wrapper = styled.TouchableOpacity`
   position: ${Platform.OS === "web" ? `fixed` : `absolute`};
@@ -74,5 +75,4 @@ const Wrapper = styled.TouchableOpacity`
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  
 `;

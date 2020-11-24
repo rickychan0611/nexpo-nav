@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
 import { Card, Button } from 'react-native-elements';
-import { Divider, TextInput } from "react-native-paper";
+import { Divider, TextInput, Headline } from "react-native-paper";
 
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -17,9 +17,9 @@ import ShippingAddress from "../components/ShippingAddress";
 
 export default function Cart() {
   const { navigate } = useRouting();
-  const { 
-    total, 
-    newOrderProductList, setNewOrderProductList, 
+  const {
+    total,
+    newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress
   } = useContext(Context);
@@ -42,21 +42,19 @@ export default function Cart() {
 
   return (
     <>
-      <Title
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 0,
-          },
-          shadowOpacity: 0.4,
-          shadowRadius: 5,
-          elevation: 10,
-          zIndex: 1000
-        }}>Your order</Title>
       <ContextArea>
         <ScrollView>
+          <Headline
+            style={{
+              padding: 25
+            }}
+          >
+            Your order</Headline>
+            
+          <Divider />
+
           <CartItems />
+
           <View style={{ padding: 25 }}>
             <Text>Your points: 10000</Text>
             <TextInput
@@ -72,26 +70,28 @@ export default function Cart() {
           </View>
           <Divider />
 
-          <TotalContainer style={{ paddingTop: 20 }}>
+          <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
             <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
           </TotalContainer>
-          <TotalContainer >
+          <TotalContainer style={{paddingRight: 40 }}>
             <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
           </TotalContainer>
-          <TotalContainer >
+          <TotalContainer style={{paddingRight: 40 }}>
             <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20 }}>
+          <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
             <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
             <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
           </TotalContainer>
 
           <Divider />
 
-          <ShippingAddress/>      
+          <ShippingAddress />
+
+          <View style={{height: 100}}></View>
 
         </ScrollView>
       </ContextArea>
@@ -143,5 +143,5 @@ const ContextArea = styled.View`
   height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
   max-width: 500px;
   background-color: white;
-  padding-bottom: ${Platform.OS === "web" ? `124px` : `190px`};
+  /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;

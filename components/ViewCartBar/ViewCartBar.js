@@ -25,11 +25,11 @@ export default function CartCheckoutBar() {
           routeName: "cart",
         })
       }}>
-          <Margin theme={theme}>
+          <Bar theme={theme}>
           <Total>
           View Cart  ●  ${(+total).toFixed(2)}
           </Total>
-          </Margin>
+          </Bar>
           {/* <Qty>{qty}</Qty> */}
       </Wrapper>
     </>
@@ -51,7 +51,7 @@ const Qty = styled.Text`
   font-size: 13px;
   margin: 0 30px;
 `;
-const Margin = styled.View`
+const Bar = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
@@ -61,7 +61,8 @@ const Margin = styled.View`
   font-weight: bold;
   background-color: ${props => props.theme.black}; 
   height: 40px;
-  width: 90%
+  width: 90%;
+  border-radius: 25px;
 `;
 const Wrapper = styled.TouchableOpacity`
   position: ${Platform.OS === "web" ? `fixed` : `absolute`};

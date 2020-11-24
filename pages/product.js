@@ -13,13 +13,15 @@ import ImageSwiper from "../components/ImageSwiper";
 import Divider from "../components/Divider";
 
 export default function Product() {
+  const { getParam } = useRouting()
+  const id = getParam('id')
+
   const [counter, setCounter] = useState(0);
   const { newOrderProductList, setNewOrderProductList, selectedItem, setTotal } = useContext(Context);
   const ctx = useContext(Context);
 
   let idArray = [];
   let index;
-
 
   if (newOrderProductList[0]) {
     newOrderProductList.forEach(item => {

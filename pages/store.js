@@ -84,7 +84,7 @@ export default function Store({ ssrData }) {
                       navigate({
                         routeName: "product",
                         params: { id: item.uid },
-                        web: { as: `/product/${item.englishName}` },
+                        web: { as: `/product/${item.englishName}?id=${item.uid}` },
                       })
                     }}>
                     <ProductCard item={item} />
