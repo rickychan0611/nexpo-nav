@@ -70,7 +70,7 @@ const ContextProvider = ({ children }) => {
     })
   }, [])
 
-
+ 
   const fetchData = async () => {
     const snapshot = await db.collection("categories").get()
     snapshot.forEach((doc) => {
@@ -129,7 +129,7 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     getData()
   }, [])
-
+  
 
   return (
     <Context.Provider

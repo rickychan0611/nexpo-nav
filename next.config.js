@@ -10,11 +10,11 @@ module.exports = withPlugins(
     [withExpo, { projectRoot: __dirname }],
   ],
   {
-    // webpack(config, { dev }) {
-    //   if (dev) {
-    //     config.devtool = 'cheap-module-source-map';
-    //   }
-    //   return config;
-    // }
+    webpack(config, { dev }) {
+      if (dev) {
+        config.devtool = 'eval';
+      }
+      return config;
+    }
   }
 )
