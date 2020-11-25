@@ -1,5 +1,6 @@
 
 import produce from "immer";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function handlePlus(selectedItem, ctx) {
   console.log(selectedItem)
@@ -73,8 +74,11 @@ export function handleMinus(selectedItem, ctx) {
 
     // remove object if it is the last one
     if (newOrderProductList[index].quantity === 1) {
+      AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList.filter(e => e.productId !== selectedItem.uid)))
       setNewOrderProductList(
-        produce(prev => prev.filter(e => e.productId !== selectedItem.uid))
+        produce( prev => {
+          return prev.filter(e => e.productId !== selectedItem.uid)
+        })
       );
     }
 

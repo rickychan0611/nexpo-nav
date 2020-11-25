@@ -24,7 +24,7 @@ export default function Product() {
   let idArray = [];
   let index;
 
-  if (newOrderProductList[0]) {
+  if (newOrderProductList[0] && selectedItem) {
     newOrderProductList.forEach(item => {
       idArray.push(item.productId);
     });
@@ -32,7 +32,7 @@ export default function Product() {
   }
 
   useEffect(() => {
-    if (newOrderProductList[0]) {
+    if (newOrderProductList[0] && selectedItem) {
       newOrderProductList.forEach(e => {
         if (e.productId == selectedItem.uid) {
           setCounter(e.quantity)

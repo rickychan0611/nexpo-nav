@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { db, auth } from "../firebase";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import {firebase, db, auth} from "../firebase";
 
@@ -45,10 +46,10 @@ const ContextProvider = ({ children }) => {
   const [redeemPoint, setRedeemPoint] = useState("");
   const [shippingAddress, setShippingAddress] = useState(
     {
-      address1 : "",
-      address2 : "",
-      city : "",
-      province : "BC",
+      address1: "",
+      address2: "",
+      city: "",
+      province: "BC",
       country: "Canada",
       postalCode: "",
       phoneNumber: ""
@@ -60,39 +61,75 @@ const ContextProvider = ({ children }) => {
       if (user) {
         console.log("logged in", user);
         db.collection("users").doc(user.email).get()
-        .then((doc)=>{
-          setUser(doc.data());
-        })
-        .catch((err)=>console.log(err))
+          .then((doc) => {
+            setUser(doc.data());
+          })
+          .catch((err) => console.log(err))
       }
       else console.log("Not logged in")
     })
   }, [])
 
-  const fetchData = async () => {
 
+  const fetchData = async () => {
     const snapshot = await db.collection("categories").get()
-    
     snapshot.forEach((doc) => {
       setCategories(prev => {
         return [...prev, doc.data()]
       })
     })
-
-    const productSnapshot = await db.collection("products").where("category", "array-contains", snapshot.docs[0].data().uid).get()
-
+    const productSnapshot = await db.collection("products")
+      .where("category", "array-contains", snapshot.docs[0].data().uid).get()
     productSnapshot.forEach((doc) => {
       setProductData(prev => {
         return [...prev, doc.data()]
       })
     })
-
   }
-
   useEffect(() => {
-    fetchData()
-    .catch((err) => console.log(err))
+    fetchData().catch((err) => console.log(err))
   }, [])
+
+
+  const storeData = async () => {
+    console.log("run", total)
+    try {
+      await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
+      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
+      await AsyncStorage.setItem('total', (+total).toFixed(2))
+    } catch (e) {
+      console.log("AsyncStorage Save Error:", e)
+    }
+  }
+  useEffect(() => {
+    if (newOrderProductList[0]) {
+      storeData()
+    }
+  }, [newOrderProductList, total])
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('newOrderProductList')
+      const totalValue = await AsyncStorage.getItem('total')
+      console.log(totalValue)
+
+      setNewOrderProductList( jsonValue != null ? JSON.parse(jsonValue) : [] )
+
+      if (JSON.parse(jsonValue)[0]){
+     setTotal(totalValue != null ? +totalValue : 0)
+    }
+    else {
+      setTotal(0)
+      await AsyncStorage.setItem('total', "0")
+    }
+    } catch (e) {
+      console.log("AsyncStorage Read Error:", e)
+    }
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+
 
   return (
     <Context.Provider

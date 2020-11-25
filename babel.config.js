@@ -3,5 +3,14 @@
 
 module.exports = { 
     presets: ['@expo/next-adapter/babel'],
-    "plugins": [["styled-components", { "ssr": true }]]
+    "plugins": [
+        [
+            "styled-components", 
+            { 
+                "ssr": true ,
+                "displayName": true,
+                "preprocess": false
+            }
+        ]
+    ]
 };
