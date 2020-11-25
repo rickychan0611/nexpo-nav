@@ -15,11 +15,11 @@ export default function CartItems() {
         return (
           <TouchableOpacity key={item.uid}
             onPress={() => {
-              setSelectedItem(item)
+              setSelectedItem(item.item)
               navigate({
                 routeName: "product",
-                params: { id: item.uid },
-                web: { as: `/product/${item.englishName}` },
+                params: { id: item.item.uid },
+                web: { as: `/product?id=${item.item.uid}` },
               })
             }}>
             <ItemsContainer key={item.uid}>

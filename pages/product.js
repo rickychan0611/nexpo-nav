@@ -5,8 +5,9 @@ import { ScrollView, Text, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
-import CartCheckoutBar from "../components/CartCheckoutBar";
+import ViewCartBar from "../components/ViewCartBar";
 import {handleMinus, handlePlus} from  "../hooks/onPlusMinusQty";
+import {db} from "../firebase";
 
 import BottomBar from "../components/BottomBar";
 import ImageSwiper from "../components/ImageSwiper";
@@ -17,7 +18,7 @@ export default function Product() {
   const id = getParam('id')
 
   const [counter, setCounter] = useState(0);
-  const { newOrderProductList, setNewOrderProductList, selectedItem, setTotal } = useContext(Context);
+  const { newOrderProductList, setNewOrderProductList, selectedItem, setSelectedItem } = useContext(Context);
   const ctx = useContext(Context);
 
   let idArray = [];
@@ -43,6 +44,17 @@ export default function Product() {
   useEffect(() => {
     setCounter(prev => prev)
   }, [counter])
+
+  useEffect(() => {
+    console.log("id")
+    console.log(id)
+    if (!selectedItem && id) {
+      db.collection("products").doc(id).get()
+      .then((doc)=>{
+        setSelectedItem(doc.data())
+      })
+    }
+  }, [id])
 
   useEffect(() => {
     setNewOrderProductList(prev => prev)
@@ -113,7 +125,7 @@ export default function Product() {
           </ContextArea>
         }
         {newOrderProductList.length > 0 ?
-          <CartCheckoutBar />
+          <ViewCartBar />
           : null}
       </CartBarWrapper>
       <BottomBar />
@@ -130,7 +142,7 @@ const ContextArea = styled.View`
     width: 100%;
     max-width: 500px;
     /* margin-bottom: 60px; */
-    padding-bottom: 20px;
+    padding-bottom: 80px;
 `;
 const CartBarWrapper = styled.View`
       flex: 1;
