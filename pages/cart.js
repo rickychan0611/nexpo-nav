@@ -12,6 +12,7 @@ import ProductCard from "../components/ProductCard";
 import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
 import ShippingAddress from "../components/ShippingAddress";
+import { forEach } from "react-native-elevation";
 
 export default function Cart() {
   const { navigate } = useRouting();
@@ -104,6 +105,18 @@ export default function Cart() {
     console.log(newOrderProductList)
   }, [newOrderProductList])
 
+  useEffect(()=>{
+    if (user) {
+      db.collection('shippingAddresses').where("userId", "==", user.email).get()
+      .then((snapshot)=>{
+        snapshot.forEach((doc)=>{
+          console.log(doc.data())
+          setShippingAddress(doc.data())
+        })
+      })
+      .catch(err=>console.log(err))
+    }
+  },[user])
 
   return (
     <>
@@ -153,7 +166,7 @@ export default function Cart() {
           </TotalContainer>
 
           <Divider />
-
+          
           <ShippingAddress err={err} setErr={setErr} />
 
           <View style={{ height: 100 }}></View>
