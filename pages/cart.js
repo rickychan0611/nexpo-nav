@@ -1,11 +1,9 @@
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
-import { ThemeContext } from "../context/ThemeContext";
-import { Card, Button } from 'react-native-elements';
 import { Divider, TextInput, Headline } from "react-native-paper";
-
+import { db } from "../firebase";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 
@@ -18,13 +16,87 @@ import ShippingAddress from "../components/ShippingAddress";
 export default function Cart() {
   const { navigate } = useRouting();
   const {
-    total,
+    total, user,
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress
   } = useContext(Context);
 
-  const { theme } = useContext(ThemeContext);
+  const shippingDefault = {
+    address1: "",
+    address2: "",
+    city: "",
+    province: "",
+    country: "",
+    postalCode: "",
+    phoneNumber: ""
+  }
+
+  const [err, setErr] = useState(shippingDefault);
+
+  const onSubmit = () => {
+    setErr(shippingDefault)
+
+    let validate = new Promise((resolve, reject) => {
+
+      if (!shippingAddress.firstName) {
+        setErr(prev => ({ ...prev, firstName: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.lastName) {
+        setErr(prev => ({ ...prev, lastName: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.address1) {
+        setErr(prev => ({ ...prev, address1: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.city) {
+        setErr(prev => ({ ...prev, city: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.province) {
+        setErr(prev => ({ ...prev, province: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.country) {
+        setErr(prev => ({ ...prev, country: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.postalCode) {
+        setErr(prev => ({ ...prev, postalCode: "Required" }))
+        reject()
+      }
+      if (!shippingAddress.phoneNumber) {
+        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
+        reject()
+      }
+      else resolve()
+    })
+
+    validate.then(() => {
+
+      const orderRef = db.collection("order").doc()
+      const shippingAddressRef = db.collection("shippingAddresses").doc()
+      const timestamp = new Date()
+
+      shippingAddressRef.set({
+        ...shippingAddress,
+        uid: shippingAddressRef.id,
+        createAt: timestamp,
+        userId: user.email
+      })
+        .then(() => {
+          //reset everything after sumbitting to server
+          // setProduct(productInitValue)
+          // setSelectedCategory([])
+          navigate({
+            routeName: "home"
+          })
+        })
+        .catch(error => console.log(error))
+    })
+  }
 
   useEffect(() => {
     setNewOrderProductList(prev => prev)
@@ -32,13 +104,6 @@ export default function Cart() {
     console.log(newOrderProductList)
   }, [newOrderProductList])
 
-  const handleChange = (value) => {
-    setRedeemPoint(value)
-  }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>
@@ -50,7 +115,7 @@ export default function Cart() {
             }}
           >
             Your order</Headline>
-            
+
           <Divider />
 
           <CartItems />
@@ -74,11 +139,11 @@ export default function Cart() {
             <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{paddingRight: 40 }}>
+          <TotalContainer style={{ paddingRight: 40 }}>
             <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{paddingRight: 40 }}>
+          <TotalContainer style={{ paddingRight: 40 }}>
             <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
           </TotalContainer>
@@ -89,14 +154,14 @@ export default function Cart() {
 
           <Divider />
 
-          <ShippingAddress />
+          <ShippingAddress err={err} setErr={setErr} />
 
-          <View style={{height: 100}}></View>
+          <View style={{ height: 100 }}></View>
 
         </ScrollView>
       </ContextArea>
 
-      <CartCheckoutBar />
+      <CartCheckoutBar onSubmit={onSubmit} />
 
       <BottomBar style={{
         shadowColor: "#000",

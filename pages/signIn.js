@@ -73,32 +73,20 @@ export default function signIn() {
     else {
       setLoading(true)
       auth.signInWithEmailAndPassword(login.email, login.password)
-        .then((doc) => {
-          db.collection("users").doc(doc.user.email).set({
-            uid: doc.user.uid,
-            email: doc.user.email,
-            password: login.password
-          })
-            .then(() => {
-              setLoading(false)
-              showModal()
-              setSelected("cart")
-              navigate({
-                routeName: "cart"
-              })
-            })
-            .catch(function (error) {
-              console.log(error)
-              setErrMsg(prev => ({ ...prev, email: error }))
-            });
+      .then(() => {
+        setLoading(false)
+        showModal()
+        setSelected("cart")
+        navigate({
+          routeName: "cart"
         })
-        .catch(function (error) {
-          setLoading(false)
-          // Handle Errors here.
-          setLoading(false)
-          setErrMsg(prev => ({ ...prev, email: error.message }))
-          // ...
-        });
+      })
+      .catch(function (error) {
+        setLoading(false)
+        // Handle Errors here.
+        setLoading(false)
+        setErrMsg(prev => ({ ...prev, email: error.message }))
+      });
     }
   }
 

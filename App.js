@@ -60,6 +60,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />
           <Stack.Screen name="signUp" component={signUp} options={options("signUp")} />
           <Stack.Screen name="signIn" component={signIn} options={options("signIn")} />
           <Stack.Screen name="forgotPassword" component={forgotPassword} options={options("Forgot Password")} />
@@ -70,7 +71,6 @@ function App() {
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="user" component={user} options={options("My Account")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
-          <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

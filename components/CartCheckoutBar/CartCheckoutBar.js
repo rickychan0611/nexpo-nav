@@ -1,36 +1,36 @@
 import React, { useContext } from "react";
-import { Text, StyleSheet, TouchableOpacity, Platform } from "react-native";
-import { Link, useRouting } from "expo-next-react-navigation";
-import Elevations from 'react-native-elevation'
-import { Button } from 'react-native-elements';
+import { Platform } from "react-native";
+import { useRouting } from "expo-next-react-navigation";
 import useQty from '../../hooks/useQty';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import styled from 'styled-components/native';
-import { Icon } from 'react-native-elements'
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function CartCheckoutBar() {
+export default function CartCheckoutBar({ onSubmit }) {
   const { navigate } = useRouting();
-  const { setSelected, total } = useContext(Context);
+  const { setSelected, total, user } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
   return (
     <>
       <Wrapper onPress={() => {
-        setSelected("login")
-        navigate({
-          routeName: "login",
-        })
+        if (user) {
+          onSubmit()
+        }
+        else {
+          setSelected("login")
+          navigate({
+            routeName: "login",
+          })
+        }
       }}>
-          <Bar theme={theme}>
+        <Bar theme={theme}>
           <Total>
-          Place Order  ●  ${(+total).toFixed(2)}
+            Place Order  ●  ${(+total).toFixed(2)}
           </Total>
-          </Bar>
-          {/* <Qty>{qty}</Qty> */}
+        </Bar>
       </Wrapper>
     </>
   )

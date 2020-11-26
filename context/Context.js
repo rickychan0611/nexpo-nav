@@ -63,6 +63,17 @@ const ContextProvider = ({ children }) => {
         db.collection("users").doc(user.email).get()
           .then((doc) => {
             setUser(doc.data());
+            setShippingAddress(
+              {
+                address1: doc.data().address1 || "",
+                address2: doc.data().address2 || "",
+                city: doc.data().city || "",
+                province: doc.data().province || "BC",
+                country: doc.data().country || "Canada",
+                postalCode: doc.data().postalCode || "",
+                phoneNumber: doc.data().phoneNumnber || ""
+              }
+            )
           })
           .catch((err) => console.log(err))
       }
