@@ -12,6 +12,7 @@ import user from "./pages/user";
 import store from "./pages/store";
 import product from "./pages/product";
 import cart from "./pages/cart";
+import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import login from "./pages/login";
@@ -60,6 +61,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />
           <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />
           <Stack.Screen name="signUp" component={signUp} options={options("signUp")} />
           <Stack.Screen name="signIn" component={signIn} options={options("signIn")} />

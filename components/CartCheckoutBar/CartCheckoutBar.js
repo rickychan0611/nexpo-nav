@@ -16,19 +16,24 @@ export default function CartCheckoutBar({ onSubmit }) {
   return (
     <>
       <Wrapper onPress={() => {
-        if (user) {
-          onSubmit()
-        }
-        else {
-          setSelected("login")
+        setSelected("confirmOrder")
           navigate({
-            routeName: "login",
+            routeName: "confirmOrder",
           })
-        }
+        
+        // if (user) {
+        //   onSubmit()
+        // }
+        // else {
+        //   setSelected("login")
+        //   navigate({
+        //     routeName: "login",
+        //   })
+        // }
       }}>
         <Bar theme={theme}>
           <Total>
-            Place Order  ●  ${(+total).toFixed(2)}
+            Check out
           </Total>
         </Bar>
       </Wrapper>

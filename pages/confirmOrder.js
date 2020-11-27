@@ -14,14 +14,14 @@ import CartItems from "../components/CartItems";
 import ShippingAddress from "../components/ShippingAddress";
 import { forEach } from "react-native-elevation";
 
-export default function Cart() {
+export default function confirmOrder() {
   const { navigate } = useRouting();
   const {
     total, user,
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
-    deliveryMsg, setDeliveryMsg
+    deliveryMsg
   } = useContext(Context);
 
   const shippingDefault = {
@@ -82,8 +82,6 @@ export default function Cart() {
       const shippingAddressRef = db.collection("shippingAddresses").doc()
       const timestamp = new Date()
 
-      shippingAddress.message && setDeliveryMsg(shippingAddress.message)
-
       shippingAddressRef.set({
         ...shippingAddress,
         uid: shippingAddressRef.id,
@@ -108,18 +106,18 @@ export default function Cart() {
     console.log(newOrderProductList)
   }, [newOrderProductList])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user) {
       db.collection('shippingAddresses').where("userId", "==", user.email).get()
-      .then((snapshot)=>{
-        snapshot.forEach((doc)=>{
-          console.log(doc.data())
-          setShippingAddress(prev => ({...prev, ...doc.data()}))
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            console.log(doc.data())
+            setShippingAddress(doc.data())
+          })
         })
-      })
-      .catch(err=>console.log(err))
+        .catch(err => console.log(err))
     }
-  },[user])
+  }, [user])
 
   return (
     <>
@@ -130,49 +128,64 @@ export default function Cart() {
               padding: 25
             }}
           >
-            Your order</Headline>
+            Confirm Order</Headline>
 
           <Divider />
 
           <CartItems />
 
-          <View style={{ padding: 25 }}>
-            <Text>Your points: 10000</Text>
-            <TextInput
-              label="Redeem your point"
-              placeholder='Enter the number of points that you want to redeem'
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              value={redeemPoint}
-              onChangeText={value => { handleChanage(value) }}
-            // error={catErrMsg.englishName}
-            />
-          </View>
           <Divider />
 
-          <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
+          <TableRow style={{ paddingTop: 20, paddingRight: 40 }}>
+            <Left><Text style={{ color: "grey" }}>Subtotal:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Right>
+          </TableRow>
+          <TableRow style={{ paddingRight: 40 }}>
+            <Left><Text style={{ color: "grey" }}>Discount:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>-$0.00</Text></Right>
+          </TableRow>
+          <TableRow style={{ paddingRight: 40 }}>
+            <Left><Text style={{ color: "grey" }}>Taxes:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Right>
+          </TableRow>
+          <TableRow style={{ paddingBottom: 20, paddingRight: 40 }}>
+            <Left><Text style={{ color: "black" }}>Total:</Text></Left>
+            <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
+          </TableRow>
 
           <Divider />
-          
-          <ShippingAddress err={err} setErr={setErr} />
 
-          <View style={{ height: 100 }}></View>
+          <Title>Delivery Info:</Title>
+
+          <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+            <Left><Text style={{ color: "grey" }}>Receiver:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>{shippingAddress.firstName + " " + shippingAddress.lastName}</Text></Right>
+          </TableRow>
+          <TableRow style={{ paddingRight: 40 }}>
+            <Left><Text style={{ color: "grey" }}>Address:</Text></Left>
+            <Right><Text style={{ color: "grey", textAlign: "right" }}>
+              {shippingAddress.address1 + "\n"}
+              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+              {shippingAddress.city + "\n"}
+              {shippingAddress.province + ", "}
+              {shippingAddress.country + "\n"}
+              {shippingAddress.postalCode}
+            </Text></Right>
+          </TableRow>
+
+          <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+              <Left><Text style={{ color: "grey" }}>Phone#:</Text></Left>
+              <Right><Text style={{ color: "grey" }}>{shippingAddress.phoneNumber}</Text></Right>
+            </TableRow>
+
+          {shippingAddress.message ?
+            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+              <Left><Text style={{ color: "grey" }}>Note:</Text></Left>
+              <Right><Text style={{ color: "grey" }}>{shippingAddress.message}</Text></Right>
+            </TableRow>
+          : null }
+
+          <View style={{ height: 200 }}></View>
 
         </ScrollView>
       </ContextArea>
@@ -194,29 +207,28 @@ export default function Cart() {
   );
 }
 
-const TotalContainer = styled.View`
+const TableRow = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 500px;
   padding: 5px 25px 5px 25px;
-
 `;
-const Content = styled.View`
-  flex: 10;
-  justify-content: center;
+const Left = styled.View`
+  flex: 1;
+  justify-content: flex-start;
   align-items: flex-start;
 `;
-const Price = styled.View`
-  flex: 2;
-  justify-content: center;
+const Right = styled.View`
+  flex: 3;
+  justify-content: flex-end;
   align-items: flex-end;
-`;
+  `;
 const Title = styled.Text`
   font-size: 18px;
   width: 100%;
   padding: 15px;
-  background-color: white;   
+  background-color: white; 
 `;
 const ContextArea = styled.View`
   /* flex: 1; */
