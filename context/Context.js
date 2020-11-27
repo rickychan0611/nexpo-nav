@@ -82,7 +82,7 @@ const ContextProvider = ({ children }) => {
     })
   }, [])
 
- 
+
   const fetchData = async () => {
     const snapshot = await db.collection("categories").get()
     snapshot.forEach((doc) => {
@@ -121,17 +121,15 @@ const ContextProvider = ({ children }) => {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('newOrderProductList')
-      const totalValue = await AsyncStorage.getItem('total')
-
-      setNewOrderProductList( jsonValue != null ? JSON.parse(jsonValue) : [] )
-
-      if (JSON.parse(jsonValue)[0]){
-     setTotal(totalValue != null ? +totalValue : 0)
-    }
-    else {
-      setTotal(0)
-      await AsyncStorage.setItem('total', "0")
-    }
+      const orders = JSON.parse(jsonValue)
+      setNewOrderProductList(orders != null ? orders : [])
+      let totalCounter = 0
+      if (orders[0]){
+        await orders.map((item)=>{
+          totalCounter = totalCounter + item.price * item.quantity
+        })
+        setTotal(totalCounter)
+      }
     } catch (e) {
       console.log("AsyncStorage Read Error:", e)
     }
@@ -139,7 +137,7 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     getData()
   }, [])
-  
+
 
   return (
     <Context.Provider

@@ -14,11 +14,14 @@ import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
 import ShippingAddress from "../components/ShippingAddress";
 import { forEach } from "react-native-elevation";
+import Loader from "../components/Loader";
 
 export default function Cart() {
   const { navigate } = useRouting();
+  const [loading, setLoading] = useState(false);
+
   const {
-    total, user,
+    total, user, setSelected,
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
@@ -38,12 +41,14 @@ export default function Cart() {
   const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
+    setLoading(true)
+    console.log(shippingAddress)
     setErr(shippingDefault)
 
-    if (newOrderProductList) {
-      alert("Your shopping Cart is empty. Please add something : )")
-      return
-    }
+    // if (!newOrderProductList[0]) {
+    //   alert("Your shopping Cart is empty. Please add something : )")
+    //   return
+    // }
 
     let validate = new Promise((resolve, reject) => {
 
@@ -83,26 +88,34 @@ export default function Cart() {
     })
 
     validate.then(() => {
-
-      const orderRef = db.collection("order").doc()
-      const shippingAddressRef = db.collection("shippingAddresses").doc()
-      const timestamp = new Date()
-
-      shippingAddress.message && setDeliveryMsg(shippingAddress.message)
-
-      shippingAddressRef.set({
-        ...shippingAddress,
-        uid: shippingAddressRef.id,
-        createAt: timestamp,
-        userId: user.email
+      setSelected("confirmOrder")
+      navigate({
+        routeName: "confirmOrder",
       })
-        .then(() => {
-          setSelected("confirmOrder")
-          navigate({
-            routeName: "confirmOrder",
-          })
-        })
-        .catch(error => console.log(error))
+
+      // const orderRef = db.collection("order").doc()
+      // const shippingAddressRef = db.collection("shippingAddresses").doc()
+      // const timestamp = new Date()
+
+      // shippingAddress.message && setDeliveryMsg(shippingAddress.message)
+
+      // shippingAddressRef.set({
+      //   ...shippingAddress,
+      //   uid: shippingAddressRef.id,
+      //   createAt: timestamp,
+      //   userId: user.email
+      // })
+      //   .then(() => {
+      //     setLoading(false)
+      //     setSelected("confirmOrder")
+      //     navigate({
+      //       routeName: "confirmOrder",
+      //     })
+      //   })
+      //   .catch(error => {
+      //     setLoading(false)
+      //     console.log(error)
+      //   })
     })
   }
 
@@ -111,6 +124,7 @@ export default function Cart() {
   }, [newOrderProductList])
 
   useEffect(() => {
+    setLoading(false)
     if (user) {
       db.collection('shippingAddresses').where("userId", "==", user.email).get()
         .then((snapshot) => {
@@ -118,12 +132,15 @@ export default function Cart() {
             setShippingAddress(prev => ({ ...prev, ...doc.data() }))
           })
         })
-        .catch(err => console.log(err))
+        .catch(error => {
+          console.log(error)
+        })
     }
   }, [user])
 
   return (
     <>
+      {loading && <Loader />}
       <ContextArea>
         <ScrollView>
           <Headline
