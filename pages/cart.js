@@ -41,14 +41,13 @@ export default function Cart() {
   const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
-    setLoading(true)
     console.log(shippingAddress)
     setErr(shippingDefault)
 
-    // if (!newOrderProductList[0]) {
-    //   alert("Your shopping Cart is empty. Please add something : )")
-    //   return
-    // }
+    if (!newOrderProductList[0]) {
+      alert("Your shopping Cart is empty. Please add something : )")
+      return
+    }
 
     let validate = new Promise((resolve, reject) => {
 

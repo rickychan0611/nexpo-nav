@@ -1,24 +1,97 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Platform } from "react-native";
 import { useRouting } from "expo-next-react-navigation";
 import useQty from '../../hooks/useQty';
-import AwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
+import { db } from "../../firebase";
+import Loader from "../Loader";
 
-export default function ComfirmOrderBar({ cancel }) {
+export default function ComfirmOrderBar() {
   const { navigate } = useRouting();
-  const { setSelected, total, user } = useContext(Context);
+  const [loading, setLoading] = useState(false);
+
+  const { setSelected, total, user, shippingAddress, newOrderProductList } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
+  const onOrderSubmit = () => {
+    setLoading(true)
+
+    const timestamp = new Date()
+
+    const orderRef = db.collection("orders").doc()
+    orderRef.set({
+      orderId: orderRef.id,
+      orderItems: newOrderProductList,
+      shippingAddress,
+      userId: user.email,
+      createAt: timestamp,
+    })
+      .then(() => {
+        setLoading(false)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
+
+    if (shippingAddress.uid) {
+      setLoading(true)
+      const shippingAddressRef = db.collection("shippingAddresses").doc(shippingAddress.uid)
+      shippingAddressRef.update({
+        ...shippingAddress,
+        createAt: timestamp,
+        userId: user.email
+      })
+        .then(() => {
+          setLoading(false)
+          setSelected("confirmOrder")
+          navigate({
+            routeName: "confirmOrder",
+          })
+        })
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+        })
+    }
+    else if (!shippingAddresses.uid) {
+      setLoading(true)
+      const shippingAddressRef = db.collection("shippingAddresses").doc()
+      shippingAddressRef.add({
+        ...shippingAddress,
+        uid: shippingAddressRef.id,
+        createAt: timestamp,
+        userId: user.email
+      })
+        .then(() => {
+          setLoading(false)
+          setSelected("confirmOrder")
+          navigate({
+            routeName: "confirmOrder",
+          })
+        })
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+        })
+    }
+  }
+
+  useEffect(()=>{
+    setLoading(false)
+  },[])
+
   return (
     <>
+      {loading && <Loader />}
+
       <Wrapper onPress={() => {
         if (user) {
-          onSubmit()
+          onOrderSubmit()
         }
         else {
           setSelected("login")
@@ -27,30 +100,11 @@ export default function ComfirmOrderBar({ cancel }) {
           })
         }
       }}>
-        <Bar theme={theme} cancel={cancel} >
-          {cancel ?
-            <>
-              <IconButton
-                icon="close"
-                color="white"
-                onPress={() => {
-                  setSelected("cart")
-                  navigate({
-                    routeName: "cart",
-                  })
-                }} />
-            </>
-            :
-            <>
-              <IconButton icon="check" color="white"
-                onPress={() => {
-                  // onSubmit()
-                }} />
-              <Total>
-                Place Order
+        <Bar theme={theme} >
+          <IconButton icon="check" color="white" />
+          <Total>
+            Place Order
               </Total>
-            </>
-          }
         </Bar>
       </Wrapper>
     </>
