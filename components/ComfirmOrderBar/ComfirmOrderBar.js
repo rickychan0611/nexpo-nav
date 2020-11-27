@@ -13,7 +13,7 @@ export default function ComfirmOrderBar() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
 
-  const { setSelected, total, user, shippingAddress, newOrderProductList } = useContext(Context);
+  const { setSelected, total, user, shippingAddress, newOrderProductList, newOrderId, setNewOrderId } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
@@ -32,6 +32,7 @@ export default function ComfirmOrderBar() {
     })
       .then(() => {
         setLoading(false)
+        setNewOrderId(orderRef.id)
       })
       .catch(error => {
         setLoading(false)

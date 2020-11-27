@@ -19,6 +19,7 @@ import login from "./pages/login";
 import signIn from "./pages/signIn";
 import signUp from "./pages/signUp";
 import forgotPassword from "./pages/forgotPassword";
+import orderSuccess from "./pages/orderSuccess";
 
 import BottomBar from './components/BottomBar';
 import { ThemeContext } from "styled-components";
@@ -61,6 +62,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
           <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />
           <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />
           <Stack.Screen name="signUp" component={signUp} options={options("signUp")} />

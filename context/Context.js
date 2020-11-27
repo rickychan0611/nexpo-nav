@@ -45,6 +45,7 @@ const ContextProvider = ({ children }) => {
   const [counter, setCounter] = useState(0);
   const [redeemPoint, setRedeemPoint] = useState("");
   const [deliveryMsg, setDeliveryMsg] = useState("");
+  const [newOrderId, setNewOrderId] = useState("");
   const [shippingAddress, setShippingAddress] = useState(
     {
       address1: "",
@@ -164,7 +165,8 @@ const ContextProvider = ({ children }) => {
           counter, setCounter,
           redeemPoint, setRedeemPoint,
           shippingAddress, setShippingAddress,
-          deliveryMsg, setDeliveryMsg
+          deliveryMsg, setDeliveryMsg,
+          newOrderId, setNewOrderId
         }
       }
     >
