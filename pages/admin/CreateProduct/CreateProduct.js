@@ -37,15 +37,6 @@ export default function CreateProduct() {
 
   const { theme } = useContext(ThemeContext);
 
-
-  // useEffect(() => {
-  //   // setTimeout(()=>{
-  //   setProduct(prev => prev)
-  //   console.log(product)
-  //   console.log(error)
-  //   // },[500])
-  // }, [product])
-
   const [cat, setCat] = useState({});
 
   const onAddCatChange = (name, value) => {
@@ -54,8 +45,6 @@ export default function CreateProduct() {
   }
 
   const onAddCategory = () => {
-    console.log("cat")
-    console.log(cat)
 
     let validate = new Promise((resolve, reject) => {
       if (!cat.chineseName) {
@@ -106,7 +95,6 @@ export default function CreateProduct() {
   const [uploading, setUploading] = useState(false);
 
   const reSizeImage = async (image) => {
-    console.log("resize run!")
     const manipResult = await ImageManipulator.manipulateAsync(
       image,
       [{ resize: { width: 800 } }],
@@ -123,7 +111,6 @@ export default function CreateProduct() {
       task = storage.ref(imgData.ref).putString(imgData.uri, 'data_url')
     }
     else {
-      console.log("uri", imgData.uri)
       const response = await fetch(imgData.uri)
       const blob = await response.blob()
       task = storage.ref(imgData.ref).put(blob, { contentType: 'image/jpeg' })
@@ -131,7 +118,6 @@ export default function CreateProduct() {
 
     task.on('state_changed', snap => {
       setProgress(Math.round(snap.bytesTransferred / snap.totalBytes));
-      console.log("snap", progress)
     });
 
     //get image URL
@@ -141,11 +127,8 @@ export default function CreateProduct() {
       return downloadURL
     })
       .then((downloadURL) => {
-        console.log('PickFile PROFILE PIC load ' + downloadURL)
-
         //store returned url in image array
         setImages(prev => {
-          console.log("run???")
           if (!prev) {
             return [{ url: downloadURL }]
           }
@@ -167,8 +150,6 @@ export default function CreateProduct() {
       aspect: [4, 3],
       quality: .8,
     });
-
-    // console.log(result);
 
     if (!result.cancelled) {
       setUploading(true);
@@ -201,25 +182,7 @@ export default function CreateProduct() {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("selectedCategory:")
-  //   console.log(selectedCategory)
-  // }, [selectedCategory])
-
-  // //get categories from server
-  // useEffect(() => {
-  //   db.collection("categories").get()
-  //     .then((snapshot) => {
-  //       snapshot.forEach((doc) => {
-  //         console.log(doc.data())
-  //         setCategories(prev => {
-  //           return [...prev, doc.data()]
-  //         })
-  //       })
-  //     })
-  //     .catch((err) => console.log(err))
-  // }, [])
-
+ 
   return (
     <>
       <Container>

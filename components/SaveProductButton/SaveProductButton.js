@@ -18,11 +18,9 @@ export default function SaveProductButton() {
     const productRef = db.collection("products").doc()
     const timestamp = new Date()
 
-    console.log("Clicked")
     setError({})
 
     product.category = selectedCategory
-    console.log(product)
 
     let validate = new Promise((resolve, reject) => {
 
@@ -47,8 +45,6 @@ export default function SaveProductButton() {
         reject("No unit")
       }
       if (selectedCategory.length === 0) {
-        console.log("here?")
-        console.log(selectedCategory)
         setError(prev => ({ ...prev, category_err: "Error: Please select at least one category or create a new one." }))
         reject("No category selected")
       }
@@ -71,7 +67,6 @@ export default function SaveProductButton() {
                 productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
               })
                 .then(() => {
-                  console.log(category, " added")
                   //////reset everything after sumbitting to server
                   // setProduct(productInitValue)
                   // setSelectedCategory([])

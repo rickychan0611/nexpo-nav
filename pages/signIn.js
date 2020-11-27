@@ -186,7 +186,6 @@ export default function signIn() {
                   onChangeText={value => { handleChange("email", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -218,7 +217,6 @@ export default function signIn() {
                   onChangeText={value => { handleChange("password", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}

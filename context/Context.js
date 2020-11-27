@@ -104,7 +104,6 @@ const ContextProvider = ({ children }) => {
 
 
   const storeData = async () => {
-    console.log("run", total)
     try {
       await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
       await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
@@ -123,7 +122,6 @@ const ContextProvider = ({ children }) => {
     try {
       const jsonValue = await AsyncStorage.getItem('newOrderProductList')
       const totalValue = await AsyncStorage.getItem('total')
-      console.log(totalValue)
 
       setNewOrderProductList( jsonValue != null ? JSON.parse(jsonValue) : [] )
 

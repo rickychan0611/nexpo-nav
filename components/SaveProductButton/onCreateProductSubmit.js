@@ -8,11 +8,9 @@ const onCreateProductSubmit = (ctx) => {
   const timestamp = new Date()
   const { navigate } = useRouting();
 
-  console.log("Clicked")
   setError({})
 
   product.category = selectedCategory
-  console.log(product)
 
   let validate = new Promise((resolve, reject) => {
 
@@ -37,8 +35,6 @@ const onCreateProductSubmit = (ctx) => {
       reject()
     }
     if (selectedCategory.length === 0) {
-      console.log("here?")
-      console.log(selectedCategory)
       setError(prev => ({ ...prev, category_err: "Error: Please select at least one category or create a new one." }))
       reject()
     }
@@ -46,8 +42,6 @@ const onCreateProductSubmit = (ctx) => {
   })
 
   validate.then(() => {
-    console.log("product!!!!!!!")
-    console.log(product)
     productRef.set({
       ...product,
       uid: productRef.id,

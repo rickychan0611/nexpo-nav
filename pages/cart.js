@@ -4,8 +4,9 @@ import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { Divider, TextInput, Headline } from "react-native-paper";
 import { db } from "../firebase";
-import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
+import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
+import emptyCart from "../public/emptyCart.jpg"
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
@@ -38,6 +39,11 @@ export default function Cart() {
 
   const onSubmit = () => {
     setErr(shippingDefault)
+
+    if (newOrderProductList) {
+      alert("Your shopping Cart is empty. Please add something : )")
+      return
+    }
 
     let validate = new Promise((resolve, reject) => {
 
@@ -91,11 +97,9 @@ export default function Cart() {
         userId: user.email
       })
         .then(() => {
-          //reset everything after sumbitting to server
-          // setProduct(productInitValue)
-          // setSelectedCategory([])
+          setSelected("confirmOrder")
           navigate({
-            routeName: "home"
+            routeName: "confirmOrder",
           })
         })
         .catch(error => console.log(error))
@@ -104,22 +108,19 @@ export default function Cart() {
 
   useEffect(() => {
     setNewOrderProductList(prev => prev)
-    console.log("newOrderProductList::::")
-    console.log(newOrderProductList)
   }, [newOrderProductList])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user) {
       db.collection('shippingAddresses').where("userId", "==", user.email).get()
-      .then((snapshot)=>{
-        snapshot.forEach((doc)=>{
-          console.log(doc.data())
-          setShippingAddress(prev => ({...prev, ...doc.data()}))
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
+          })
         })
-      })
-      .catch(err=>console.log(err))
+        .catch(err => console.log(err))
     }
-  },[user])
+  }, [user])
 
   return (
     <>
@@ -134,7 +135,23 @@ export default function Cart() {
 
           <Divider />
 
-          <CartItems />
+          {newOrderProductList[0] ?
+            <CartItems />
+            :
+            <>
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Image
+                  style={{
+                    width: 200,
+                    height: 200,
+                    resizeMode: "cover"
+                  }}
+                  source={emptyCart} />
+                <Title style={{ textAlign: "center" }}>Your shopping cart is empty!</Title>
+              </View>
+              <Divider />
+            </>
+          }
 
           <View style={{ padding: 25 }}>
             <Text>Your points: 10000</Text>
@@ -169,7 +186,7 @@ export default function Cart() {
           </TotalContainer>
 
           <Divider />
-          
+
           <ShippingAddress err={err} setErr={setErr} />
 
           <View style={{ height: 100 }}></View>

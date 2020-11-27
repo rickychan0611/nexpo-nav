@@ -12,8 +12,6 @@ export function handlePlus(selectedItem, ctx) {
     newOrderProductList.forEach(item => {
       idArray.push(item.productId);
     });
-    console.log("idArray")
-    console.log(idArray)
     index = idArray.indexOf(selectedItem.uid)
   }
 

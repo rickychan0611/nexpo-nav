@@ -46,8 +46,6 @@ export default function Product() {
   }, [counter])
 
   useEffect(() => {
-    console.log("id")
-    console.log(id)
     if (!selectedItem && id) {
       db.collection("products").doc(id).get()
       .then((doc)=>{

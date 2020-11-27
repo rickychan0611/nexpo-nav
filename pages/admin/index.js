@@ -24,15 +24,12 @@ export default function admin() {
   }
 
   const onSubmit = () => {
-    console.log(login)
-    // auth.signInWithEmailAndPassword(login.email, login.password)
     auth.signInWithEmailAndPassword("admin@admin.com", "112233")
       .then((doc) => {
         console.log('logging in... wait' + JSON.stringify(doc.user))
         db.collection("users").doc(doc.user.uid).get()
         .then(doc => {
           if (doc.data().isAdmin) {
-            console.log(doc.data())
             setUser(doc.data())
             navigate({web:{path: "/admin/panel"}})
           }

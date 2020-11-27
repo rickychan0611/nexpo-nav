@@ -215,7 +215,6 @@ export default function signUp() {
                   onChangeText={value => { handleChange("fristName", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -245,7 +244,6 @@ export default function signUp() {
                   onChangeText={value => { handleChange("lastName", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -275,7 +273,6 @@ export default function signUp() {
                   onChangeText={value => { handleChange("email", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -314,7 +311,6 @@ export default function signUp() {
                   onChangeText={value => { handleChange("password", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       emailLogin()
                     }
                   }}

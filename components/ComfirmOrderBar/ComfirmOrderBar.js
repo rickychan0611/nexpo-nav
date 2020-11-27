@@ -8,22 +8,49 @@ import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 
-export default function CartCheckoutBar({ onSubmit }) {
+export default function ComfirmOrderBar({ cancel }) {
   const { navigate } = useRouting();
-  const { setSelected, total, user, newOrderProductList } = useContext(Context);
+  const { setSelected, total, user } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
   return (
     <>
       <Wrapper onPress={() => {
-        onSubmit()
+        if (user) {
+          onSubmit()
+        }
+        else {
+          setSelected("login")
+          navigate({
+            routeName: "login",
+          })
+        }
       }}>
-        <Bar theme={theme}>
-          <IconButton icon="cart" color="white"></IconButton>
-          <Total>
-            Check out
-          </Total>
+        <Bar theme={theme} cancel={cancel} >
+          {cancel ?
+            <>
+              <IconButton
+                icon="close"
+                color="white"
+                onPress={() => {
+                  setSelected("cart")
+                  navigate({
+                    routeName: "cart",
+                  })
+                }} />
+            </>
+            :
+            <>
+              <IconButton icon="check" color="white"
+                onPress={() => {
+                  // onSubmit()
+                }} />
+              <Total>
+                Place Order
+              </Total>
+            </>
+          }
         </Bar>
       </Wrapper>
     </>
@@ -53,7 +80,7 @@ const Bar = styled.View`
   color: white;
   font-size: 16px;
   font-weight: bold;
-  background-color: ${props => props.theme.black}; 
+  background-color: ${props => props.cancel ? props.theme.black : props.theme.green}; 
   height: 40px;
   width: 90%;
   border-radius: 25px;

@@ -34,7 +34,6 @@ export default function Store({ ssrData }) {
     // const data = await res.json()
     const productSnapshot = await db.collection("products").where("category", "array-contains", selectedCat).get()
     productSnapshot.forEach((doc) => {
-      console.log(doc.data())
       setProductData(prev => {
         return [...prev, doc.data()]
       })
@@ -44,15 +43,10 @@ export default function Store({ ssrData }) {
   }
 
   useEffect(() => {
-    console.log(selectedCat)
     if (selectedCat) {
       queryProducts()
     }
   }, [selectedCat])
-
-  useEffect(() => {
-    console.log(newOrderProductList)
-  }, [newOrderProductList])
 
   return (
     <>

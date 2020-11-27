@@ -187,7 +187,6 @@ export default function forgotPassword() {
                   onChangeText={value => { handleChange("email", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
-                      console.log(e.key)
                       passwordReset()
                     }
                   }}

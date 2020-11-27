@@ -13,6 +13,7 @@ import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
 import ShippingAddress from "../components/ShippingAddress";
 import { forEach } from "react-native-elevation";
+import ComfirmOrderBar from "../components/ComfirmOrderBar";
 
 export default function confirmOrder() {
   const { navigate } = useRouting();
@@ -21,7 +22,7 @@ export default function confirmOrder() {
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
-    deliveryMsg
+    deliveryMsg, setSelected
   } = useContext(Context);
 
   const shippingDefault = {
@@ -36,88 +37,17 @@ export default function confirmOrder() {
 
   const [err, setErr] = useState(shippingDefault);
 
-  const onSubmit = () => {
-    setErr(shippingDefault)
-
-    let validate = new Promise((resolve, reject) => {
-
-      if (!shippingAddress.firstName) {
-        setErr(prev => ({ ...prev, firstName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.lastName) {
-        setErr(prev => ({ ...prev, lastName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.address1) {
-        setErr(prev => ({ ...prev, address1: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.city) {
-        setErr(prev => ({ ...prev, city: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.province) {
-        setErr(prev => ({ ...prev, province: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.country) {
-        setErr(prev => ({ ...prev, country: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.postalCode) {
-        setErr(prev => ({ ...prev, postalCode: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
-      else resolve()
-    })
-
-    validate.then(() => {
-
-      const orderRef = db.collection("order").doc()
-      const shippingAddressRef = db.collection("shippingAddresses").doc()
-      const timestamp = new Date()
-
-      shippingAddressRef.set({
-        ...shippingAddress,
-        uid: shippingAddressRef.id,
-        createAt: timestamp,
-        userId: user.email
-      })
-        .then(() => {
-          //reset everything after sumbitting to server
-          // setProduct(productInitValue)
-          // setSelectedCategory([])
-          navigate({
-            routeName: "home"
-          })
-        })
-        .catch(error => console.log(error))
-    })
+  const onSubmitOrder = () => {
   }
 
   useEffect(() => {
-    setNewOrderProductList(prev => prev)
-    console.log("newOrderProductList::::")
-    console.log(newOrderProductList)
-  }, [newOrderProductList])
-
-  useEffect(() => {
-    if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            console.log(doc.data())
-            setShippingAddress(doc.data())
-          })
-        })
-        .catch(err => console.log(err))
+    if (!user || !shippingAddress || !newOrderProductList) {
+      setSelected("cart")
+      navigate({
+        routeName: "cart",
+      })
     }
-  }, [user])
+  }, [])
 
   return (
     <>
@@ -174,23 +104,24 @@ export default function confirmOrder() {
           </TableRow>
 
           <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-              <Left><Text style={{ color: "grey" }}>Phone#:</Text></Left>
-              <Right><Text style={{ color: "grey" }}>{shippingAddress.phoneNumber}</Text></Right>
-            </TableRow>
+            <Left><Text style={{ color: "grey" }}>Phone#:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>{shippingAddress.phoneNumber}</Text></Right>
+          </TableRow>
 
           {shippingAddress.message ?
             <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
               <Left><Text style={{ color: "grey" }}>Note:</Text></Left>
               <Right><Text style={{ color: "grey" }}>{shippingAddress.message}</Text></Right>
             </TableRow>
-          : null }
+            : null}
 
           <View style={{ height: 200 }}></View>
 
         </ScrollView>
       </ContextArea>
 
-      <CartCheckoutBar onSubmit={onSubmit} />
+      <ComfirmOrderBar onSubmitOrder={onSubmitOrder} />
+
 
       <BottomBar style={{
         shadowColor: "#000",
