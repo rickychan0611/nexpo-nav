@@ -35,11 +35,6 @@ export default function confirmOrder() {
     phoneNumber: ""
   }
 
-  const [err, setErr] = useState(shippingDefault);
-
-  const onSubmitOrder = () => {
-  }
-
   useEffect(() => {
     if (!user || !shippingAddress || !newOrderProductList) {
       setSelected("cart")
@@ -120,7 +115,7 @@ export default function confirmOrder() {
         </ScrollView>
       </ContextArea>
 
-      <ComfirmOrderBar onSubmitOrder={onSubmitOrder} />
+      <ComfirmOrderBar />
 
 
       <BottomBar style={{

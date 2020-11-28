@@ -47,6 +47,8 @@ const ContextProvider = ({ children }) => {
   const [deliveryMsg, setDeliveryMsg] = useState("");
   const [newOrderId, setNewOrderId] = useState("");
   const [selectedOrder, setSelectedOrder] = useState();
+  const [myOrderQueryTime, setMyOrderQueryTime] = useState();
+  const [orders, setOrders] = useState([]);
   const [shippingAddress, setShippingAddress] = useState(
     {
       address1: "",
@@ -168,7 +170,9 @@ const ContextProvider = ({ children }) => {
           shippingAddress, setShippingAddress,
           deliveryMsg, setDeliveryMsg,
           newOrderId, setNewOrderId,
-          selectedOrder, setSelectedOrder
+          selectedOrder, setSelectedOrder,
+          myOrderQueryTime, setMyOrderQueryTime,
+          orders, setOrders
         }
       }
     >

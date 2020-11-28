@@ -8,7 +8,6 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import theme from './theme';
 
 import home from "./pages";
-import user from "./pages/user";
 import store from "./pages/store";
 import product from "./pages/product";
 import cart from "./pages/cart";
@@ -74,7 +73,6 @@ function App() {
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
-          <Stack.Screen name="user" component={user} options={options("My Account")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
         </Stack.Navigator>
       </NavigationContainer>

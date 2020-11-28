@@ -91,6 +91,10 @@ export default function ComfirmOrderBar() {
           console.log(error)
         })
     }
+
+    //update user order time. 
+    db.collection("users").doc(user.email).update({lastOrderAt: timestamp})
+
   }
 
   useEffect(() => {

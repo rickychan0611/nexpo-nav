@@ -63,7 +63,7 @@ export default function orderSuccess() {
             marginBottom: 30,
             color: theme.green
           }}>
-            {`Thank You ${"\n"} for your Order !`}
+            {`Thank You ${"\n"} for your Order!`}
           </Headline>
 
           <Headline style={{
@@ -102,19 +102,9 @@ export default function orderSuccess() {
                 marginBottom: 10
               }}
               onPress={() => navigate({
-                routeName: "user"
+                routeName: "account"
               })}>
               Track Your Order</Button>
-
-          {/* <Title style={{
-            color: theme.red,
-            marginTop: 60
-          }}
-            onPress={() => {
-              navigate({
-                routeName: "user"
-              })
-            }}>Track Your Order</Title> */}
 
         </Surface>
       </View>

@@ -17,33 +17,57 @@ export default function account() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
-  const [orders, setOrders] = useState([]);
-  const { user, setUser, setSelectedOrder } = useContext(Context);
+  const {
+    user, setUser, setSelectedOrder,
+    myOrderQueryTime, setMyOrderQueryTime,
+    orders, setOrders
+  } = useContext(Context);
 
   useEffect(() => {
-    setSelectedOrder({})
-    setLoading(true)
-    if (user) {
-      console.log(user)
-      const ordersRef = db.collection("orders")
-      ordersRef.where("userId", "==", user.email).get()
-        .then((snapshot) => {
-          let tempArr = []
-          snapshot.forEach((doc) => {
-            tempArr.push(doc.data())
-          })
-          tempArr.sort((a, b) => {
-            return b.createAt.toDate() - a.createAt.toDate()
-          })
-          setOrders(tempArr)
+    
+    const query = async () => {
+      setSelectedOrder({})
+      setLoading(true)
+
+      if (user) {
+
+        const userRef = db.collection("users").doc(user.email)
+        const snapshot = await userRef.get()
+        const lastOrderAt = snapshot.data().lastOrderAt
+        
+        if (myOrderQueryTime && moment(myOrderQueryTime.toDate())
+          .isSame(lastOrderAt.toDate())
+        ) {
           setLoading(false)
-        })
-        .catch(err => {
-          setLoading(false)
-          console.log(err)
-        })
+          console.log("Din't run order query")
+          return
+        }
+
+        else {
+          console.log("Run order query")
+          const ordersRef = db.collection("orders")
+          ordersRef.where("userId", "==", user.email).get()
+            .then((snapshot) => {
+              setMyOrderQueryTime(lastOrderAt)
+              let tempArr = []
+              snapshot.forEach((doc) => {
+                tempArr.push(doc.data())
+              })
+              tempArr.sort((a, b) => {
+                return b.createAt.toDate() - a.createAt.toDate()
+              })
+              setOrders(tempArr)
+              setLoading(false)
+            })
+            .catch(err => {
+              setLoading(false)
+              console.log(err)
+            })
+        }
+      }
     }
     // else navigate({routeName:"login"})
+    query()
   }, [user])
 
   return (
@@ -96,7 +120,7 @@ export default function account() {
             borderBottomColor: theme.lightGrey, marginTop: 200
           }}>
             <Drawer.Item
-              style={{ backgroundColor: "white"}}
+              style={{ backgroundColor: "white" }}
               icon="cogs"
               label="Settings"
             />
@@ -106,10 +130,11 @@ export default function account() {
               icon="logout"
               label="Logout"
               onPress={() => {
-                auth.signOut().then(()=>{
-                  navigate({routeName: "login"})
+                auth.signOut().then(() => {
+                  navigate({ routeName: "login" })
                   setUser("")
-                })}}
+                })
+              }}
             />
           </DrawerContainer>
 
@@ -135,7 +160,7 @@ export default function account() {
               {orders && orders[0] && orders.map((item) => {
                 return (
                   <>
-                    <ItemsContainer onPress={() => {
+                    <ItemsContainer key={item.orderId} onPress={() => {
                       setSelectedOrder(item)
                       navigate({
                         routeName: "order"
@@ -209,7 +234,7 @@ const Status = styled.View`
   align-items: flex-start;
   padding: 0;
   margin-top: -7px;
-  right: 5
+  right: 5px
 `;
 const Content = styled.View`
   flex: 9;
