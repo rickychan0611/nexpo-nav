@@ -8,6 +8,7 @@ import { db } from "../firebase";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import emptyCart from "../public/emptyCart.jpg"
+import pointBG from "../public/pointBG.jpg"
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
@@ -17,7 +18,7 @@ import ShippingAddress from "../components/ShippingAddress";
 import { forEach } from "react-native-elevation";
 import Loader from "../components/Loader";
 
-export default function Cart() {
+export default function account() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
@@ -41,62 +42,6 @@ export default function Cart() {
   }
 
   const [err, setErr] = useState(shippingDefault);
-
-  const onSubmit = () => {
-    console.log(shippingAddress)
-    setErr(shippingDefault)
-
-    if (!newOrderProductList[0]) {
-      alert("Your shopping Cart is empty. Please add something : )")
-      return
-    }
-
-    let validate = new Promise((resolve, reject) => {
-
-      if (!shippingAddress.firstName) {
-        setErr(prev => ({ ...prev, firstName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.lastName) {
-        setErr(prev => ({ ...prev, lastName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.address1) {
-        setErr(prev => ({ ...prev, address1: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.city) {
-        setErr(prev => ({ ...prev, city: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.province) {
-        setErr(prev => ({ ...prev, province: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.country) {
-        setErr(prev => ({ ...prev, country: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.postalCode) {
-        setErr(prev => ({ ...prev, postalCode: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
-      else resolve()
-    })
-
-    validate.then(() => {
-      setSelected("confirmOrder")
-      navigate({
-        routeName: "confirmOrder",
-      })
-
-     
-    })
-  }
 
   useEffect(() => {
     setNewOrderProductList(prev => prev)
@@ -122,48 +67,64 @@ export default function Cart() {
       {loading && <Loader />}
       <ContextArea>
         <ScrollView>
+
+          <Image
+            style={{
+              top: 0,
+              position: "absolute",
+              width: "100%",
+              maxWidth: 500,
+              height: 200,
+              resizeMode: "stretch"
+            }}
+            source={pointBG}
+          />
+          <View style={{
+            // flex: 1 ,
+            top: 0,
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: 500,
+            height: 200,
+          }}>
+            <Text
+            style={{
+              color: "white",
+              fontSize: 26,
+              fontWeight: "bold",
+              marginBottom: 20
+            }}>
+              {user.email}
+            </Text>
+            <Text
+            style={{
+              color: "white",
+              fontSize: 22,
+              fontWeight: "bold",
+            }}>
+              0 pts
+            </Text>
+          </View>
+
           <Headline
             style={{
               padding: 25,
               fontWeight: "bold",
-              color: theme.red
+              color: theme.red,
+              marginTop: 220
             }}
           >
-            Your order</Headline>
+            My orders</Headline>
 
           <Divider />
 
-          {newOrderProductList[0] ?
-            <CartItems />
-            :
-            <>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Image
-                  style={{
-                    width: 200,
-                    height: 200,
-                    resizeMode: "cover"
-                  }}
-                  source={emptyCart} />
-                <Title style={{ textAlign: "center" }}>Your shopping cart is empty!</Title>
-              </View>
-              <Divider />
-            </>
-          }
 
-          <View style={{ padding: 25 }}>
-            <Text>Your points: 10000</Text>
-            <TextInput
-              label="Redeem your point"
-              placeholder='Enter the number of points that you want to redeem'
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              value={redeemPoint}
-              onChangeText={value => { handleChanage(value) }}
-            // error={catErrMsg.englishName}
-            />
-          </View>
+
+
+          <CartItems />
+
           <Divider />
 
           <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
@@ -191,8 +152,6 @@ export default function Cart() {
 
         </ScrollView>
       </ContextArea>
-
-      <CartCheckoutBar onSubmit={onSubmit} />
 
       <BottomBar style={{
         shadowColor: "#000",

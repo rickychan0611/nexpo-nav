@@ -20,9 +20,8 @@ import signIn from "./pages/signIn";
 import signUp from "./pages/signUp";
 import forgotPassword from "./pages/forgotPassword";
 import orderSuccess from "./pages/orderSuccess";
-
-import BottomBar from './components/BottomBar';
-import { ThemeContext } from "styled-components";
+import yourOrder from "./pages/yourOrder";
+import account from "./pages/account";
 
 const Stack = createStackNavigator();
 
@@ -62,6 +61,8 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="account" component={account} options={options("account")} />
+          <Stack.Screen name="yourOrder" component={yourOrder} options={options("yourOrder")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
           <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />
           <Stack.Screen name="cart" component={cart} options={options("Shopping Cart")} />

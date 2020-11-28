@@ -74,10 +74,10 @@ export default function BottomBar() {
           </Button>
 
           <Button onPress={() => {
-            setSelected("user")
+            setSelected("account")
             if (user) {
               navigate({
-                routeName: "user",
+                routeName: "account",
               })
             }
             else {
@@ -89,9 +89,9 @@ export default function BottomBar() {
             <Icon
               name='user-circle'
               type='font-awesome-5'
-              color={selected === "user" ? 'black' : '#ababab'}
+              color={selected === "account" ? 'black' : '#ababab'}
             />
-            <Name selected={selected === "user" ? 'black' : '#ababab'}>Me</Name>
+            <Name selected={selected === "account" ? 'black' : '#ababab'}>Account</Name>
           </Button>
 
         </ContentArea>
