@@ -171,7 +171,7 @@ export default function account() {
                       </Status>
                       <Content>
                         <Text style={{ fontSize: 16 }}>Order completed</Text>
-                        <Text style={{ fontSize: 12, color: "grey" }}>{moment(item.createAt.toDate()).format("MMM. DD, YYYY, hh:mm A")}</Text>
+                        <Text style={{ fontSize: 12, color: "grey" }}>{moment(item.createAt.toDate()).format("MMM. DD, YYYY, hh:mm")}</Text>
                         <Text style={{ fontSize: 12, color: "grey" }}>Order # {item.orderId} </Text>
                       </Content>
                       <Next>

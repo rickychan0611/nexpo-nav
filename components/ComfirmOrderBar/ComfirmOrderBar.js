@@ -21,80 +21,85 @@ export default function ComfirmOrderBar() {
   const qty = useQty();
 
   const onOrderSubmit = async () => {
-    setLoading(true)
-
-    const increment = firebase.firestore.FieldValue.increment(1);
-    const orderIdRef = db.collection('orderId').doc('orderId')
-    await orderIdRef.update({ orderId: increment })
-    const snapshot = await orderIdRef.get()
-    const orderId = snapshot.data().orderId
-    setNewOrderId(moment().format("YYMMDD") + orderId)
-    console.log("orderId: ", orderId)
-
-    const timestamp = new Date()
-    const orderRef = db.collection("orders").doc()
-    await orderRef.set({
-      orderId: newOrderId,
-      orderItems: newOrderProductList,
-      shippingAddress,
-      userId: user.email,
-      createAt: timestamp,
-      total_amt: (+total * 1.15).toFixed(2),
-      status: "Order in Proccess"
-    })
-      .catch(error => {
-        setLoading(false)
-        console.log(error)
-      })
-
-    //shipping address exist / update. 
-    if (shippingAddress.uid) {
+    try {
       setLoading(true)
-      const shippingAddressRef = db.collection("shippingAddresses").doc(shippingAddress.uid)
-      shippingAddressRef.update({
-        ...shippingAddress,
+      const timestamp = new Date()
+      let now = moment().format("YYMMDD")
+
+      const increment = firebase.firestore.FieldValue.increment(1);
+      const orderIdRef = db.collection('orderId').doc('orderId')
+      await orderIdRef.update({ orderId: increment })
+      const snapshot = await orderIdRef.get()
+      const orderId = await snapshot.data().orderId
+      
+      console.log(orderId)
+      
+      const orderRef = db.collection("orders").doc()
+      setNewOrderId(now + orderId)
+      await orderRef.set({
+        orderId: now + orderId,
+        orderItems: newOrderProductList,
+        shippingAddress,
+        userId: user.email,
         createAt: timestamp,
-        userId: user.email
+        total_amt: (+total * 1.15).toFixed(2),
+        status: "Order in Proccess"
       })
-        .then(() => {
-          setLoading(false)
-          setSelected("orderSuccess")
-          navigate({
-            routeName: "orderSuccess",
-          })
-        })
         .catch(error => {
           setLoading(false)
           console.log(error)
         })
-    }
 
-    //create new shipping address. 
-    else if (!shippingAddresses.uid) {
-      setLoading(true)
-      const shippingAddressRef = db.collection("shippingAddresses").doc()
-      shippingAddressRef.add({
-        ...shippingAddress,
-        uid: shippingAddressRef.id,
-        createAt: timestamp,
-        userId: user.email
-      })
-        .then(() => {
-          setLoading(false)
-          setSelected("orderSuccess")
-          navigate({
-            routeName: "orderSuccess",
+      //shipping address exist / update. 
+      if (shippingAddress.uid) {
+        setLoading(true)
+        const shippingAddressRef = db.collection("shippingAddresses").doc(shippingAddress.uid)
+        shippingAddressRef.update({
+          ...shippingAddress,
+          createAt: timestamp,
+          userId: user.email
+        })
+          .then(() => {
+            setLoading(false)
+            setSelected("orderSuccess")
+            navigate({
+              routeName: "orderSuccess",
+            })
           })
+          .catch(error => {
+            setLoading(false)
+            console.log(error)
+          })
+
+      }
+
+      //create new shipping address. 
+      else if (!shippingAddresses.uid) {
+        setLoading(true)
+        const shippingAddressRef = db.collection("shippingAddresses").doc()
+        shippingAddressRef.add({
+          ...shippingAddress,
+          uid: shippingAddressRef.id,
+          createAt: timestamp,
+          userId: user.email
         })
-        .catch(error => {
-          setLoading(false)
-          console.log(error)
-        })
+          .then(() => {
+            setLoading(false)
+            setSelected("orderSuccess")
+            navigate({
+              routeName: "orderSuccess",
+            })
+          })
+          .catch(error => {
+            setLoading(false)
+            console.log(error)
+          })
+      }
+
+      //update user order time. 
+      db.collection("users").doc(user.email).update({ lastOrderAt: timestamp })
     }
-
-    //update user order time. 
-    db.collection("users").doc(user.email).update({lastOrderAt: timestamp})
-
+    catch (err) { console.log(err) }
   }
 
   useEffect(() => {
