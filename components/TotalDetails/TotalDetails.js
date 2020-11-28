@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, Platform } from "react-native";
 import styled from "styled-components/native";
 
 export default function TotalDetails({total}) {
+
   return (
     <>
-      <TotalDetails />
       <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
         <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-        {/* <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price> */}
+        <Price ><Text style={{ color: "grey" }}>${(+total).toFixed(2)}</Text></Price>
       </TotalContainer>
       <TotalContainer style={{ paddingRight: 40 }}>
         <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
@@ -16,11 +16,11 @@ export default function TotalDetails({total}) {
       </TotalContainer>
       <TotalContainer style={{ paddingRight: 40 }}>
         <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-        {/* <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price> */}
+        <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
       </TotalContainer>
       <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
         <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-        {/* <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price> */}
+        <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
       </TotalContainer>
     </>
   )

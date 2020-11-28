@@ -3,68 +3,51 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
-import { Divider, TextInput, Headline } from "react-native-paper";
-import { db } from "../firebase";
+import { Divider, IconButton, Headline, Drawer, ActivityIndicator } from "react-native-paper";
+import { db, auth } from "../firebase";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
-import emptyCart from "../public/emptyCart.jpg"
 import pointBG from "../public/pointBG.jpg"
+import moment from "moment";
 
 import BottomBar from "../components/BottomBar";
-import ProductCard from "../components/ProductCard";
-import CartCheckoutBar from "../components/CartCheckoutBar";
-import CartItems from "../components/CartItems";
-import ShippingAddress from "../components/ShippingAddress";
-import { forEach } from "react-native-elevation";
 import Loader from "../components/Loader";
 
 export default function account() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
-
-  const {
-    total, user, setSelected,
-    newOrderProductList, setNewOrderProductList,
-    redeemPoint, setRedeemPoint,
-    shippingAddress, setShippingAddress,
-    deliveryMsg, setDeliveryMsg
-  } = useContext(Context);
-
-  const shippingDefault = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
-  }
-
-  const [err, setErr] = useState(shippingDefault);
+  const [orders, setOrders] = useState([]);
+  const { user, setUser, setSelectedOrder } = useContext(Context);
 
   useEffect(() => {
-    setNewOrderProductList(prev => prev)
-  }, [newOrderProductList])
-
-  useEffect(() => {
-    setLoading(false)
+    setSelectedOrder({})
+    setLoading(true)
     if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
+      console.log(user)
+      const ordersRef = db.collection("orders")
+      ordersRef.where("userId", "==", user.email).get()
         .then((snapshot) => {
+          let tempArr = []
           snapshot.forEach((doc) => {
-            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
+            tempArr.push(doc.data())
           })
+          tempArr.sort((a, b) => {
+            return b.createAt.toDate() - a.createAt.toDate()
+          })
+          setOrders(tempArr)
+          setLoading(false)
         })
-        .catch(error => {
-          console.log(error)
+        .catch(err => {
+          setLoading(false)
+          console.log(err)
         })
     }
+    // else navigate({routeName:"login"})
   }, [user])
 
   return (
     <>
-      {loading && <Loader />}
       <ContextArea>
         <ScrollView>
 
@@ -90,63 +73,98 @@ export default function account() {
             height: 200,
           }}>
             <Text
-            style={{
-              color: "white",
-              fontSize: 26,
-              fontWeight: "bold",
-              marginBottom: 20
-            }}>
-              {user.email}
+              style={{
+                color: "white",
+                fontSize: 26,
+                fontWeight: "bold",
+                marginBottom: 20
+              }}>
+              {user && user.firstName + " " + user.lastName}
             </Text>
             <Text
-            style={{
-              color: "white",
-              fontSize: 22,
-              fontWeight: "bold",
-            }}>
+              style={{
+                color: "white",
+                fontSize: 22,
+                fontWeight: "bold",
+              }}>
               0 pts
             </Text>
           </View>
+
+          <DrawerContainer style={{
+            // borderBottomWidth: 1, 
+            borderBottomColor: theme.lightGrey, marginTop: 200
+          }}>
+            <Drawer.Item
+              style={{ backgroundColor: "white"}}
+              icon="cogs"
+              label="Settings"
+            />
+            <Divider />
+            <Drawer.Item
+              style={{ backgroundColor: "white" }}
+              icon="logout"
+              label="Logout"
+              onPress={() => {
+                auth.signOut().then(()=>{
+                  navigate({routeName: "login"})
+                  setUser("")
+                })}}
+            />
+          </DrawerContainer>
 
           <Headline
             style={{
               padding: 25,
               fontWeight: "bold",
               color: theme.red,
-              marginTop: 220
+              backgroundColor: theme.lightGrey
             }}
           >
             My orders</Headline>
 
-          <Divider />
-
-
-
-
-          <CartItems />
-
-          <Divider />
-
-          <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-
-          <Divider />
-
-          <ShippingAddress err={err} setErr={setErr} />
+          {loading ?
+            <View style={{
+              height: 200,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <ActivityIndicator color={theme.red} size="large" />
+            </View> :
+            <>
+              {orders && orders[0] && orders.map((item) => {
+                return (
+                  <>
+                    <ItemsContainer onPress={() => {
+                      setSelectedOrder(item)
+                      navigate({
+                        routeName: "order"
+                      })
+                    }}>
+                      <Status>
+                        <IconButton icon="check-circle-outline" color={theme.green} size={16} />
+                      </Status>
+                      <Content>
+                        <Text style={{ fontSize: 16 }}>Order completed</Text>
+                        <Text style={{ fontSize: 12, color: "grey" }}>{moment(item.createAt.toDate()).format("MMM. DD, YYYY, hh:mm A")}</Text>
+                        <Text style={{ fontSize: 12, color: "grey" }}>Order # {item.orderId} </Text>
+                      </Content>
+                      <Next>
+                        <Text style={{
+                          textAlign: "right",
+                          backgroundColor: theme.lightGrey,
+                          paddingVertical: 10,
+                          paddingHorizontal: 15,
+                          borderRadius: 25
+                        }}>{"Details"}</Text>
+                      </Next>
+                    </ItemsContainer>
+                    <Divider style={{ borderBottomWidth: 2, borderBottomColor: theme.lightGrey }} />
+                  </>
+                )
+              })}
+            </>
+          }
 
           <View style={{ height: 100 }}></View>
 
@@ -168,29 +186,40 @@ export default function account() {
   );
 }
 
-const TotalContainer = styled.View`
+
+const ItemsContainer = styled.TouchableOpacity`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 500px;
-  padding: 5px 25px 5px 25px;
+  padding: 15px;
+`;
 
+const DrawerContainer = styled.View`
+  width: ${Platform.OS === "web" ? `100vw` : `null`};
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 500px;
+  padding: 7px 0px 7px 0px;
+`;
+
+const Status = styled.View`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  margin-top: -7px;
+  right: 5
 `;
 const Content = styled.View`
-  flex: 10;
+  flex: 9;
   justify-content: center;
   align-items: flex-start;
 `;
-const Price = styled.View`
-  flex: 2;
+const Next = styled.View`
+  flex: 4;
   justify-content: center;
   align-items: flex-end;
-`;
-const Title = styled.Text`
-  font-size: 18px;
-  width: 100%;
-  padding: 15px;
-  background-color: white;   
 `;
 const ContextArea = styled.View`
   /* flex: 1; */
