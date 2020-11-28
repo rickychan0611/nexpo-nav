@@ -65,7 +65,18 @@ export default function orderSuccess() {
           }}>
             {`Thank You ${"\n"} for your Order !`}
           </Headline>
-          <TableRow >
+
+          <Headline style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: 24,
+            marginBottom: 30,
+            color: theme.black
+          }}>
+            {`Your Order ID: ${"\n" + newOrderId}`}
+          </Headline>
+
+          {/* <TableRow >
             <Left><Text style={{ color: "grey" }}>Date:</Text></Left>
             <Right><Text style={{ color: "grey" }}>{moment().format("DD/MM/YYYY")}</Text></Right>
           </TableRow>
@@ -76,7 +87,7 @@ export default function orderSuccess() {
           <TableRow >
             <Left><Text style={{ color: "black" }}>Total:</Text></Left>
             <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
-          </TableRow>
+          </TableRow> */}
 
           <Button 
             icon="arrow-right"

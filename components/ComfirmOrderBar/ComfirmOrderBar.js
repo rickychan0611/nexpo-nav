@@ -6,39 +6,48 @@ import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { db } from "../../firebase";
+import { db, firebase } from "../../firebase";
 import Loader from "../Loader";
+import moment from "moment";
 
 export default function ComfirmOrderBar() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
 
-  const { setSelected, total, user, shippingAddress, newOrderProductList, newOrderId, setNewOrderId } = useContext(Context);
+  const { setSelected, total, user,
+    shippingAddress, newOrderProductList,
+    setNewOrderId, newOrderId } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
-  const onOrderSubmit = () => {
+  const onOrderSubmit = async () => {
     setLoading(true)
 
-    const timestamp = new Date()
+    const increment = firebase.firestore.FieldValue.increment(1);
+    const orderIdRef = db.collection('orderId').doc('orderId')
+    await orderIdRef.update({ orderId: increment })
+    const snapshot = await orderIdRef.get()
+    const orderId = snapshot.data().orderId
+    setNewOrderId(moment().format("YYMMDD") + orderId)
+    console.log("orderId: ", orderId)
 
+    const timestamp = new Date()
     const orderRef = db.collection("orders").doc()
-    orderRef.set({
-      orderId: orderRef.id,
+    await orderRef.set({
+      orderId: newOrderId,
       orderItems: newOrderProductList,
       shippingAddress,
       userId: user.email,
       createAt: timestamp,
+      total_amt: (+total * 1.15).toFixed(2),
+      status: "Order in Proccess"
     })
-      .then(() => {
-        setLoading(false)
-        setNewOrderId(orderRef.id)
-      })
       .catch(error => {
         setLoading(false)
         console.log(error)
       })
 
+    //shipping address exist / update. 
     if (shippingAddress.uid) {
       setLoading(true)
       const shippingAddressRef = db.collection("shippingAddresses").doc(shippingAddress.uid)
@@ -49,9 +58,9 @@ export default function ComfirmOrderBar() {
       })
         .then(() => {
           setLoading(false)
-          setSelected("confirmOrder")
+          setSelected("orderSuccess")
           navigate({
-            routeName: "confirmOrder",
+            routeName: "orderSuccess",
           })
         })
         .catch(error => {
@@ -59,6 +68,8 @@ export default function ComfirmOrderBar() {
           console.log(error)
         })
     }
+
+    //create new shipping address. 
     else if (!shippingAddresses.uid) {
       setLoading(true)
       const shippingAddressRef = db.collection("shippingAddresses").doc()
@@ -70,9 +81,9 @@ export default function ComfirmOrderBar() {
       })
         .then(() => {
           setLoading(false)
-          setSelected("confirmOrder")
+          setSelected("orderSuccess")
           navigate({
-            routeName: "confirmOrder",
+            routeName: "orderSuccess",
           })
         })
         .catch(error => {
@@ -82,9 +93,9 @@ export default function ComfirmOrderBar() {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setLoading(false)
-  },[])
+  }, [])
 
   return (
     <>
