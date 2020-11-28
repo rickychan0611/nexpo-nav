@@ -34,7 +34,7 @@ export default function ComfirmOrderBar() {
       
       console.log(orderId)
       
-      const orderRef = db.collection("orders").doc()
+      const orderRef = db.collection("orders").doc(now + orderId)
       setNewOrderId(now + orderId)
       await orderRef.set({
         orderId: now + orderId,
