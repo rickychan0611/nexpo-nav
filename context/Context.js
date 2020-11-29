@@ -47,7 +47,6 @@ const ContextProvider = ({ children }) => {
   const [deliveryMsg, setDeliveryMsg] = useState("");
   const [newOrderId, setNewOrderId] = useState("");
   const [selectedOrder, setSelectedOrder] = useState();
-  const [myOrderQueryTime, setMyOrderQueryTime] = useState();
   const [orders, setOrders] = useState([]);
   const [shippingAddress, setShippingAddress] = useState(
     {
@@ -138,6 +137,7 @@ const ContextProvider = ({ children }) => {
       console.log("AsyncStorage Read Error:", e)
     }
   }
+
   useEffect(() => {
     getData()
   }, [])
@@ -171,7 +171,6 @@ const ContextProvider = ({ children }) => {
           deliveryMsg, setDeliveryMsg,
           newOrderId, setNewOrderId,
           selectedOrder, setSelectedOrder,
-          myOrderQueryTime, setMyOrderQueryTime,
           orders, setOrders
         }
       }

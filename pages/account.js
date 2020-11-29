@@ -26,31 +26,29 @@ export default function account() {
   } = useContext(Context);
 
   useEffect(() => {
-    const query = async () => {
-      // setSelectedOrder({})
-      console.log("RuNNNNNNNNNNNNNNNNNNNNNNNNN?????")
-      if (user) {
-        console.log("userNNNNNNNNNNNNNNN?????")
-        const userRef = db.collection("users").doc(user.email)
-        const snapshot = await userRef.get()
-        console.log("userRef.getNNNNNNNNN?????")
-        const lastOrderAt = snapshot.data().lastOrderAt
+    // const query = async () => {
+    //   // setSelectedOrder({})
+    //   console.log("RuNNNNNNNNNNNNNNNNNNNNNNNNN?????")
+    //   if (user) {
+    //     console.log("userNNNNNNNNNNNNNNN?????")
+    //     const userRef = db.collection("users").doc(user.email)
+    //     const snapshot = await userRef.get()
+    //     console.log("userRef.getNNNNNNNNN?????")
+    //     const lastOrderAt = snapshot.data().lastOrderAt
 
-        if (myOrderQueryTime && moment(myOrderQueryTime.toDate())
-          .isSame(lastOrderAt.toDate())
-        ) {
-          setLoading(false)
-          console.log("Didn't run order query")
-          return
-        }
+    //     if (myOrderQueryTime && moment(myOrderQueryTime.toDate())
+    //       .isSame(lastOrderAt.toDate())
+    //     ) {
+    //       setLoading(false)
+    //       console.log("Didn't run order query")
+    //       return
+    //     }
 
-        else {
-          setLoading(true)
+        if (user) {
+          // setLoading(true)
           console.log("Run order query")
-          const ordersRef = db.collection("orders")
-          ordersRef.where("userId", "==", user.email).get()
-            .then((snapshot) => {
-              setMyOrderQueryTime(lastOrderAt)
+          db.collection("orders").where("userId", "==", user.email).onSnapshot((snapshot) => {
+              // setMyOrderQueryTime(lastOrderAt)
               let tempArr = []
               snapshot.forEach((doc) => {
                 tempArr.push(doc.data())
@@ -59,16 +57,16 @@ export default function account() {
                 return b.createAt.toDate() - a.createAt.toDate()
               })
               setOrders(tempArr)
-              setLoading(false)
+              // setLoading(false)
             })
-            .catch(err => {
-              setLoading(false)
-              console.log(err)
-            })
+            // .catch(err => {
+            //   // setLoading(false)
+            //   console.log(err)
+            // })
         }
-      }
-    }
-      query()
+      // }
+    // }
+      // query()
   }, [user, selected])
 
   return (

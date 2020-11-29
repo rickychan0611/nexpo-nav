@@ -32,13 +32,8 @@ export default function order() {
 
   const onCancel = async () => {
     setCancelLoading(true)
-    // hideCancelDialog()
     const orderRef = db.collection("orders").doc(selectedOrder.orderId)
     orderRef.update({ status: "Order Cancelled" })
-    console.log("Cancelled")
-    const userRef = db.collection("users").doc(selectedOrder.userId)
-    await userRef.update({ lastOrderAt: new Date() })
-    console.log("updated users")
     setSelectedOrder(prev => ({ ...prev, status: "Order Cancelled" }))
     showCancelledDialog()
     hideCancelDialog()
