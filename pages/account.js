@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
@@ -13,61 +12,24 @@ import moment from "moment";
 import BottomBar from "../components/BottomBar";
 import Status from "../components/Status";
 import Loader from "../components/Loader";
+import { AccountContext } from "../context/AccountContext";
 
 export default function account() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
   const {
-    user, setUser, setSelectedOrder, selectedOrder,
-    selected, setSelected,
-    myOrderQueryTime, setMyOrderQueryTime,
-    orders, setOrders
+    user, setUser, setSelectedOrder, setSelected,
   } = useContext(Context);
 
+  const {
+    orders, setOrders,
+    listenMyOrders, unlistenMyOrders
+  } = useContext(AccountContext)
+
   useEffect(() => {
-    // const query = async () => {
-    //   // setSelectedOrder({})
-    //   console.log("RuNNNNNNNNNNNNNNNNNNNNNNNNN?????")
-    //   if (user) {
-    //     console.log("userNNNNNNNNNNNNNNN?????")
-    //     const userRef = db.collection("users").doc(user.email)
-    //     const snapshot = await userRef.get()
-    //     console.log("userRef.getNNNNNNNNN?????")
-    //     const lastOrderAt = snapshot.data().lastOrderAt
-
-    //     if (myOrderQueryTime && moment(myOrderQueryTime.toDate())
-    //       .isSame(lastOrderAt.toDate())
-    //     ) {
-    //       setLoading(false)
-    //       console.log("Didn't run order query")
-    //       return
-    //     }
-
-        if (user) {
-          // setLoading(true)
-          console.log("Run order query")
-          db.collection("orders").where("userId", "==", user.email).onSnapshot((snapshot) => {
-              // setMyOrderQueryTime(lastOrderAt)
-              let tempArr = []
-              snapshot.forEach((doc) => {
-                tempArr.push(doc.data())
-              })
-              tempArr.sort((a, b) => {
-                return b.createAt.toDate() - a.createAt.toDate()
-              })
-              setOrders(tempArr)
-              // setLoading(false)
-            })
-            // .catch(err => {
-            //   // setLoading(false)
-            //   console.log(err)
-            // })
-        }
-      // }
-    // }
-      // query()
-  }, [user, selected])
+    listenMyOrders()
+  }, [user])
 
   return (
     <>

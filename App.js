@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import ContextProvider from './context/Context';
 import ThemeProvider from './context/ThemeContext';
+import AccountProvider from './context/AccountContext';
 import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
@@ -82,14 +83,16 @@ function App() {
 export default () => {
   return (
     <ContextProvider>
-      <ThemeProvider>
+      <AccountProvider>
+        <ThemeProvider>
           <PaperProvider>
             <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
               {/* <TopBar /> */}
               <App />
             </SafeAreaView>
           </PaperProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </AccountProvider>
     </ContextProvider>
   )
 }
