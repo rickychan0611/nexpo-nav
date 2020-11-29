@@ -11,9 +11,9 @@ export default function CartItems() {
 
   return (
     <>
-      {newOrderProductList.map(item => {
+      {newOrderProductList.map((item, index) => {
         return (
-          <TouchableOpacity key={item.uid}
+          <TouchableOpacity key={index}
             onPress={() => {
               setSelectedItem(item.item)
               navigate({
@@ -37,7 +37,6 @@ export default function CartItems() {
             </ItemsContainer>
             <Divider />
           </TouchableOpacity>
-
         )
       })}
     </>
@@ -58,7 +57,7 @@ const Qty = styled.View`
   align-items: flex-start;
 `;
 const Content = styled.View`
-  flex: 10;
+  flex: 8;
   justify-content: center;
   align-items: flex-start;
 `;

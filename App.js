@@ -5,7 +5,6 @@ import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { Provider as PaperProvider } from 'react-native-paper';
-import theme from './theme';
 
 import home from "./pages";
 import store from "./pages/store";

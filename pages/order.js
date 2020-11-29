@@ -2,26 +2,51 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
-import { Divider, IconButton, Headline } from "react-native-paper";
+import { ThemeContext } from "../context/ThemeContext";
+import { Divider, IconButton, Headline, Button, Paragraph, Dialog, Portal, ActivityIndicator } from "react-native-paper";
 import { Image, Platform, ScrollView, View, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import moment from "moment";
+import { db } from "../firebase";
 
 import BottomBar from "../components/BottomBar";
 import TotalDetails from "../components/TotalDetails";
+import Status from "../components/Status";
 
 import Loader from "../components/Loader";
 export default function order() {
   const { navigate, goBack } = useRouting();
   const [loading, setLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
-  const {
-    selectedOrder
-  } = useContext(Context);
+  const { selectedOrder, setSelectedOrder, setSelected } = useContext(Context);
+  const { theme } = useContext(ThemeContext);
 
-  useEffect(()=>{
+  const [cancelDialog, setCancelDialog] = useState(false);
+  const showCancelDialog = () => setCancelDialog(true);
+  const hideCancelDialog = () => setCancelDialog(false);
+
+  const [cancelledDialog, setCancelledDialog] = useState(false);
+  const showCancelledDialog = () => setCancelledDialog(true);
+  const hideCancelledDialog = () => setCancelledDialog(false);
+
+  const onCancel = async () => {
+    setCancelLoading(true)
+    // hideCancelDialog()
+    const orderRef = db.collection("orders").doc(selectedOrder.orderId)
+    orderRef.update({ status: "Order Cancelled" })
+    console.log("Cancelled")
+    const userRef = db.collection("users").doc(selectedOrder.userId)
+    await userRef.update({ lastOrderAt: new Date() })
+    console.log("updated users")
+    setSelectedOrder(prev => ({ ...prev, status: "Order Cancelled" }))
+    showCancelledDialog()
+    hideCancelDialog()
+    setCancelLoading(false)
+  }
+
+  useEffect(() => {
     setLoading(true)
-    console.log(selectedOrder)
     if (!selectedOrder) {
       setLoading(false)
       navigate({
@@ -33,68 +58,152 @@ export default function order() {
 
   return (
     <>
-      { loading || !selectedOrder ? 
-      <Loader />
-      :
-      <>
-      <ContextArea>
-        <IconButton icon="arrow-left" onPress={()=>{
-          goBack()
-        }}/>
-        <ScrollView>
-          <Headline
-            style={{
-              padding: 25
-            }}
-          >
-            Order #{selectedOrder &&  selectedOrder.orderId}</Headline>
-          <Title style={{
-              paddingLeft: 25
-            }}>{moment(selectedOrder.createAt.toDate()).format("MMM. DD, YYYY, hh:mm A")}</Title>
-          <Divider />
+      <Portal>
+        <Dialog visible={cancelDialog} onDismiss={hideCancelDialog}>
+          <Dialog.Title>Cancel Order</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure to cancel order?</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            {!cancelLoading ?
+              <>
+                <Button onPress={() => { hideCancelDialog() }}>No</Button>
+                <Button onPress={() => { onCancel() }}>Yes</Button>
+              </> :
+              <>
+                <Button loading></Button>
+              </>
+            }
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
-        {selectedOrder && selectedOrder.orderItems[0] && selectedOrder.orderItems.map(item => {
-        return (
-          <View key={item.uid} >
-            <ItemsContainer key={item.uid}>
-              <Qty>
-                <Text style={{ color: "green" }}>{item.quantity}X</Text>
-              </Qty>
-              <Content>
-                <Text style={{ fontSize: 16 }}>
-                  {item.item.chineseName + " " + item.item.englishName}
-                </Text>
-              </Content>
-              <Price>
-                <Text style={{ textAlign: "right" }}>${(+item.item.final_price).toFixed(2)}</Text>
-              </Price>
-            </ItemsContainer>
-            <Divider />
-          </View>
-        )
-      })}
+      <Portal>
+        <Dialog visible={cancelledDialog} onDismiss={hideCancelledDialog}>
+          <Dialog.Title>Order has been cancelled</Dialog.Title>
+          <Dialog.Actions>
+            <Button onPress={() => {
+              setSelected("account")
+              hideCancelledDialog()
+              navigate({routeName: "account"})
+            }}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
-          <Divider />
+      {
+        loading || !selectedOrder ?
+          <Loader />
+          :
+          <>
+            <ContextArea>
+              <IconButton icon="arrow-left" onPress={() => {
+                goBack()
+              }} />
+              <ScrollView>
+                <Headline
+                  style={{
+                    paddingLeft: 25
+                  }}
+                >
+                  Order #{selectedOrder && selectedOrder.orderId}</Headline>
+                <Title style={{
+                  paddingLeft: 25,
+                  paddingVertical: 0,
+                  color: "grey",
+                  fontSize: 16
+                }}>{moment(selectedOrder.createAt.toDate()).format("MMM. DD, YYYY, hh:mm A")}</Title>
 
-          <TotalDetails total={selectedOrder ? selectedOrder.total_amt : 0}/>
-         
-          <Divider />
+                <View style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  justifyContent: "space-between",
+                  paddingRight: 20,
+                  marginBottom: 25
+                }}>
 
-          <View style={{ height: 100 }}></View>
+                  <View style={{
+                    paddingLeft: 15,
+                    flex: 2,
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                  }}>
+                    <StatusContainer>
+                      <Status status={selectedOrder.status} theme={theme} 
+                      style={{margin: 0}}/>
+                    </StatusContainer>
+                    <Text style={{
+                      fontSize: 16,
+                      paddingTop: 7
+                    }}>
+                      {selectedOrder.status}
+                    </Text>
+                  </View>
 
-        </ScrollView>
-      </ContextArea>
-      <BottomBar style={{
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 5,
-        elevation: 10,
-      }} />
-      </>
+                  {selectedOrder.status === "Order in Proccess" ?
+                    <CancelButton onPress={showCancelDialog}>
+                      <Text style={{
+                        textAlign: "right",
+                        backgroundColor: theme.lightGrey,
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        borderRadius: 25,
+                        fontSize: 10
+                      }}>
+                        {"Cancel Order"}
+                      </Text>
+                    </CancelButton>
+                    : null
+                  }
+
+                </View>
+                <Divider />
+                <Divider />
+
+                {selectedOrder && selectedOrder.orderItems[0] && selectedOrder.orderItems.map((item, index) => {
+                  return (
+                    <View key={item.index} >
+                      <ItemsContainer>
+                        <Qty>
+                          <Text style={{ color: "green" }}>{item.quantity}X</Text>
+                        </Qty>
+                        <Content>
+                          <Text style={{ fontSize: 16 }}>
+                            {item.item.chineseName + " " + item.item.englishName}
+                          </Text>
+                        </Content>
+                        <Price>
+                          <Text style={{ textAlign: "right" }}>${(+item.item.final_price).toFixed(2)}</Text>
+                        </Price>
+                      </ItemsContainer>
+                      <Divider />
+                    </View>
+                  )
+                })}
+
+                <Divider />
+
+                <TotalDetails total={selectedOrder ? selectedOrder.total_amt : 0} />
+
+                <Divider />
+
+                <View style={{ height: 100 }}></View>
+
+              </ScrollView>
+
+            </ContextArea>
+            <BottomBar style={{
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              shadowOpacity: 0.4,
+              shadowRadius: 5,
+              elevation: 10,
+            }} />
+          </>
       }
     </>
   );
@@ -114,7 +223,7 @@ const Qty = styled.View`
   align-items: flex-start;
 `;
 const Content = styled.View`
-  flex: 10;
+  flex: 8;
   justify-content: center;
   align-items: flex-start;
 `;
@@ -136,4 +245,52 @@ const ContextArea = styled.View`
   max-width: 500px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
+`;
+
+const Total = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const Bar = styled.View`
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: ${props => props.theme.black}; 
+  height: 40px;
+  width: 40%;
+  max-width: 220px;
+  border-radius: 25px;
+`;
+const Wrapper = styled.TouchableOpacity`
+  position: ${Platform.OS === "web" ? `fixed` : `absolute`};
+  bottom: 68px;
+  height: 55px;
+  width: 100%;
+  max-width: 500px;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+`;
+const CancelButton = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: flex-end;
+`;
+
+const StatusContainer = styled.View`
+  /* flex: 1; */
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  /* margin-top: -7px; */
+  /* right: 5px */
 `;

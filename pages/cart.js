@@ -43,7 +43,6 @@ export default function Cart() {
   const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
-    console.log(shippingAddress)
     setErr(shippingDefault)
 
     if (!newOrderProductList[0]) {
@@ -218,7 +217,7 @@ const TotalContainer = styled.View`
 
 `;
 const Content = styled.View`
-  flex: 10;
+  flex: 8;
   justify-content: center;
   align-items: flex-start;
 `;

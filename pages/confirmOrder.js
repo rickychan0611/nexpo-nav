@@ -117,7 +117,6 @@ export default function confirmOrder() {
 
       <ComfirmOrderBar />
 
-
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {

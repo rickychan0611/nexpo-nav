@@ -35,7 +35,7 @@ const TotalContainer = styled.View`
 
 `;
 const Content = styled.View`
-  flex: 10;
+  flex: 8;
   justify-content: center;
   align-items: flex-start;
 `;

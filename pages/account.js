@@ -11,6 +11,7 @@ import pointBG from "../public/pointBG.jpg"
 import moment from "moment";
 
 import BottomBar from "../components/BottomBar";
+import Status from "../components/Status";
 import Loader from "../components/Loader";
 
 export default function account() {
@@ -18,32 +19,33 @@ export default function account() {
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
   const {
-    user, setUser, setSelectedOrder,
+    user, setUser, setSelectedOrder, selectedOrder,
+    selected, setSelected,
     myOrderQueryTime, setMyOrderQueryTime,
     orders, setOrders
   } = useContext(Context);
 
   useEffect(() => {
-    
     const query = async () => {
-      setSelectedOrder({})
-      setLoading(true)
-
+      // setSelectedOrder({})
+      console.log("RuNNNNNNNNNNNNNNNNNNNNNNNNN?????")
       if (user) {
-
+        console.log("userNNNNNNNNNNNNNNN?????")
         const userRef = db.collection("users").doc(user.email)
         const snapshot = await userRef.get()
+        console.log("userRef.getNNNNNNNNN?????")
         const lastOrderAt = snapshot.data().lastOrderAt
-        
+
         if (myOrderQueryTime && moment(myOrderQueryTime.toDate())
           .isSame(lastOrderAt.toDate())
         ) {
           setLoading(false)
-          console.log("Din't run order query")
+          console.log("Didn't run order query")
           return
         }
 
         else {
+          setLoading(true)
           console.log("Run order query")
           const ordersRef = db.collection("orders")
           ordersRef.where("userId", "==", user.email).get()
@@ -66,9 +68,8 @@ export default function account() {
         }
       }
     }
-    // else navigate({routeName:"login"})
-    query()
-  }, [user])
+      query()
+  }, [user, selected])
 
   return (
     <>
@@ -159,19 +160,21 @@ export default function account() {
             <>
               {orders && orders[0] && orders.map((item) => {
                 return (
-                  <>
-                    <ItemsContainer key={item.orderId} onPress={() => {
-                      setSelectedOrder(item)
-                      navigate({
-                        routeName: "order"
-                      })
-                    }}>
-                      <Status>
-                        <IconButton icon="check-circle-outline" color={theme.green} size={16} />
-                      </Status>
+                  <View key={item.orderId}>
+                    <ItemsContainer key={item.orderId}
+                      onPress={() => {
+                        setSelected("order")
+                        setSelectedOrder(item)
+                        navigate({
+                          routeName: "order"
+                        })
+                      }}>
+                      <StatusContainer>
+                        <Status status={item.status} theme={theme} />
+                      </StatusContainer>
                       <Content>
-                        <Text style={{ fontSize: 16 }}>Order completed</Text>
-                        <Text style={{ fontSize: 12, color: "grey" }}>{moment(item.createAt.toDate()).format("MMM. DD, YYYY, hh:mm")}</Text>
+                        <Text style={{ fontSize: 16 }}>{item.status}</Text>
+                        <Text style={{ fontSize: 12, color: "grey" }}>{moment(item.createAt.toDate()).format("MMM. DD, YYYY, hh:mm A")}</Text>
                         <Text style={{ fontSize: 12, color: "grey" }}>Order # {item.orderId} </Text>
                       </Content>
                       <Next>
@@ -185,7 +188,7 @@ export default function account() {
                       </Next>
                     </ItemsContainer>
                     <Divider style={{ borderBottomWidth: 2, borderBottomColor: theme.lightGrey }} />
-                  </>
+                  </View>
                 )
               })}
             </>
@@ -228,14 +231,6 @@ const DrawerContainer = styled.View`
   padding: 7px 0px 7px 0px;
 `;
 
-const Status = styled.View`
-  flex: 1;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-  margin-top: -7px;
-  right: 5px
-`;
 const Content = styled.View`
   flex: 9;
   justify-content: center;
@@ -253,4 +248,12 @@ const ContextArea = styled.View`
   max-width: 500px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
+`;
+const StatusContainer = styled.View`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+  margin-top: -7px;
+  right: 5px
 `;

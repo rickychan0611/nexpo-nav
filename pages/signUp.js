@@ -27,7 +27,7 @@ schema
 
 export default function signUp() {
   const { navigate } = useRouting();
-  const { user, setUser, selected, setSelected } = useContext(Context);
+  const {  setSelected } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const vw = Dimensions.get('window').width;
   const vh = Dimensions.get('window').height;
@@ -215,6 +215,7 @@ export default function signUp() {
                   onChangeText={value => { handleChange("fristName", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
+                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -244,6 +245,7 @@ export default function signUp() {
                   onChangeText={value => { handleChange("lastName", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
+                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -273,6 +275,7 @@ export default function signUp() {
                   onChangeText={value => { handleChange("email", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
+                      console.log(e.key)
                       emailLogin()
                     }
                   }}
@@ -311,6 +314,7 @@ export default function signUp() {
                   onChangeText={value => { handleChange("password", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
+                      console.log(e.key)
                       emailLogin()
                     }
                   }}

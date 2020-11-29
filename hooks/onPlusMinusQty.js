@@ -3,7 +3,6 @@ import produce from "immer";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function handlePlus(selectedItem, ctx) {
-  console.log(selectedItem)
   let idArray = [];
   const { newOrderProductList, setNewOrderProductList, setTotal, counter, setCounter } = ctx;
   let index = -1;
