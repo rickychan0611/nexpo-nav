@@ -36,6 +36,7 @@ export default function Store({ ssrData }) {
   useEffect(() => {
     if (selected === "store") {
       listenCategories()
+      listenProducts()
     }
   }, [selected ])
 

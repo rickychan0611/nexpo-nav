@@ -54,14 +54,14 @@ export default function BottomBar() {
             <Name selected={selected === "home" ? 'black' : '#ababab'}>Home</Name>
           </Button>
 
-          <Button>
+          {/* <Button>
             <Icon
               name='star'
               type='font-awesome-5'
               color={selected === "star" ? 'black' : '#ababab'}
             />
             <Name selected={selected === "star" ? 'black' : '#ababab'}>Special</Name>
-          </Button>
+          </Button> */}
 
           <Button onPress={() => {
             setSelected("store")
