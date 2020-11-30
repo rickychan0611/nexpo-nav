@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../../context/Context";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { ProductsContext } from "../../../context/ProductsContext";
 import moment from "moment";
 import { storage } from '../../../firebase';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -32,7 +33,7 @@ export default function CreateProduct() {
     product, setProduct, error
   } = useContext(Context);
 
-  const { categories, setCategories } = useContext(ProductsContext)
+  const { categories, setCategories, listenCategories } = useContext(ProductsContext)
 
   const ctx = useContext(Context);
 
@@ -183,6 +184,10 @@ export default function CreateProduct() {
     })();
   }, []);
 
+
+  useEffect(() => {
+      listenCategories()
+  }, [])
 
   return (
     <>

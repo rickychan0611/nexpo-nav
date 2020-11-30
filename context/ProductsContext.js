@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { Context } from "./Context";
 import { db } from "../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from "moment";
 
 export const ProductsContext = createContext();
 
@@ -11,7 +12,7 @@ const ProductsProvider = ({ children }) => {
 
   const [productData, setProductData] = useState([]);
   const [categories, setCategories] = useState();
-
+  const [timer, setTimer] = useState();
 
   const listenCategories = () => {
     if (!categories) {
@@ -41,11 +42,20 @@ const ProductsProvider = ({ children }) => {
       })
   }
 
+  const moreThan30min = (timer) => {
+    return moment(timer).add(30, "minutes").isBefore(moment())
+  }
+
   useEffect(() => {
-    if (!productData[selectedCat]) {
+    const setNow = moment()
+    if (!productData[selectedCat] || moreThan30min(moment(timer)) || !timer) {
       listenProducts()
+      setTimer(setNow)
     }
-    else console.log("listenProducts not run")
+    else {
+      setTimer(setNow)
+      console.log("listenProducts not run")
+    }
   }, [selectedCat])
 
   return (

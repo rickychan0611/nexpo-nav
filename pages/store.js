@@ -43,7 +43,7 @@ export default function Store({ ssrData }) {
     <>
       <CartBarWrapper up={newOrderProductList.length > 0}>
         {productData && <>
-          <SearchBar
+          {/* <SearchBar
             placeholder="Search"
             // onChangeText={this.updateSearch}
             // value={"search"}
@@ -52,7 +52,7 @@ export default function Store({ ssrData }) {
             containerStyle={{ width: "100%", maxWidth: 500, backgroundColor: "white" }}
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
-          />
+          /> */}
           <ContextArea up={newOrderProductList.length > 0}>
 
             <CategoryScrollView up={newOrderProductList.length > 0}>
