@@ -26,7 +26,7 @@ const ContextProvider = ({ children }) => {
   const [data, setData] = useState();
   const [user, setUser] = useState("");
   const [selectedItem, setSelectedItem] = useState();
-  const [selectedCat, setSelectedCat] = useState("");
+  const [selectedCat, setSelectedCat] = useState("555544");
   const [total, setTotal] = useState(0);
   const [newOrderProductList, setNewOrderProductList] = useState([]);
   const [selected, setSelected] = useState("home");
