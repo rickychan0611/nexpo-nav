@@ -4,7 +4,7 @@ import ContextProvider from '../context/Context';
 import ThemeProvider from '../context/ThemeContext';
 import AccountProvider from '../context/AccountContext';
 import ProductsProvider from '../context/ProductsContext';
-import AdminProvider from '../context/AdminProvider ';
+import AdminProvider from '../context/AdminContext';
 import WebContainer from "../components/WebContainer";
 import { Provider as PaperProvider } from 'react-native-paper';
 import BottomBar from "../components/BottomBar";

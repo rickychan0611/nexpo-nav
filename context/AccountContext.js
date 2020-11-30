@@ -11,8 +11,7 @@ const AccountProvider = ({ children }) => {
   let ordersRef;
   const listenMyOrders = () => {
       if (user) {
-        ordersRef = db.collection("orders").where("userId", "==", user.email)
-        .onSnapshot((snapshot) => {
+        ordersRef = db.collection("orders").where("userId", "==", user.email).onSnapshot((snapshot) => {
           let tempArr = []
           snapshot.forEach((doc) => {
             tempArr.push(doc.data())
@@ -24,7 +23,6 @@ const AccountProvider = ({ children }) => {
         })
       }
     }
-  
 
   const unlistenMyOrders = () => ordersRef()
 

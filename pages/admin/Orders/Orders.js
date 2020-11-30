@@ -1,6 +1,6 @@
 
 import React, { useContext, useState, useEffect } from "react";
-import { Dimensions, View, Text, TouchableOpacity } from "react-native";
+import { Dimensions, View, Text, TouchableOpacity, Platform } from "react-native";
 import { Headline, Surface, Divider, Switch  } from 'react-native-paper';
 
 import { Context } from "../../../context/Context";
@@ -50,10 +50,11 @@ export default function Orders() {
             }}>
               <View key={order.orderId} style={{ width: "100%" }}>
 
-                <View style={{ width: "100%", flexDirection: "row", flexWrap: "nowrap", justifyContent: "space-between" }}>
-                  <Date style={{ flex: 3 }}>{moment(order.createAt.toDate()).format("MMM. DD, YYYY")} -- #{order.orderId}</Date>
-                  <View style={{flex: 1 }}>
-                      <Text>Completed?</Text><Switch/>
+                <View style={{ width: "100%", flexDirection: "row", flexWrap: "nowrap", justifyContent: "space-between", alignItems: "center" }}>
+                  <Date style={{ flex: 2 }}>{moment(order.createAt.toDate()).format("MMM. DD, YYYY")} -- #{order.orderId}</Date>
+                  <View style={{flex: 1,flexDirection: "row", flexWrap: "nowrap", 
+                  justifyContent: "space-between", alignItems: "center", margin: 0}}>
+                      <Text>Completed?</Text><Switch style={{transform: [{ scaleX: .6 }, { scaleY: .6 }]}}/>
                   </View>
                 </View>
                 {order.orderItems.map((item, index) => {
@@ -91,7 +92,7 @@ export default function Orders() {
             </Surface>
           )
         })}
-        <View style={{ heigth: 40 }}></View>
+        {/* <View style={{ heigth: 40 }}></View> */}
       </Container>
 
     </>
@@ -99,10 +100,10 @@ export default function Orders() {
 }
 
 const Container = styled.ScrollView`
-  flex: 1;
+  /* flex: 1; */
   width: 100%;
-  height: ${props => props.ScreenHeight};
-  margin-bottom: 20px;
+  height: ${props => Platform.OS === "web" ? `120%` : props.ScreenHeight};
+  /* margin-bottom: 20px; */
   padding: 10px;
   background-color: ${props => props.theme.lightGrey};
 `;
@@ -111,10 +112,10 @@ font-size: 14px;
   margin-bottom: 10px;
 `;
 const ItemsContainer = styled.View`
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
+  /* width: ${Platform.OS === "web" ? `100%` : `null`}; */
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 440px;
   padding: 10px 0px 10px 0px;
 `;
 

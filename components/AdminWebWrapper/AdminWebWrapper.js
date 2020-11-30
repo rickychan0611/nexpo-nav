@@ -30,9 +30,9 @@ export default function AdminWebWrapper({children}) {
             shadow
             styles={{ sidebar: { position: "fixed", left: 0, background: "white", paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170} }}
           >
-            <WebContentColumn   backgroundColor={theme.backgroundColor}>
+            {/* <WebContentColumn   backgroundColor={theme.backgroundColor}> */}
               {children}
-            </WebContentColumn>
+            {/* </WebContentColumn> */}
           </Sidebar>
         </WebContextArea>
       </>
@@ -48,6 +48,7 @@ const WebContextArea = styled.View`
       justify-content: flex-start;
       background-color: ${props => props.backgroundColor};
       width: 100%;
+      height: 100vh;
       /* App width */
       max-width: 500px;
 `;
@@ -55,5 +56,5 @@ const WebContentColumn = styled.ScrollView`
       /* flex: 3; */
       height: 100%;
       background-color: white;
-      padding: 0px 10px 20px 10px;
+      /* padding: 0px 10px 20px 10px; */
 `;
