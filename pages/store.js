@@ -1,6 +1,8 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../context/Context";
+import { ProductsContext } from "../context/ProductsContext";
+
 import { SearchBar, Button } from 'react-native-elements';
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -9,46 +11,35 @@ import { db } from "../firebase";
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
-import AppContainer from "../components/AppContainer";
 import CategoryNames from "../components/CategoryNames";
 import ViewCartBar from "../components/ViewCartBar";
-
-import dataJson from '../public/db.json';
 
 // const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
 export default function Store({ ssrData }) {
   const { navigate } = useRouting();
+
   const {
-    productData, setProductData,
-    setSelectedItem, selectedCat,
-    newOrderProductList,
+    setSelectedItem, selectedCat, selected,
+    newOrderProductList, setSelected
   } = useContext(Context);
+
+  const {
+    listenCategories,
+    listenProducts,
+    productData, setProductData,
+  } = useContext(ProductsContext);
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
-  const queryProducts = async () => {
-    setProductData([])
-    // const res = await fetch(API_URL)
-    // const data = await res.json()
-    const productSnapshot = await db.collection("products").where("category", "array-contains", selectedCat).get()
-    productSnapshot.forEach((doc) => {
-      setProductData(prev => {
-        return [...prev, doc.data()]
-      })
-    })
-    // ssrData ? setData(ssrData) : setData(data)
-    // ssrData ? setData(dataJson) : setData(dataJson)
-  }
-
   useEffect(() => {
-    if (selectedCat) {
-      queryProducts()
+    if (selected === "store") {
+      listenCategories()
     }
-  }, [selectedCat])
+  }, [selected ])
 
-  return (
+   return (
     <>
       <CartBarWrapper up={newOrderProductList.length > 0}>
         {productData && <>
@@ -70,7 +61,7 @@ export default function Store({ ssrData }) {
             </CategoryScrollView>
 
             <ProductContainer>
-              {productData && productData[0] && productData.map((item) => {
+              {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
                 return (
                   <TouchableOpacity key={item.uid}
                     onPress={() => {

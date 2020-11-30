@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
+import { ProductsContext } from "../../context/ProductsContext";
 
 export default function CategoryNames() {
 
-  const { setSelectedCat, categories } = useContext(Context);
+  const { setSelectedCat } = useContext(Context);
+  const { categories } = useContext(ProductsContext);
 
-  return (
+
+return (
     <>
       {categories && categories.map((category) => {
         return (

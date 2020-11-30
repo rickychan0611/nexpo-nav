@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import ContextProvider from './context/Context';
 import ThemeProvider from './context/ThemeContext';
 import AccountProvider from './context/AccountContext';
+import ProductsProvider from './context/ProductsContext';
 import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
@@ -21,6 +22,8 @@ import forgotPassword from "./pages/forgotPassword";
 import orderSuccess from "./pages/orderSuccess";
 import order from "./pages/order";
 import account from "./pages/account";
+import { YellowBox } from "react-native";
+YellowBox.ignoreWarnings([""]);
 
 const Stack = createStackNavigator();
 
@@ -61,6 +64,7 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="account" component={account} options={options("account")} />
+          <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
           <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />
@@ -72,7 +76,6 @@ function App() {
           <Stack.Screen name="home" component={home} options={options("Home")} />
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
-          <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -84,14 +87,16 @@ export default () => {
   return (
     <ContextProvider>
       <AccountProvider>
-        <ThemeProvider>
-          <PaperProvider>
-            <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-              {/* <TopBar /> */}
-              <App />
-            </SafeAreaView>
-          </PaperProvider>
-        </ThemeProvider>
+        <ProductsProvider>
+          <ThemeProvider>
+            <PaperProvider>
+              <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+                {/* <TopBar /> */}
+                <App />
+              </SafeAreaView>
+            </PaperProvider>
+          </ThemeProvider>
+        </ProductsProvider>
       </AccountProvider>
     </ContextProvider>
   )

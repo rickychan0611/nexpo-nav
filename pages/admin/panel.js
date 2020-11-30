@@ -22,6 +22,7 @@ import CreateProduct from "./CreateProduct/CreateProduct";
 import dataJson from '../../public/db.json';
 import CartCheckoutBar from "../../components/CartCheckoutBar";
 import { ScrollView } from "react-native-gesture-handler";
+import { ProductsContext } from "../../context/ProductsContext";
 
 const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
@@ -32,8 +33,9 @@ export default function panel({ ssrData }) {
   const {
     user, openAdminMenu, openWebAdminMenu, setOpenWebAdminMenu,
     selectedItem, data, setData, total,
-    categories, setCategories
   } = useContext(Context);
+
+  const { categories, setCategories } = useContext(ProductsContext)
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
   const [product, setProduct] = useState({});

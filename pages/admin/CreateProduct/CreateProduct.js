@@ -26,12 +26,13 @@ export default function CreateProduct() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const {
-    categories, setCategories,
     images, setImages,
     swiperControl, setSwiperControl,
     selectedCategory, setSelectedCategory,
     product, setProduct, error
   } = useContext(Context);
+
+  const { categories, setCategories } = useContext(ProductsContext)
 
   const ctx = useContext(Context);
 
@@ -68,7 +69,7 @@ export default function CreateProduct() {
 
     validate.then(() => {
       setButtonDisabled(true)
-      const uid = cat.chineseName.trim()+cat.englishName.trim()
+      const uid = cat.chineseName.trim() + cat.englishName.trim()
       db.collection("categories").doc(uid).set({
         uid,
         chineseName: cat.chineseName.trim(),
@@ -182,7 +183,7 @@ export default function CreateProduct() {
     })();
   }, []);
 
- 
+
   return (
     <>
       <Container>
@@ -264,7 +265,7 @@ export default function CreateProduct() {
 
           {categories && categories.map((category) => {
 
-            const uid = category.chineseName+category.englishName
+            const uid = category.chineseName + category.englishName
             return (
               <>
                 {category.id !== "Others" &&
@@ -295,7 +296,7 @@ export default function CreateProduct() {
 
           {!showNewCategory &&
             <Button onPress={() => setShowNewCategory(true)}
-            style={{marginTop: 20}}>
+              style={{ marginTop: 20 }}>
               + Add a new category
             </Button>}
           {showNewCategory &&

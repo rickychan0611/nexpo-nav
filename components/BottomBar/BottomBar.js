@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import Elevations from 'react-native-elevation'
@@ -8,13 +8,33 @@ import styled from 'styled-components/native';
 import { Badge, Icon, withBadge } from 'react-native-elements'
 import { Context } from "../../context/Context";
 
+let useRouter;
+if (Platform.OS === 'web') {
+  import ('next/router')
+  .then((importNext)=>{
+    useRouter = importNext.useRouter
+  })
+}
+
+
 export default function BottomBar() {
+  const router = Platform.OS === 'web' ? useRouter() : null
+
   const { navigate } = useRouting();
 
   const { user, selected, setSelected } = useContext(Context);
   const qty = useQty();
 
   const BadgedIcon = qty > 0 ? withBadge(qty)(Icon) : Icon
+
+   //for web only. make bottom bar icon selected
+   useEffect(() => {
+    if (router) {
+      let pathname = router.pathname.substring(1)
+      console.log(pathname)
+      setSelected(pathname)
+    }
+  }, [router])
 
   return (
     <>

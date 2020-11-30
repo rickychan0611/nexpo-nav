@@ -91,9 +91,7 @@ export default function Cart() {
       setSelected("confirmOrder")
       navigate({
         routeName: "confirmOrder",
-      })
-
-     
+      })   
     })
   }
 

@@ -2,8 +2,6 @@ import React, { createContext, useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// import {firebase, db, auth} from "../firebase";
-
 export const Context = createContext();
 
 const productInitValue = {
@@ -26,7 +24,6 @@ const productInitValue = {
 
 const ContextProvider = ({ children }) => {
   const [data, setData] = useState();
-  const [productData, setProductData] = useState([]);
   const [user, setUser] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [selectedCat, setSelectedCat] = useState("");
@@ -35,7 +32,6 @@ const ContextProvider = ({ children }) => {
   const [selected, setSelected] = useState("home");
   const [openAdminMenu, setOpenAdminMenu] = useState(false);
   const [openWebAdminMenu, setOpenWebAdminMenu] = useState(false);
-  const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("Add a product");
   const [images, setImages] = useState(null);
   const [swiperControl, setSwiperControl] = useState(null);
@@ -59,11 +55,10 @@ const ContextProvider = ({ children }) => {
       phoneNumber: ""
     });
 
-
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        console.log("logged in", user);
+        console.log("logged in", user.email);
         db.collection("users").doc(user.email).get()
           .then((doc) => {
             setUser(doc.data());
@@ -85,34 +80,16 @@ const ContextProvider = ({ children }) => {
     })
   }, [])
 
-
-  const fetchData = async () => {
-    const snapshot = await db.collection("categories").get()
-    snapshot.forEach((doc) => {
-      setCategories(prev => {
-        return [...prev, doc.data()]
-      })
-    })
-    const productSnapshot = await db.collection("products")
-      .where("category", "array-contains", snapshot.docs[0].data().uid).get()
-    productSnapshot.forEach((doc) => {
-      setProductData(prev => {
-        return [...prev, doc.data()]
-      })
-    })
-  }
-  useEffect(() => {
-    fetchData().catch((err) => console.log(err))
-  }, [])
-
-
+  //save newOrderProductList to AsyncStorage when it is updated
   const storeData = async () => {
-    try {
-      await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
-      await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
-      await AsyncStorage.setItem('total', (+total).toFixed(2))
-    } catch (e) {
-      console.log("AsyncStorage Save Error:", e)
+    if (newOrderProductList && selectedItem && total) {
+      try {
+        await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
+        await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
+        await AsyncStorage.setItem('total', (+total).toFixed(2))
+      } catch (e) {
+        console.log("AsyncStorage Save Error:", e)
+      }
     }
   }
   useEffect(() => {
@@ -121,14 +98,15 @@ const ContextProvider = ({ children }) => {
     }
   }, [newOrderProductList, total])
 
+  //init get newOrderProductList from AsyncStorage on reload
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('newOrderProductList')
       const orders = JSON.parse(jsonValue)
       setNewOrderProductList(orders != null ? orders : [])
       let totalCounter = 0
-      if (orders[0]){
-        await orders.map((item)=>{
+      if (orders[0]) {
+        await orders.map((item) => {
           totalCounter = totalCounter + item.price * item.quantity
         })
         setTotal(totalCounter)
@@ -156,7 +134,6 @@ const ContextProvider = ({ children }) => {
           selected, setSelected,
           openAdminMenu, setOpenAdminMenu,
           openWebAdminMenu, setOpenWebAdminMenu,
-          categories, setCategories,
           title, setTitle,
           images, setImages,
           swiperControl, setSwiperControl,
@@ -164,7 +141,6 @@ const ContextProvider = ({ children }) => {
           product, setProduct,
           productInitValue,
           error, setError,
-          productData, setProductData,
           counter, setCounter,
           redeemPoint, setRedeemPoint,
           shippingAddress, setShippingAddress,
