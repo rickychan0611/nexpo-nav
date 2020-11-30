@@ -7,7 +7,7 @@ import CreateProduct from "./CreateProduct/CreateProduct";
 import AdminWebWrapper from "../../components/AdminWebWrapper";
 import AdminMobileWrapper from "../../components/AdminMobileWrapper";
 
-export default function panel() {
+export default function createProduct() {
 
   //This is WEB layout, website has fixed side bar
   if (Platform.OS === "web") {

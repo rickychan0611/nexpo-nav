@@ -46,7 +46,7 @@ const ProductsProvider = ({ children }) => {
     return moment(timer).add(30, "minutes").isBefore(moment())
   }
 
-  useEffect(() => {
+  const queryProduct = () => {
     const setNow = moment()
     if (!productData[selectedCat] || moreThan30min(moment(timer)) || !timer) {
       listenProducts()
@@ -56,6 +56,10 @@ const ProductsProvider = ({ children }) => {
       setTimer(setNow)
       console.log("listenProducts not run")
     }
+  }
+  
+  useEffect(() => {
+    queryProduct()
   }, [selectedCat])
 
   return (
@@ -63,7 +67,7 @@ const ProductsProvider = ({ children }) => {
       value={
         {
           listenCategories,
-          listenProducts,
+          queryProduct,
           productData, setProductData,
           categories, setCategories,
         }

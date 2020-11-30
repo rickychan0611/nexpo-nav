@@ -11,7 +11,6 @@ import moment from "moment";
 
 import BottomBar from "../components/BottomBar";
 import Status from "../components/Status";
-import Loader from "../components/Loader";
 import { AccountContext } from "../context/AccountContext";
 
 export default function account() {
@@ -28,7 +27,10 @@ export default function account() {
   } = useContext(AccountContext)
 
   useEffect(() => {
-    listenMyOrders()
+    if (!user) {
+      navigate({routeName: "login"})
+    }
+    else listenMyOrders()
   }, [user])
 
   return (
@@ -80,6 +82,18 @@ export default function account() {
             // borderBottomWidth: 1, 
             borderBottomColor: theme.lightGrey, marginTop: 200
           }}>
+            {user.role === "admin" &&
+              <>
+                <Drawer.Item
+                  style={{ backgroundColor: "white" }}
+                  icon="shield-account"
+                  label="Admin Panel"
+                  onPress={()=>navigate({routeName: "admin/panel"})
+                }
+                />
+                <Divider />
+              </>
+            }
             <Drawer.Item
               style={{ backgroundColor: "white" }}
               icon="cogs"
@@ -98,6 +112,8 @@ export default function account() {
               }}
             />
           </DrawerContainer>
+
+
 
           <Headline
             style={{

@@ -27,8 +27,7 @@ export default function Store({ ssrData }) {
 
   const {
     listenCategories,
-    listenProducts,
-    productData, setProductData,
+    productData, queryProduct,
   } = useContext(ProductsContext);
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
@@ -36,7 +35,7 @@ export default function Store({ ssrData }) {
   useEffect(() => {
     if (selected === "store") {
       listenCategories()
-      listenProducts()
+      queryProduct()
     }
   }, [selected ])
 

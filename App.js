@@ -15,6 +15,7 @@ import cart from "./pages/cart";
 import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+import createProduct from "./pages/admin/create-product";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
 import signUp from "./pages/signUp";
@@ -77,6 +78,8 @@ function App() {
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
+          <Stack.Screen name="admin/panel" component={createProduct} options={options("Create Prodcut")} />
+          {/* <Stack.Screen name="admin/create-product" component={createProduct} options={options("Create Prodcut")} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </>
