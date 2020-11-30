@@ -3,6 +3,7 @@ import ContextProvider from './context/Context';
 import ThemeProvider from './context/ThemeContext';
 import AccountProvider from './context/AccountContext';
 import ProductsProvider from './context/ProductsContext';
+import AdminProvider from './context/AdminContext';
 import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
@@ -15,6 +16,7 @@ import cart from "./pages/cart";
 import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+// import orders from "./pages/admin/orders";
 import createProduct from "./pages/admin/create-product";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
@@ -65,6 +67,7 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="account" component={account} options={options("account")} />
+          <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
@@ -78,7 +81,6 @@ function App() {
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
-          <Stack.Screen name="admin/panel" component={createProduct} options={options("Create Prodcut")} />
           {/* <Stack.Screen name="admin/create-product" component={createProduct} options={options("Create Prodcut")} /> */}
         </Stack.Navigator>
       </NavigationContainer>
@@ -93,10 +95,12 @@ export default () => {
         <ProductsProvider>
           <ThemeProvider>
             <PaperProvider>
-              <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-                {/* <TopBar /> */}
-                <App />
-              </SafeAreaView>
+              <AdminProvider >
+                <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+                  {/* <TopBar /> */}
+                  <App />
+                </SafeAreaView>
+              </AdminProvider >
             </PaperProvider>
           </ThemeProvider>
         </ProductsProvider>

@@ -34,11 +34,9 @@ export default function AdminMobileWrapper({ children }) {
       }
     >
       <AdminTopBar />
-      <ScrollView>
         <MobileContextArea backgroundColor={theme.backgroundColor}>
           {children}
         </MobileContextArea>
-      </ScrollView>
     </SideMenu>
   );
 }
@@ -53,5 +51,5 @@ const MobileContextArea = styled.View`
       width: 100%;
       /* App width */
       max-width: 500px; 
-      padding: 0px 10px 20px 10px;
+      /* padding: 0px 10px 20px 10px; */
 `;

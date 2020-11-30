@@ -2,7 +2,7 @@
 import React from "react";
 
 import { Platform } from "react-native";
-import Orders from "./Orders";
+import CreateProduct from "./CreateProduct/CreateProduct";
 
 import AdminWebWrapper from "../../components/AdminWebWrapper";
 import AdminMobileWrapper from "../../components/AdminMobileWrapper";
@@ -13,7 +13,7 @@ export default function panel() {
   if (Platform.OS === "web") {
     return (
       <AdminWebWrapper>
-        <Orders />
+        <CreateProduct />
       </AdminWebWrapper>
     )
   }
@@ -21,7 +21,7 @@ export default function panel() {
   //This is mobile layout, mobile has side bar closed
   else return (
     <AdminMobileWrapper>
-      <Orders />
+      <CreateProduct />
     </AdminMobileWrapper>
   );
 }
