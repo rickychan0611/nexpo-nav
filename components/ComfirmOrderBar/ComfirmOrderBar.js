@@ -43,7 +43,7 @@ export default function ComfirmOrderBar() {
         userId: user.email,
         createAt: timestamp,
         total_amt: (+total * 1.15).toFixed(2),
-        status: "Order in Proccess"
+        status: "In Progress"
       })
         .catch(error => {
           setLoading(false)

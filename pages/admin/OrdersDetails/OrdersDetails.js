@@ -1,26 +1,26 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
-import { Context } from "../context/Context";
-import { ThemeContext } from "../context/ThemeContext";
+import { Context } from "../../../context/Context";
+import { ThemeContext } from "../../../context/ThemeContext";
 import { Divider, IconButton, Headline, Button, Paragraph, Dialog, Portal, ActivityIndicator } from "react-native-paper";
 import { Image, Platform, ScrollView, View, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import moment from "moment";
-import { db } from "../firebase";
+import { db } from "../../../firebase";
 
-import BottomBar from "../components/BottomBar";
-import TotalDetails from "../components/TotalDetails";
-import Status from "../components/Status";
+import TotalDetails from "../../../components/TotalDetails";
+import Status from "../../../components/Status";
 
-import Loader from "../components/Loader";
+import Loader from "../../../components/Loader";
+import { AdminContext } from "../../../context/AdminContext";
 export default function order() {
   const { navigate, goBack } = useRouting();
   const [loading, setLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
 
-  const { selectedOrder, setSelectedOrder, setSelected } = useContext(Context);
+  const { setSelectedOrder, setSelected } = useContext(Context);
   const { theme } = useContext(ThemeContext);
+  const { selectedOrder } = useContext(AdminContext);
 
   const [cancelDialog, setCancelDialog] = useState(false);
   const showCancelDialog = () => setCancelDialog(true);
@@ -53,40 +53,7 @@ export default function order() {
 
   return (
     <>
-      <Portal>
-        <Dialog visible={cancelDialog} onDismiss={hideCancelDialog}>
-          <Dialog.Title>Cancel Order</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>Are you sure to cancel order?</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            {!cancelLoading ?
-              <>
-                <Button onPress={() => { hideCancelDialog() }}>No</Button>
-                <Button onPress={() => { onCancel() }}>Yes</Button>
-              </> :
-              <>
-                <Button loading></Button>
-              </>
-            }
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-
-      <Portal>
-        <Dialog visible={cancelledDialog} onDismiss={hideCancelledDialog}>
-          <Dialog.Title>Order has been cancelled</Dialog.Title>
-          <Dialog.Actions>
-            <Button onPress={() => {
-              setSelected("account")
-              hideCancelledDialog()
-              navigate({routeName: "account"})
-            }}>OK</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
-
-      {
+       {
         loading || !selectedOrder ?
           <Loader />
           :
@@ -125,8 +92,8 @@ export default function order() {
                     flexWrap: "nowrap",
                   }}>
                     <StatusContainer>
-                      <Status status={selectedOrder.status} theme={theme} 
-                      style={{margin: 0}}/>
+                      <Status status={selectedOrder.status} theme={theme}
+                        style={{ margin: 0 }} />
                     </StatusContainer>
                     <Text style={{
                       fontSize: 16,
@@ -183,21 +150,43 @@ export default function order() {
 
                 <Divider />
 
+                <Title>Delivery Info:</Title>
+
+                <TableRow style={{ paddingTop: 10, paddingRight: 25 }}>
+                  <Left><Text style={{ color: "grey" }}>Receiver:</Text></Left>
+                  <Right><Text style={{ color: "grey" }}>{selectedOrder.shippingAddress.firstName + " " + selectedOrder.shippingAddress.lastName}</Text></Right>
+                </TableRow>
+                <TableRow style={{ paddingRight: 25 }}>
+                  <Left><Text style={{ color: "grey" }}>Address:</Text></Left>
+                  <Right><Text style={{ color: "grey", textAlign: "right" }}>
+                    {selectedOrder.shippingAddress.address1 + "\n"}
+                    {selectedOrder.shippingAddress.address2 && shippingAddress.address2 + "\n"}
+                    {selectedOrder.shippingAddress.city + "\n"}
+                    {selectedOrder.shippingAddress.province + ", "}
+                    {selectedOrder.shippingAddress.country + "\n"}
+                    {selectedOrder.shippingAddress.postalCode}
+                  </Text></Right>
+                </TableRow>
+
+                <TableRow style={{ paddingTop: 10, paddingRight: 25 }}>
+                  <Left><Text style={{ color: "grey" }}>Phone#:</Text></Left>
+                  <Right><Text style={{ color: "grey" }}>{selectedOrder.shippingAddress.phoneNumber}</Text></Right>
+                </TableRow>
+
+                {selectedOrder.shippingAddress.message ?
+                  <TableRow style={{ paddingTop: 10, paddingRight: 25 }}>
+                    <Left><Text style={{ color: "grey" }}>Note:</Text></Left>
+                    <Right><Text style={{ color: "grey" }}>{selectedOrder.shippingAddress.message}</Text></Right>
+                  </TableRow>
+                  : null}
+
+                <View style={{ height: 200 }}></View>
+
                 <View style={{ height: 100 }}></View>
 
               </ScrollView>
 
             </ContextArea>
-            <BottomBar style={{
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 0,
-              },
-              shadowOpacity: 0.4,
-              shadowRadius: 5,
-              elevation: 10,
-            }} />
           </>
       }
     </>
@@ -289,3 +278,21 @@ const StatusContainer = styled.View`
   /* margin-top: -7px; */
   /* right: 5px */
 `;
+
+const TableRow = styled.View`
+  width: ${Platform.OS === "web" ? `100vw` : `null`};
+  flex-direction: row;
+  flex-wrap: nowrap;
+  max-width: 500px;
+  padding: 5px 25px 5px 25px;
+`;
+const Left = styled.View`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+const Right = styled.View`
+  flex: 3;
+  justify-content: flex-end;
+  align-items: flex-end;
+  `;

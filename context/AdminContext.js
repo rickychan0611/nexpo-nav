@@ -9,6 +9,7 @@ export const AdminContext = createContext();
 const AdminProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
   const [timer, setTimer] = useState();
+  const [selectedOrder, setSelectedOrder] = useState();
 
   const { setSelectedItem, selectedCat, selected,
     newOrderProductList, setSelected } = useContext(Context)
@@ -24,6 +25,9 @@ const AdminProvider = ({ children }) => {
         let tempArr = []
         snapshot.forEach((doc) => {
           tempArr.push(doc.data())
+        })
+        tempArr.sort((a,b)=>{
+          return b.orderId - a.orderId
         })
         setOrders(tempArr)
       })
@@ -54,7 +58,8 @@ const AdminProvider = ({ children }) => {
       value={
         {
           listenOrders,
-          orders, setOrders
+          orders, setOrders,
+          selectedOrder, setSelectedOrder
         }
       }
     >

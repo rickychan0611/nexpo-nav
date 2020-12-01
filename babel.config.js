@@ -6,12 +6,12 @@ module.exports = {
         '@expo/next-adapter/babel'],
     "plugins": [
         [
-            "styled-components",
+            "babel-plugin-styled-components",
             {
                 "ssr": false,
                 "displayName": true,
                 "preprocess": false
             }
         ]
-    ]
+    ],
 };

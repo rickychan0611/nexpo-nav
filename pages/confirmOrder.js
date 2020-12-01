@@ -61,19 +61,19 @@ export default function confirmOrder() {
 
           <Divider />
 
-          <TableRow style={{ paddingTop: 20, paddingRight: 40 }}>
+          <TableRow style={{ paddingTop: 20, paddingRight: 25 }}>
             <Left><Text style={{ color: "grey" }}>Subtotal:</Text></Left>
             <Right><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Right>
           </TableRow>
-          <TableRow style={{ paddingRight: 40 }}>
+          <TableRow style={{ paddingRight: 25 }}>
             <Left><Text style={{ color: "grey" }}>Discount:</Text></Left>
             <Right><Text style={{ color: "grey" }}>-$0.00</Text></Right>
           </TableRow>
-          <TableRow style={{ paddingRight: 40 }}>
+          <TableRow style={{ paddingRight: 25 }}>
             <Left><Text style={{ color: "grey" }}>Taxes:</Text></Left>
             <Right><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Right>
           </TableRow>
-          <TableRow style={{ paddingBottom: 20, paddingRight: 40 }}>
+          <TableRow style={{ paddingBottom: 20, paddingRight: 25 }}>
             <Left><Text style={{ color: "black" }}>Total:</Text></Left>
             <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
           </TableRow>

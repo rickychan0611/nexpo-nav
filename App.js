@@ -16,6 +16,7 @@ import cart from "./pages/cart";
 import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+import order_details from "./pages/admin/order-details";
 // import orders from "./pages/admin/orders";
 import createProduct from "./pages/admin/create-product";
 import login from "./pages/login";
@@ -25,6 +26,7 @@ import forgotPassword from "./pages/forgotPassword";
 import orderSuccess from "./pages/orderSuccess";
 import order from "./pages/order";
 import account from "./pages/account";
+
 import { YellowBox } from "react-native";
 YellowBox.ignoreWarnings([""]);
 
@@ -68,6 +70,7 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
+          <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
