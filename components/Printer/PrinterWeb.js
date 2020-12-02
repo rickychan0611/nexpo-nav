@@ -23,7 +23,7 @@ export default function PrinterWeb() {
         }
       />
       <View style={{
-        display: "none"
+        overflow: "hidden", height: 0
       }}>
         <ComponentToPrint ref={componentRef} />
       </View>
