@@ -200,7 +200,6 @@ const ItemsContainer = styled.View`
   max-width: 500px;
   padding: 15px 25px 15px 25px;
 `;
-
 const Qty = styled.View`
   flex: 1;
   justify-content: center;
@@ -230,46 +229,11 @@ const ContextArea = styled.View`
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;
-
-const Total = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-`;
-
-const Bar = styled.View`
-  flex: 1;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: ${props => props.theme.black}; 
-  height: 40px;
-  width: 40%;
-  max-width: 220px;
-  border-radius: 25px;
-`;
-const Wrapper = styled.TouchableOpacity`
-  position: ${Platform.OS === "web" ? `fixed` : `absolute`};
-  bottom: 68px;
-  height: 55px;
-  width: 100%;
-  max-width: 500px;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-`;
 const CancelButton = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: flex-end;
 `;
-
 const StatusContainer = styled.View`
   /* flex: 1; */
   justify-content: flex-start;
@@ -278,7 +242,6 @@ const StatusContainer = styled.View`
   /* margin-top: -7px; */
   /* right: 5px */
 `;
-
 const TableRow = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;

@@ -22,7 +22,7 @@ export default function AdminWebWrapper({children}) {
     return (
       <>
         <AdminTopBar />
-        <WebContextArea  backgroundColor={theme.backgroundColor}>
+        <WebContextArea>
           <Sidebar
             sidebar={menu}
             open={openWebAdminMenu}
@@ -46,7 +46,7 @@ const WebContextArea = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      background-color: ${props => props.backgroundColor};
+      /* background-color: ${props => props.backgroundColor}; */
       width: 100%;
       /* max-height: 400px; */
       /* App width */
