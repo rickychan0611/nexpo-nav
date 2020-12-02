@@ -42,8 +42,13 @@ export default function ComfirmOrderBar() {
         shippingAddress,
         userId: user.email,
         createAt: timestamp,
+        subTotal: total,
+        gst: (+total * 0.05).toFixed(2),
         total_amt: (+total * 1.15).toFixed(2),
-        status: "In Progress"
+        discount: 0,
+        shippingFee: 8,
+        status: "In Progress",
+        paymentStatus: "Not paid"
       })
         .catch(error => {
           setLoading(false)

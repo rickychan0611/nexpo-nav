@@ -82,7 +82,7 @@ export default function OrdersList() {
               >
                 <View key={order.orderId} style={{ width: "100%" }}>
 
-                {Platform.OS === "web" ? <PrinterWeb /> : <PrinterMobile />}
+                {Platform.OS === "web" ? <PrinterWeb order={order}/> : <PrinterMobile order={order}/>}
                 
                   <View style={{
                     width: "100%",

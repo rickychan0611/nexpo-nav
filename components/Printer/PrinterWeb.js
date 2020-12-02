@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { IconButton } from 'react-native-paper';
 import ComponentToPrint from './ComponentToPrint.web.js';
 
-export default function PrinterWeb() {
+export default function PrinterWeb({order}) {
 
   const componentRef = useRef();
 
@@ -25,7 +25,7 @@ export default function PrinterWeb() {
       <View style={{
         overflow: "hidden", height: 0
       }}>
-        <ComponentToPrint ref={componentRef} />
+        <ComponentToPrint ref={componentRef} order={order}/>
       </View>
     </>
   )
