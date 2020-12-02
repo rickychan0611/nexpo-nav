@@ -12,6 +12,8 @@ import { useRouting } from "expo-next-react-navigation";
 
 import { db } from "../../../firebase";
 import Loader from "../../../components/Loader";
+import PrinterWeb from "../../../components/Printer/PrinterWeb";
+import PrinterMobile from "../../../components/Printer/PrinterMobile";
 
 export default function OrdersList() {
   const { navigate } = useRouting();
@@ -80,9 +82,7 @@ export default function OrdersList() {
               >
                 <View key={order.orderId} style={{ width: "100%" }}>
 
-                <IconButton icon="printer" color="grey"
-                style={{position: 'absolute', right: -10, top: -35}}
-                />
+                {Platform.OS === "web" ? <PrinterWeb /> : <PrinterMobile />}
                 
                   <View style={{
                     width: "100%",
