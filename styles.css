@@ -28,12 +28,48 @@ textarea:focus, input:focus{
     margin: 20mm;
   }
 
-  table {
+  .table {
       width: 100%;
-      border-collapse: collapse;
+      text-align: center;
+      border: 1px solid black;
+
   }
 
-  th, td {
-    border: 1px solid black;
-    padding: 15px;
+  .row {
+      /* padding: 15px; */
+      width: 100%;
+      border-bottom: 1px solid black;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+  }
+
+  .cell {
+    margin: 10px;
+  }
+
+  .pad {
+    padding: 10px;
+  }
+
+ .bottomLine {
+    border-bottom: 1px solid black;
+  }
+
+  .rightLine {
+    border-right: 1px solid black;
+  }
+
+  .left {
+      text-align: left;
+  }
+  .center {
+      text-align: center;
+  }
+
+  .grey {
+      background-color: rgb(238, 238, 238);
   }
