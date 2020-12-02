@@ -48,13 +48,7 @@ const WebContextArea = styled.View`
       justify-content: flex-start;
       background-color: ${props => props.backgroundColor};
       width: 100%;
-      height: 100vh;
+      /* max-height: 400px; */
       /* App width */
       max-width: 500px;
-`;
-const WebContentColumn = styled.ScrollView`
-      /* flex: 3; */
-      height: 100%;
-      background-color: white;
-      /* padding: 0px 10px 20px 10px; */
 `;

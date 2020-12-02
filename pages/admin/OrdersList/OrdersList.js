@@ -13,7 +13,7 @@ import { useRouting } from "expo-next-react-navigation";
 import { db } from "../../../firebase";
 import Loader from "../../../components/Loader";
 
-export default function Orders() {
+export default function OrdersList() {
   const { navigate } = useRouting();
 
   let ScreenHeight = Dimensions.get("window").height;
@@ -68,6 +68,8 @@ export default function Orders() {
               }}>
               <Surface style={{
                 padding: 20,
+                paddingTop: 40,
+                paddingBottom: 30,
                 width: "100%",
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
@@ -78,6 +80,10 @@ export default function Orders() {
               >
                 <View key={order.orderId} style={{ width: "100%" }}>
 
+                <IconButton icon="printer" color="grey"
+                style={{position: 'absolute', right: -10, top: -35}}
+                />
+                
                   <View style={{
                     width: "100%",
                     flexDirection: "row",
@@ -87,11 +93,8 @@ export default function Orders() {
                     marginBottom: 10
                   }}>
 
-                    <Date style={{ flex: 1 }}>
-                      {moment(order.createAt.toDate()).format("MMM. DD, YYYY")} {"\nOrder ID#: " + order.orderId}
-                      {/* <Text>
-                      #{order.orderId}
-                    </Text> */}
+                    <Date style={{ flex: 1, position: 'absolute', top: -20 }}>
+                      {moment(order.createAt.toDate()).format("MMM. DD, YYYY")} {"\n\nOrder ID#: " + order.orderId}
                     </Date>
 
                     <View style={{
@@ -114,7 +117,7 @@ export default function Orders() {
                             justifyContent: "flex-end",
                             alignItems: "center",
                             margin: 0,
-                            width: "100%"
+                            // width: "100%"
                           }}
                           >
                             <IconButton icon="chevron-down" onPress={() => openMenu(order.orderId)} />
@@ -161,9 +164,8 @@ export default function Orders() {
             </TouchableOpacity>
           )
         })}
-        {/* <View style={{ heigth: 40 }}></View> */}
+        <View style={{ marginBottom: 150}}></View>
       </Container>
-
     </>
   );
 }
@@ -171,7 +173,7 @@ export default function Orders() {
 const Container = styled.ScrollView`
   /* flex: 1; */
   width: 100%;
-  height: ${props => Platform.OS === "web" ? `120%` : props.ScreenHeight};
+  height: ${props => Platform.OS === "web" ? `100%` : props.ScreenHeight};
   /* margin-bottom: 20px; */
   padding: 10px;
   background-color: ${props => props.theme.lightGrey};
