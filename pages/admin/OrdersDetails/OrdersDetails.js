@@ -146,7 +146,7 @@ export default function order() {
 
                 <Divider />
 
-                <TotalDetails total={selectedOrder ? selectedOrder.total_amt : 0} />
+                <TotalDetails total={selectedOrder ? selectedOrder.totalAmt : 0} />
 
                 <Divider />
 

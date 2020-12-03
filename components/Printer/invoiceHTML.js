@@ -152,7 +152,7 @@ const invoiceHTML = (order) => {
 
             <div class="rightLine" style="flex: 1;">
               <div class="cell center">
-                實付: ${"$" + order.total_amt}
+                實付: ${"$" + order.totalAmt}
                 </div>
             </div>
 

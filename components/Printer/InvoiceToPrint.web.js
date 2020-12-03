@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import moment from "moment";
 
-class ComponentToPrint extends React.Component {
+class InvoiceToPrint extends React.Component {
   render() {
     return (
       <>
@@ -69,7 +69,7 @@ class ComponentToPrint extends React.Component {
 
             <div className="rightLine" style={{ flex: 1 }}>
               <div className="cell center">
-                實付: ${this.props.order.total_amt}
+                實付: ${this.props.order.totalAmt}
                 </div>
             </div>
 

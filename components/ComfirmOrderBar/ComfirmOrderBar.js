@@ -34,17 +34,18 @@ export default function ComfirmOrderBar() {
       
       console.log(orderId)
       
-      const orderRef = db.collection("orders").doc(now + orderId)
-      setNewOrderId(now + orderId)
+      const orderRef = db.collection("orders").doc(now + "A" + orderId)
+      setNewOrderId(now + "A" + orderId)
       await orderRef.set({
-        orderId: now + orderId,
+        orderId: now + "A" + orderId,
+        index: orderId+"",
         orderItems: newOrderProductList,
         shippingAddress,
         userId: user.email,
         createAt: timestamp,
         subTotal: total,
         gst: (+total * 0.05).toFixed(2),
-        total_amt: (+total * 1.15).toFixed(2),
+        totalAmt: (+total * 1.15).toFixed(2),
         discount: 0,
         shippingFee: 8,
         status: "In Progress",
