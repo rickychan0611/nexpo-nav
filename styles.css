@@ -53,6 +53,7 @@ textarea:focus, input:focus{
 
   .pad {
     padding: 10px;
+    font-size: 16px;
   }
 
  .bottomLine {
