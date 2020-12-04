@@ -27,8 +27,13 @@ export default function Home() {
   const [err, setErr] = useState('')
   const [arr, setArr] = useState([])
   const [orders, setOrders] = useState([])
+  const [mapUrl, setMapUrl] = useState("")
 
   let INPUTQTY = 20;
+  const URL = "https://www.google.com/maps/dir/"
+  const origin = "8828 Healther Street, Vancouver, BC"
+  let addresses = [];
+
 
   const onChange = (name, value) => {
     console.log(name, " : ", value)
@@ -43,17 +48,19 @@ export default function Home() {
     const query = new Promise((resolve, reject) => {
       for (let i = 0; i < routesNames.length; i++) {
         // console.log(routes[routesNames[i]])
+        counter = counter + 1;
         if (routes[routesNames[i]]) {
           db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
           .then((snapshot)=>{
             snapshot.forEach((doc)=>{
+              console.log(doc.data())
               tempArr.push(doc.data())
             })
-            counter = counter + 1;
             console.log(counter)
             console.log(routesNames.length)
 
             if (counter === routesNames.length) {
+              console.log(tempArr)
               setOrders(tempArr)
               resolve();
             }
@@ -65,8 +72,14 @@ export default function Home() {
         }
       }
     })
-    query.then(() => {
-      console.log(orders)
+    query.then(async () => {
+      let addressStr = ""
+      await orders.map((item) => {
+        addressStr = addressStr + item.shippingAddress.address1
+      })
+      console.log(
+        URL + origin + addressStr
+      )
     })
     query.catch(err => console.log(err))
   }
