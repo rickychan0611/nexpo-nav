@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 
 export default function WayPointList({mapResponse, waypoints, orders}) {
   console.log("mapResponse", mapResponse)
-  console.log("waypoints", waypoints[0])
+  // console.log("waypoints", waypoints[0])
   return (
       <>
       <Text>points</Text>
