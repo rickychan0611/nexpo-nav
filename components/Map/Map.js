@@ -64,9 +64,10 @@ export default function Map({
                 // required
                 callback={directionsCallback}
               // optional
-              // onLoad={directionsService => {
-              //   console.log('DirectionsService onLoad directionsService: ', directionsService)
-              // }}
+              onLoad={directionsService => {
+                setResponded(true)
+                // console.log('DirectionsService onLoad directionsService: ', directionsService)
+              }}
               // // optional
               // onUnmount={directionsService => {
               //   console.log('DirectionsService onUnmount directionsService: ', directionsService)

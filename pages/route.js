@@ -27,11 +27,26 @@ function Route({ google }) {
   const destination = "8771 Sierpina Drive, Richmond, BC"
 
   const onChange = (name, value) => {
+  
+    setMapResponse()
+    setWaypoints()
     console.log(name, " : ", value)
     setRoutes(prev => ({ ...prev, [name]: value }))
+    
   }
 
   const onSubmit = () => {
+    let temp = routes
+    let k
+    for ( k in temp) {
+      if (temp[k] === '') {
+        delete temp[k]
+        setRoutes(temp)
+      }
+    }
+    setMapResponse()
+    setWaypoints()
+    setOrders([])
     setResponded(false)
     const routesNames = Object.getOwnPropertyNames(routes)
     console.log(routesNames)
@@ -40,23 +55,25 @@ function Route({ google }) {
     const query = new Promise((resolve, reject) => {
       for (let i = 0; i < routesNames.length; i++) {
         // console.log(routes[routesNames[i]])
-        if (routes[routesNames[i]]) {
-          counter = counter + 1;
-          db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
-            .then((snapshot) => {
-              snapshot.forEach((doc) => {
-                tempArr.push(doc.data())
-                if (counter === routesNames.length) {
-                  setOrders(tempArr)
-                  resolve();
-                }
+        setTimeout(() => {
+          if (routes[routesNames[i]]) {
+            counter = counter + 1;
+            db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
+              .then((snapshot) => {
+                snapshot.forEach((doc) => {
+                  tempArr.push(doc.data())
+                  if (counter === routesNames.length) {
+                    setOrders(tempArr)
+                    resolve();
+                  }
+                })
+                // else reject("Uable to get data. Please try again");
               })
-              // else reject("Uable to get data. Please try again");
-            })
-            .catch(err => {
-              reject(err)
-            })
-        }
+              .catch(err => {
+                reject(err)
+              })
+          }
+        }, [500])
       }
     })
     query.then(() => {
@@ -92,7 +109,9 @@ function Route({ google }) {
     query.catch(err => console.log(err))
   }
 
-
+  useEffect(()=>{
+    setRoutes(prev=>prev)
+  },[routes])
 
   useEffect(() => {
     setArr([]);
