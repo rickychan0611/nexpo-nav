@@ -7,18 +7,8 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import GenRouteBtn from "../components/GenRouteBtn";
+import Map from "../components/Map";
 import { firebase, db, auth } from "../firebase";
-import * as WebBrowser from 'expo-web-browser';
-// import * as Facebook from 'expo-auth-session/providers/facebook';
-// import { ResponseType } from 'expo-auth-session';
-import * as Facebook from 'expo-facebook';
-import banner1 from "../public/banner1.jpg"
-import { push } from "react-native-elevation";
-import { isArrayBindingPattern } from "typescript";
-import { Map, GoogleApiWrapper } from 'google-maps-react';
-
-// WebBrowser.maybeCompleteAuthSession();
-
 
 
 function Route({ google }) {
@@ -28,21 +18,21 @@ function Route({ google }) {
   const [err, setErr] = useState('')
   const [arr, setArr] = useState([])
   const [orders, setOrders] = useState([])
-  const [mapUrl, setMapUrl] = useState("")
+  const [waypoints, setWaypoints] = useState([])
+  const [mapResponse, setMapResponse] = useState()
+  const [responded, setResponded] = useState(false);
 
   let INPUTQTY = 20;
-  const URL = "https://www.google.com/maps/dir/?api=1&origin="
   const origin = "8828 Healther Street, Vancouver, BC"
   const destination = "8771 Sierpina Drive, Richmond, BC"
-  let wayPoints = [];
-
 
   const onChange = (name, value) => {
     console.log(name, " : ", value)
     setRoutes(prev => ({ ...prev, [name]: value }))
   }
 
-  const onSubmit = (name, value) => {
+  const onSubmit = () => {
+    setResponded(false)
     const routesNames = Object.getOwnPropertyNames(routes)
     console.log(routesNames)
     let counter = 0;
@@ -50,22 +40,17 @@ function Route({ google }) {
     const query = new Promise((resolve, reject) => {
       for (let i = 0; i < routesNames.length; i++) {
         // console.log(routes[routesNames[i]])
-        counter = counter + 1;
         if (routes[routesNames[i]]) {
+          counter = counter + 1;
           db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
             .then((snapshot) => {
               snapshot.forEach((doc) => {
-                console.log(doc.data())
                 tempArr.push(doc.data())
+                if (counter === routesNames.length) {
+                  setOrders(tempArr)
+                  resolve();
+                }
               })
-              console.log(counter)
-              console.log(routesNames.length)
-
-              if (counter === routesNames.length) {
-                console.log(tempArr)
-                setOrders(tempArr)
-                resolve();
-              }
               // else reject("Uable to get data. Please try again");
             })
             .catch(err => {
@@ -78,39 +63,36 @@ function Route({ google }) {
       const proxyurl = "https://cors-anywhere.herokuapp.com/";
       let addressStr = ""
 
+      // item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
+
       const createAddressStr = new Promise((resolve, reject) => {
+        let tempArr = []
         orders.map((item, index) => {
           console.log("addressStr")
+          const address1 = item.shippingAddress.address1 + ", "
+          const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
+          const city = item.shippingAddress.city + ", "
+          const province = item.shippingAddress.province + ", "
+          const country = item.shippingAddress.country
+          const addressStr = address1 + address2 + city + province + country
           console.log(addressStr)
-          addressStr = addressStr + item.shippingAddress.address1 + ", "
-          // addressStr = addressStr + item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
-          addressStr = addressStr + item.shippingAddress.city + ", "
-          addressStr = addressStr + item.shippingAddress.province + ", "
-          addressStr = addressStr + item.shippingAddress.country
-          addressStr = addressStr + "|"
+          // console.log(tempArr)
+          tempArr.push({ location: addressStr })
           if (index === orders.length - 1) {
-            resolve(addressStr)
+            resolve(tempArr)
           }
         })
       })
-
-      createAddressStr.then((addressStr) => {
-        const url = `https://maps.googleapis.com/maps/api/js?
-        &origin=${origin}
-        &destination=${destination}
-        &mode=driving
-        &waypoints=${addressStr}
-        &key=AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s
-        `
-        console.log(url)
-        fetch(url)
-          .then(response => response.json())
-          .then(data => console.log(data))
+      createAddressStr.then((tempArr) => {
+        console.log(tempArr)
+        setWaypoints(tempArr)
       })
     })
 
     query.catch(err => console.log(err))
   }
+
+
 
   useEffect(() => {
     setArr([]);
@@ -121,23 +103,23 @@ function Route({ google }) {
 
   return (
     <>
-      <ContextArea style={{
-      }}>
+      <ContextArea>
+
         <View style={{
-          flex:1,
+          flex: 1,
           marginBottom: 300
         }}>
           <Map
-            google={google}
-            zoom={11}
-            style={{
-              position: "absolute",
-              width: '100%',
-              height: '300px'
-            }}
-            initialCenter={{ lat: 49.205960, lng: -123.122550 }}
+            mapResponse={mapResponse}
+            setMapResponse={setMapResponse}
+            waypoints={waypoints}
+            destination={destination}
+            origin={origin}
+            responded={responded}
+            setResponded={setResponded}
           />
         </View>
+
         <ScrollView style={{
           padding: 25,
         }}>
@@ -220,9 +202,7 @@ function Route({ google }) {
   );
 }
 
-export default GoogleApiWrapper({
-  apiKey: 'AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s'
-})(Route);
+export default Route
 
 
 const RouteContent = styled.View`
