@@ -14,104 +14,160 @@ import { firebase, db, auth } from "../firebase";
 function Route({ google }) {
   const { navigate } = useRouting();
   const { user, setUser, newOrderProductList } = useContext(Context);
-  const [routes, setRoutes] = useState({})
-  const [err, setErr] = useState('')
+  const [wayPointIds, setWayPointIds] = useState()
+  const [err, setErr] = useState({})
   const [arr, setArr] = useState([])
   const [orders, setOrders] = useState([])
   const [waypoints, setWaypoints] = useState([])
   const [mapResponse, setMapResponse] = useState()
-  const [responded, setResponded] = useState(false);
+  const [runDirectionsService, setRunDirectionsService] = useState(false);
 
   let INPUTQTY = 20;
   const origin = "8828 Healther Street, Vancouver, BC"
   const destination = "8771 Sierpina Drive, Richmond, BC"
 
   const onChange = (name, value) => {
-  
+
     setMapResponse()
     setWaypoints()
     console.log(name, " : ", value)
-    setRoutes(prev => ({ ...prev, [name]: value }))
-    
+    setWayPointIds(prev => ({ ...prev, [name]: value }))
+
   }
 
   const onSubmit = () => {
-    let temp = routes
-    let k
-    for ( k in temp) {
-      if (temp[k] === '') {
-        delete temp[k]
-        setRoutes(temp)
+    //del all empty keys
+    if (wayPointIds) {
+      let cleanedRoutes = wayPointIds
+      let k
+      for (k in cleanedRoutes) {
+        if (cleanedRoutes[k] === '') {
+          delete cleanedRoutes[k]
+          setWayPointIds(cleanedRoutes)
+        }
+      }
+      const routesKeyNames = Object.getOwnPropertyNames(cleanedRoutes)
+      if (routesKeyNames && routesKeyNames[0]) {
+        console.log("getAddressByOrderIdPromise: ", routesKeyNames)
+
+        let promises = []
+        let orders = [];
+
+        routesKeyNames.map((keyName) => {
+          console.log("get keyName: ", keyName)
+
+          let promise = db.collection("orders").where("index", "==", wayPointIds[keyName]).get()
+            .then(snapshot => {
+              if (snapshot.empty) {
+                console.log('No matching documents.');
+              }
+              snapshot.forEach(doc => {
+                orders.push(doc.data());
+              });
+              return;
+            })
+            .catch(err => {
+              console.log('Error getting documents', err);
+            });
+
+          promises.push(promise)
+        })
+
+        Promise.all(promises).then(() => {
+          let addresses = []
+          console.log("Done: ")
+          console.log(orders)
+
+          orders.map((item) => {
+            const address1 = item.shippingAddress.address1 + ", "
+            const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
+            const city = item.shippingAddress.city + ", "
+            const province = item.shippingAddress.province + ", "
+            const country = item.shippingAddress.country
+            const addressStr = address1 + address2 + city + province + country
+            addresses.push({ location: addressStr })
+          })
+
+          console.log("addresses: ")
+          console.log(addresses)
+          setWaypoints(addresses)
+          setRunDirectionsService(true)
+        })
+      }
+
+      else {//no routesKeyNames
+        console.log("routesKeyNames is empty")
+        return
       }
     }
-    setMapResponse()
-    setWaypoints()
-    setOrders([])
-    setResponded(false)
-    const routesNames = Object.getOwnPropertyNames(routes)
-    console.log(routesNames)
-    let counter = 0;
-    let tempArr = [];
-    const query = new Promise((resolve, reject) => {
-      for (let i = 0; i < routesNames.length; i++) {
-        // console.log(routes[routesNames[i]])
-        setTimeout(() => {
-          if (routes[routesNames[i]]) {
-            counter = counter + 1;
-            db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
-              .then((snapshot) => {
-                snapshot.forEach((doc) => {
-                  tempArr.push(doc.data())
-                  if (counter === routesNames.length) {
-                    setOrders(tempArr)
-                    resolve();
-                  }
-                })
-                // else reject("Uable to get data. Please try again");
-              })
-              .catch(err => {
-                reject(err)
-              })
-          }
-        }, [500])
-      }
-    })
-    query.then(() => {
-      const proxyurl = "https://cors-anywhere.herokuapp.com/";
-      let addressStr = ""
+    else { //no route
+      console.log("route is empty")
+      return
+    }
+    // setMapResponse()
+    // setWaypoints()
+    // setOrders([])
+    // setResponded(false)
+    // const routesNames = Object.getOwnPropertyNames(routes)
+    // console.log(routesNames)
+    // let counter = 0;
+    // let tempArr = [];
+    // const query = new Promise((resolve, reject) => {
+    //   for (let i = 0; i < routesNames.length; i++) {
+    //     // console.log(routes[routesNames[i]])
+    //     setTimeout(() => {
+    //       if (routes[routesNames[i]]) {
+    //         counter = counter + 1;
+    //         db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
+    //           .then((snapshot) => {
+    //              
+    //               tempArr.push(doc.data())
+    //               if (counter === routesNames.length) {
+    //                 setOrders(tempArr)
+    //                 resolve();
+    //               }
+    //             })
+    //             // else reject("Uable to get data. Please try again");
+    //           })
+    //           .catch(err => {
+    //             reject(err)
+    //           })
+    //       }
+    //     }, [500])
+    //   }
+    // })
+    // query.then(() => {
+    //   const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    //   let addressStr = ""
 
-      // item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
+    //   // item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
 
-      const createAddressStr = new Promise((resolve, reject) => {
-        let tempArr = []
-        orders.map((item, index) => {
-          console.log("addressStr")
-          const address1 = item.shippingAddress.address1 + ", "
-          const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
-          const city = item.shippingAddress.city + ", "
-          const province = item.shippingAddress.province + ", "
-          const country = item.shippingAddress.country
-          const addressStr = address1 + address2 + city + province + country
-          console.log(addressStr)
-          // console.log(tempArr)
-          tempArr.push({ location: addressStr })
-          if (index === orders.length - 1) {
-            resolve(tempArr)
-          }
-        })
-      })
-      createAddressStr.then((tempArr) => {
-        console.log(tempArr)
-        setWaypoints(tempArr)
-      })
-    })
+    //   const createAddressStr = new Promise((resolve, reject) => {
+    //     let tempArr = []
+    //     orders.map((item, index) => {
+    //       console.log("addressStr")
+    //       const address1 = item.shippingAddress.address1 + ", "
+    //       const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
+    //       const city = item.shippingAddress.city + ", "
+    //       const province = item.shippingAddress.province + ", "
+    //       const country = item.shippingAddress.country
+    //       const addressStr = address1 + address2 + city + province + country
+    //       console.log(addressStr)
+    //       // console.log(tempArr)
+    //       tempArr.push({ location: addressStr })
+    //       if (index === orders.length - 1) {
+    //         resolve(tempArr)
+    //       }
+    //     })
+    //   })
+    //   createAddressStr.then((tempArr) => {
+    //     console.log(tempArr)
+    //     setWaypoints(tempArr)
+    //   })
+    // })
 
-    query.catch(err => console.log(err))
+    // query.catch(err => console.log(err))
   }
-
-  useEffect(()=>{
-    setRoutes(prev=>prev)
-  },[routes])
 
   useEffect(() => {
     setArr([]);
@@ -134,8 +190,8 @@ function Route({ google }) {
             waypoints={waypoints}
             destination={destination}
             origin={origin}
-            responded={responded}
-            setResponded={setResponded}
+            runDirectionsService={runDirectionsService}
+            setRunDirectionsService={setRunDirectionsService}
           />
         </View>
 
@@ -201,7 +257,7 @@ function Route({ google }) {
                     theme={{ colors: { primary: "grey" } }}
                     mode="outlined"
                     dense
-                    value={routes["point" + index]}
+                    value={wayPointIds && wayPointIds["point" + index]}
                     onChangeText={value => { onChange("point" + index, value) }}
                   // error={err.chineseName}
                   />

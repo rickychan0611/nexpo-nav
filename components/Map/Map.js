@@ -4,25 +4,23 @@ import styled from "styled-components/native";
 import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
 import Loader from "../../components/Loader";
 
-export default function Map({ 
-  mapResponse, setMapResponse, 
-  responded, setResponded,
+export default function Map({
+  mapResponse, setMapResponse,
+  runDirectionsService, setRunDirectionsService,
   waypoints, destination, origin }) {
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s" // ,
     // ...otherOptions
   })
-  
+
   function directionsCallback(response) {
     if (response !== null) {
       if (response.status === 'OK') {
         console.log(response)
         setMapResponse(response)
-        setResponded(true)
       } else {
         console.log('directionsCallback err: ', response)
-        setResponded(true)
       }
     }
   }
@@ -50,7 +48,7 @@ export default function Map({
         >
           { /* Child components, such as markers, info windows, etc. */}
           <>
-            {!responded && waypoints && waypoints[0] &&
+            {runDirectionsService && waypoints && waypoints[0] &&
               <DirectionsService
                 // required
                 options={{ // eslint-disable-line react-perf/jsx-no-new-object-as-prop
@@ -63,11 +61,11 @@ export default function Map({
                 }}
                 // required
                 callback={directionsCallback}
-              // optional
-              onLoad={directionsService => {
-                setResponded(true)
-                // console.log('DirectionsService onLoad directionsService: ', directionsService)
-              }}
+                // optional
+                onLoad={directionsService => {
+                  setRunDirectionsService(false)
+                  // console.log('DirectionsService onLoad directionsService: ', directionsService)
+                }}
               // // optional
               // onUnmount={directionsService => {
               //   console.log('DirectionsService onUnmount directionsService: ', directionsService)
@@ -75,7 +73,7 @@ export default function Map({
               />
             }
 
-            {responded && mapResponse && mapResponse.routes[0] &&
+            {!runDirectionsService && mapResponse && mapResponse.routes[0] &&
               <DirectionsRenderer
                 // required
                 options={{ // eslint-disable-line react-perf/jsx-no-new-object-as-prop
