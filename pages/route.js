@@ -15,12 +15,13 @@ import * as Facebook from 'expo-facebook';
 import banner1 from "../public/banner1.jpg"
 import { push } from "react-native-elevation";
 import { isArrayBindingPattern } from "typescript";
+import { Map, GoogleApiWrapper } from 'google-maps-react';
 
 // WebBrowser.maybeCompleteAuthSession();
 
 
 
-export default function Home() {
+function Route({ google }) {
   const { navigate } = useRouting();
   const { user, setUser, newOrderProductList } = useContext(Context);
   const [routes, setRoutes] = useState({})
@@ -30,9 +31,10 @@ export default function Home() {
   const [mapUrl, setMapUrl] = useState("")
 
   let INPUTQTY = 20;
-  const URL = "https://www.google.com/maps/dir/"
+  const URL = "https://www.google.com/maps/dir/?api=1&origin="
   const origin = "8828 Healther Street, Vancouver, BC"
-  let addresses = [];
+  const destination = "8771 Sierpina Drive, Richmond, BC"
+  let wayPoints = [];
 
 
   const onChange = (name, value) => {
@@ -51,36 +53,62 @@ export default function Home() {
         counter = counter + 1;
         if (routes[routesNames[i]]) {
           db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
-          .then((snapshot)=>{
-            snapshot.forEach((doc)=>{
-              console.log(doc.data())
-              tempArr.push(doc.data())
-            })
-            console.log(counter)
-            console.log(routesNames.length)
+            .then((snapshot) => {
+              snapshot.forEach((doc) => {
+                console.log(doc.data())
+                tempArr.push(doc.data())
+              })
+              console.log(counter)
+              console.log(routesNames.length)
 
-            if (counter === routesNames.length) {
-              console.log(tempArr)
-              setOrders(tempArr)
-              resolve();
-            }
-            // else reject("Uable to get data. Please try again");
-          })
-          .catch(err=>{
-            reject(err)
-          })
+              if (counter === routesNames.length) {
+                console.log(tempArr)
+                setOrders(tempArr)
+                resolve();
+              }
+              // else reject("Uable to get data. Please try again");
+            })
+            .catch(err => {
+              reject(err)
+            })
         }
       }
     })
-    query.then(async () => {
+    query.then(() => {
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
       let addressStr = ""
-      await orders.map((item) => {
-        addressStr = addressStr + item.shippingAddress.address1
+
+      const createAddressStr = new Promise((resolve, reject) => {
+        orders.map((item, index) => {
+          console.log("addressStr")
+          console.log(addressStr)
+          addressStr = addressStr + item.shippingAddress.address1 + ", "
+          // addressStr = addressStr + item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
+          addressStr = addressStr + item.shippingAddress.city + ", "
+          addressStr = addressStr + item.shippingAddress.province + ", "
+          addressStr = addressStr + item.shippingAddress.country
+          addressStr = addressStr + "|"
+          if (index === orders.length - 1) {
+            resolve(addressStr)
+          }
+        })
       })
-      console.log(
-        URL + origin + addressStr
-      )
+
+      createAddressStr.then((addressStr) => {
+        const url = `https://maps.googleapis.com/maps/api/js?
+        &origin=${origin}
+        &destination=${destination}
+        &mode=driving
+        &waypoints=${addressStr}
+        &key=AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s
+        `
+        console.log(url)
+        fetch(url)
+          .then(response => response.json())
+          .then(data => console.log(data))
+      })
     })
+
     query.catch(err => console.log(err))
   }
 
@@ -93,7 +121,23 @@ export default function Home() {
 
   return (
     <>
-      <ContextArea>
+      <ContextArea style={{
+      }}>
+        <View style={{
+          flex:1,
+          marginBottom: 300
+        }}>
+          <Map
+            google={google}
+            zoom={11}
+            style={{
+              position: "absolute",
+              width: '100%',
+              height: '300px'
+            }}
+            initialCenter={{ lat: 49.205960, lng: -123.122550 }}
+          />
+        </View>
         <ScrollView style={{
           padding: 25,
         }}>
@@ -111,11 +155,28 @@ export default function Home() {
 
           <Divider />
 
+
           <TextInput
-            style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
+            style={{ padding: 10, paddingTop: 20 }}
 
             label={"Starting Location"}
             placeholder='Address'
+            theme={{ colors: { primary: "grey" } }}
+            mode="outlined"
+            dense
+            value={"8828 Healther Street. Vancouver, BC"}
+            onChangeText={value => { onChange("point" + index, value) }}
+          // error={err.chineseName}
+          />
+          {/* <HelperText type="error" visible={error.chineseName}>
+            {err.chineseName}
+          </HelperText> */}
+
+          <TextInput
+            style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
+
+            label={"Destination"}
+            placeholder='Your Address / Home'
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
@@ -158,6 +219,10 @@ export default function Home() {
     </>
   );
 }
+
+export default GoogleApiWrapper({
+  apiKey: 'AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s'
+})(Route);
 
 
 const RouteContent = styled.View`
