@@ -7,11 +7,12 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import WayPointList from "../components/WayPointList";
 import GenRouteBtn from "../components/GenRouteBtn";
+import OpenNavBtn from "../components/OpenNavBtn";
 import Map from "../components/Map";
 import { firebase, db, auth } from "../firebase";
 
 
-function Route({ google }) {
+function Route() {
   const { navigate } = useRouting();
   const { user, setUser, newOrderProductList } = useContext(Context)
   const [wayPointIds, setWayPointIds] = useState()
@@ -143,12 +144,14 @@ function Route({ google }) {
 
 
         {showList ?
+
           <WayPointList
             waypoints={waypoints}
             mapResponse={mapResponse}
             ordersList={ordersList}
             origin={origin}
             destination={destination}
+            setShowList={setShowList}
           />
           :
           <>
@@ -230,9 +233,16 @@ function Route({ google }) {
             </ScrollView>
           </>
         }
-        
+
       </ContextArea>
-      <GenRouteBtn onSubmit={onSubmit} />
+      {showList ?
+        <OpenNavBtn
+          mapResponse={mapResponse}
+          origin={origin}
+          destination={destination}
+        /> :
+        <GenRouteBtn onSubmit={onSubmit} />
+      }
     </>
   );
 }

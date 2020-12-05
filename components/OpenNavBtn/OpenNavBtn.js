@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Platform } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { Platform, View, Linking } from "react-native";
 import { useRouting } from "expo-next-react-navigation";
 import useQty from '../../hooks/useQty';
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -7,25 +7,53 @@ import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
+import Link from 'next/link'
 
-export default function GenRouteBtn({ onSubmit }) {
+export default function OpenNavBtn({ mapResponse, origin, destination }) {
   const { navigate } = useRouting();
   const { setSelected, total, user, newOrderProductList } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
+  let url = ""
+
+  const mapUrl = () => {
+    let point = ""
+    mapResponse.request.waypoints.map((item) => {
+      point = point + item.location.query + "|"
+      // return point
+    })
+    return (
+      encodeURI(`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving&waypoints=${point}`)
+    )
+  }
+  useEffect(() => {
+    console.log(mapUrl())
+  }, [])
+
 
   return (
     <>
-      <Wrapper onPress={() => {
-        onSubmit()
-      }}>
-        <Bar theme={theme}>
-          <IconButton icon="map-search" color="white"></IconButton>
-          <Total>
-            Generate Route
+      {/* <Link href="http://www.google.ca">
+        <a target="_blank"  
+        style={{
+          position: "absolute"
+        }}> */}
+
+          <Wrapper
+          onPress={()=>{
+            Linking.openURL(mapUrl())
+          }}
+          >
+            <Bar theme={theme}>
+              <IconButton icon="google-maps" color="white"></IconButton>
+              <Total>
+                Start Navigation
           </Total>
-        </Bar>
-      </Wrapper>
+            </Bar>
+          </Wrapper>
+
+        {/* </a>
+      </Link> */}
     </>
   )
 };

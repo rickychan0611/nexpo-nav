@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
 import { View, Text, ScrollView } from "react-native";
+import { Headline, Button } from 'react-native-paper';
+
 import styled from "styled-components/native";
 
 export default function WayPointList({
@@ -41,31 +43,48 @@ export default function WayPointList({
   return (
     <View style={{
       position: "absolute",
-      top: 300
-      // justifyContent: "flex-start",
-      // alignItems: "flex-start"
+      top: 300,
     }}>
-      
+
       <ScrollView
-            style={{
-              padding: 25
-            }}>
-      <View style={{ marginVertical: 5 }}>
-        <Text>{"A: Starting point"}</Text>
-        <Text>{origin}</Text>
-      </View>
-      {mapResponse && mapResponse.request.waypoints.map((item, index) => {
-        return (
-          <View style={{ marginVertical: 5 }}>
-            <Text>{convertChar(index) + ":  ID #" + getOrderId(item.location.query)}</Text>
-            <Text>{item.location.query}</Text>
-          </View>
-        )
-      })}
-      <View style={{ marginVertical: 5 }}>
-        <Text>{mapResponse && convertChar(mapResponse.request.waypoints.length) + ": Destination"}</Text>
-        <Text>{destination}</Text>
-      </View>
+        style={{
+          padding: 25,
+          width: "100vw",
+          maxWidth: 500,
+        }}>
+        <Headline
+          style={{
+            // paddingHorizontal: 25,
+            fontWeight: "bold",
+          }}
+        >
+          Your Shipping Route</Headline>
+        <Button
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            // marginBottom: 20
+          }}
+          icon="arrow-left"
+          onPress={() => { setShowList(false) }}>
+          Go Back
+          </Button>
+        <View style={{ marginVertical: 8 }}>
+          <Text>{"A: Starting point"}</Text>
+          <Text style={{ paddingLeft: 16 }}>{origin}</Text>
+        </View>
+        {mapResponse && mapResponse.request.waypoints.map((item, index) => {
+          return (
+            <View style={{ marginVertical: 8 }}>
+              <Text>{convertChar(index) + ": ID #" + getOrderId(item.location.query)}</Text>
+              <Text style={{ paddingLeft: 16 }}>{item.location.query}</Text>
+            </View>
+          )
+        })}
+        <View style={{ marginVertical: 8 }}>
+          <Text>{mapResponse && convertChar(mapResponse.request.waypoints.length) + ": Destination"}</Text>
+          <Text style={{ paddingLeft: 16 }}>{destination}</Text>
+        </View>
       </ScrollView>
     </View>
 
