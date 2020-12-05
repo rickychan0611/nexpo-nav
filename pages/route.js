@@ -27,7 +27,7 @@ function Route() {
   const [origin, setOrigin] = useState("")
   const [destination, setDestination] = useState("")
 
-  let INPUTQTY = 20;
+  let INPUTQTY = 22;
   // const origin = "8828 Healther Street, Vancouver, BC"
   // const destination = "8771 Sierpina Drive, Richmond, BC"
 
@@ -45,7 +45,7 @@ function Route() {
     setErr({})
     //del all empty keys
     if (!destination) {
-      setErr({ destination: "Required. Please enter your end point" })
+      setErr({ destination: "Required. Please enter your end point"})
       return
     }
 
@@ -72,9 +72,8 @@ function Route() {
             .then(snapshot => {
               if (snapshot.empty) {
                 console.log('No matching documents.', keyName);
-                setErr(prev => ({ ...prev, [keyName]: "ID not found. Ignored" }))
-                console.log('ERrrrrrr', err);
-                return;
+                setErr(prev => ({ ...prev, [keyName]: "ID not found"}))
+                throw("ID not found")
               }
               snapshot.forEach(doc => {
                 orders.push(doc.data());
@@ -83,12 +82,14 @@ function Route() {
             })
             .catch(err => {
               console.log('Error getting documents', err);
+              throw(err)
             });
 
           promises.push(promise)
         })
 
-        Promise.all(promises).then(() => {
+        Promise.all(promises)
+        .then(() => {
           let addresses = []
           let idAndAddress = []
           console.log("Done: ")
@@ -110,7 +111,8 @@ function Route() {
           setWaypoints(addresses)
           setRunDirectionsService(true)
           setOrdersList(idAndAddress)
-        })
+      })
+      .catch((err)=>console.log(err))
       }
 
       else {//no routesKeyNames
@@ -199,7 +201,7 @@ function Route() {
                 <Text style={{
                   paddingTop: 25,
                   paddingBottom: 25,
-                }}>Please enter the last digits after "A" of the order number. (Max. 20 locations)</Text>
+                }}>Please enter the last digits after "A" of the order number. (Max. 22 locations)</Text>
 
                 <Divider />
 

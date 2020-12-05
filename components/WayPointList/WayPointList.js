@@ -27,17 +27,11 @@ export default function WayPointList({
     }
   }
 
-  const getOrderId = (address) => {
-    let id;
-    console.log(address)
-    console.log(ordersList)
-    id = ordersList.map((item) => {
-      if (address === item.location) {
-        console.log(item.orderId)
-        return item.orderId
-      }
-    })
-    return id
+  const ID = ({address, index}) => {
+    let order = ordersList.filter((item) => {
+      return address === item.location
+      })
+    return <Text>{convertChar(index) + ": ID #" + order[0].orderId}</Text>
   }
 
   return (
@@ -75,8 +69,8 @@ export default function WayPointList({
         </View>
         {mapResponse && mapResponse.request.waypoints.map((item, index) => {
           return (
-            <View style={{ marginVertical: 8 }}>
-              <Text>{convertChar(index) + ": ID #" + getOrderId(item.location.query)}</Text>
+            <View key={index} style={{ marginVertical: 8 }}>
+            <ID address={item.location.query} index={index}/>
               <Text style={{ paddingLeft: 16 }}>{item.location.query}</Text>
             </View>
           )
