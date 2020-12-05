@@ -2,12 +2,10 @@ import React, { useContext, useEffect } from "react";
 import { Platform, View, Linking } from "react-native";
 import { useRouting } from "expo-next-react-navigation";
 import useQty from '../../hooks/useQty';
-import AwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import Link from 'next/link'
 
 export default function OpenNavBtn({ mapResponse, origin, destination }) {
   const { navigate } = useRouting();
@@ -33,27 +31,19 @@ export default function OpenNavBtn({ mapResponse, origin, destination }) {
 
   return (
     <>
-      {/* <Link href="http://www.google.ca">
-        <a target="_blank"  
-        style={{
-          position: "absolute"
-        }}> */}
-
-          <Wrapper
-          onPress={()=>{
-            Linking.openURL(mapUrl())
-          }}
-          >
-            <Bar theme={theme}>
-              <IconButton icon="google-maps" color="white"></IconButton>
-              <Total>
-                Start Navigation
+      <Wrapper
+      >
+        <Bar theme={theme}
+          accessibilityRole='link'
+          href={mapUrl()}
+          target='_blank'>
+          <IconButton icon="google-maps" color="white"></IconButton>
+          <Total>
+            Start Navigation
           </Total>
-            </Bar>
-          </Wrapper>
+        </Bar>
+      </Wrapper>
 
-        {/* </a>
-      </Link> */}
     </>
   )
 };
