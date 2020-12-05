@@ -210,7 +210,7 @@ function Route() {
                   Delivery Route Generator</Headline>
                 <Text style={{
                   paddingTop: 15,
-                }}>- Route starts at your currect positin. (Please allow access to device's location.)</Text>
+                }}>- Route starts at your currect position. (Please allow access to device's location.)</Text>
                 <Text style={{
                   paddingTop: 10,
                 }}>- End point is where you want to go after delivery.</Text>
