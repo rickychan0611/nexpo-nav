@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import styled from "styled-components/native";
 
 export default function WayPointList({
@@ -7,7 +7,8 @@ export default function WayPointList({
   waypoints,
   ordersList,
   origin,
-  destination
+  destination,
+  setShowList
 }) {
   console.log("mapResponse", mapResponse)
   console.log("waypoints", waypoints)
@@ -38,7 +39,17 @@ export default function WayPointList({
   }
 
   return (
-    <>
+    <View style={{
+      position: "absolute",
+      top: 300
+      // justifyContent: "flex-start",
+      // alignItems: "flex-start"
+    }}>
+      
+      <ScrollView
+            style={{
+              padding: 25
+            }}>
       <View style={{ marginVertical: 5 }}>
         <Text>{"A: Starting point"}</Text>
         <Text>{origin}</Text>
@@ -50,12 +61,13 @@ export default function WayPointList({
             <Text>{item.location.query}</Text>
           </View>
         )
-      })}    
+      })}
       <View style={{ marginVertical: 5 }}>
         <Text>{mapResponse && convertChar(mapResponse.request.waypoints.length) + ": Destination"}</Text>
-        <Text>{ destination }</Text>
+        <Text>{destination}</Text>
       </View>
+      </ScrollView>
+    </View>
 
-    </>
   )
 };

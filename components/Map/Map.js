@@ -7,7 +7,7 @@ import Loader from "../../components/Loader";
 export default function Map({
   mapResponse, setMapResponse,
   runDirectionsService, setRunDirectionsService,
-  waypoints, destination, origin }) {
+  waypoints, destination, origin, setShowList }) {
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyB4_luRYtuvAHZazQhruQc3nJpuoffUG3s" // ,
@@ -19,6 +19,7 @@ export default function Map({
       if (response.status === 'OK') {
         console.log(response)
         setMapResponse(response)
+        setShowList(true)
       } else {
         console.log('directionsCallback err: ', response)
       }
