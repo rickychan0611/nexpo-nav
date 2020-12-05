@@ -8,8 +8,10 @@ import styled from "styled-components/native";
 import WayPointList from "../components/WayPointList";
 import GenRouteBtn from "../components/GenRouteBtn";
 import OpenNavBtn from "../components/OpenNavBtn";
+import { Marker } from '@react-google-maps/api';
 import Map from "../components/Map";
 import { firebase, db, auth } from "../firebase";
+import { error } from "firebase-functions/lib/logger";
 
 
 function Route() {
@@ -22,23 +24,31 @@ function Route() {
   const [mapResponse, setMapResponse] = useState()
   const [runDirectionsService, setRunDirectionsService] = useState(false)
   const [showList, setShowList] = useState(false)
+  const [origin, setOrigin] = useState("")
+  const [destination, setDestination] = useState("")
 
   let INPUTQTY = 20;
-  const origin = "8828 Healther Street, Vancouver, BC"
-  const destination = "8771 Sierpina Drive, Richmond, BC"
+  // const origin = "8828 Healther Street, Vancouver, BC"
+  // const destination = "8771 Sierpina Drive, Richmond, BC"
 
   const onChange = (name, value) => {
-
     setMapResponse()
     setWaypoints()
     console.log(name, " : ", value)
-    setWayPointIds(prev => ({ ...prev, [name]: value }))
-
+    if (name === "destination") {
+      setDestination(value)
+    }
+    else setWayPointIds(prev => ({ ...prev, [name]: value }))
   }
 
   const onSubmit = () => {
     setErr({})
     //del all empty keys
+    if (!destination) {
+      setErr({ destination: "Required. Please enter your end point" })
+      return
+    }
+
     if (wayPointIds) {
       let cleanedRoutes = wayPointIds
       let k
@@ -110,6 +120,7 @@ function Route() {
     }
     else { //no route
       console.log("route is empty")
+      setErr({point0 : "Please enter an ID"})
       return
     }
   }
@@ -118,6 +129,19 @@ function Route() {
     setArr([]);
     for (let i = 1; i <= INPUTQTY; i++) {
       setArr(prev => [...prev, i])
+    }
+  }, [])
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      console.log("Available");
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+        setOrigin({ lat: position.coords.latitude, lng: position.coords.longitude })
+      })
+    } else {
+      console.log("Not Available");
     }
   }, [])
 
@@ -138,7 +162,14 @@ function Route() {
               runDirectionsService={runDirectionsService}
               setRunDirectionsService={setRunDirectionsService}
               setShowList={setShowList}
-            />
+            >
+              <Marker
+                // onLoad={onLoad}
+                position={origin}
+                title="Your position"
+                visible={!mapResponse}
+              />
+            </Map>
           </View>
 
 
@@ -157,8 +188,8 @@ function Route() {
               <View
                 style={{
                   padding: 25
-                }}>>
-              <Headline
+                }}>
+                <Headline
                   style={{
                     // paddingHorizontal: 25,
                     fontWeight: "bold",
@@ -173,7 +204,7 @@ function Route() {
                 <Divider />
 
 
-                <TextInput
+                {/* <TextInput
                   style={{ padding: 10, paddingTop: 20 }}
 
                   label={"Starting Location"}
@@ -183,8 +214,8 @@ function Route() {
                   dense
                   value={"8828 Healther Street. Vancouver, BC"}
                   onChangeText={value => { onChange("point" + index, value) }}
-                // error={err.chineseName}
-                />
+                  />
+                // error={err.chineseName} */}
                 {/* <HelperText type="error" visible={error.chineseName}>
             {err.chineseName}
           </HelperText> */}
@@ -192,18 +223,18 @@ function Route() {
                 <TextInput
                   style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
 
-                  label={"Destination"}
-                  placeholder='Your Address / Home'
+                  label={"End Point"}
+                  placeholder="Name of the place, address or postal code"
                   theme={{ colors: { primary: "grey" } }}
                   mode="outlined"
                   dense
-                  value={"8828 Healther Street. Vancouver, BC"}
-                  onChangeText={value => { onChange("point" + index, value) }}
-                // error={err.chineseName}
+                  value={destination}
+                  onChangeText={value => { onChange("destination", value) }}
+                  error={err.destination}
                 />
-                {/* <HelperText type="error" visible={error.chineseName}>
-            {err.chineseName}
-          </HelperText> */}
+                <HelperText type="error" visible={err.destination}>
+                  {err.destination}
+                </HelperText>
 
                 <Divider />
 
@@ -213,7 +244,7 @@ function Route() {
                       <InputView>
                         <TextInput
                           label={"Way Point #" + (index + 1)}
-                          placeholder={'#' + (index + 1)}
+                          placeholder={'Order ID'}
                           theme={{ colors: { primary: "grey" } }}
                           mode="outlined"
                           dense

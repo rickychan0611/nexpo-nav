@@ -71,7 +71,7 @@ export default function WayPointList({
           </Button>
         <View style={{ marginVertical: 8 }}>
           <Text>{"A: Starting point"}</Text>
-          <Text style={{ paddingLeft: 16 }}>{origin}</Text>
+          <Text style={{ paddingLeft: 16 }}>My current position</Text>
         </View>
         {mapResponse && mapResponse.request.waypoints.map((item, index) => {
           return (

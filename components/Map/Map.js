@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
-import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer, useJsApiLoader, Marker } from '@react-google-maps/api';
 import Loader from "../../components/Loader";
 
 export default function Map({
-  mapResponse, setMapResponse,
+  mapResponse, setMapResponse, children,
   runDirectionsService, setRunDirectionsService,
   waypoints, destination, origin, setShowList }) {
 
@@ -43,8 +43,8 @@ export default function Map({
             width: '100%',
             height: '300px'
           }}
-          center={{ lat: 49.205960, lng: -123.122550 }}
-          zoom={11}
+          center={origin}
+          zoom={12}
         // onLoad={onLoad}
         >
           { /* Child components, such as markers, info windows, etc. */}
@@ -89,7 +89,7 @@ export default function Map({
               //   console.log('DirectionsRenderer onUnmount directionsRenderer: ', directionsRenderer)
               // }}
               />}
-
+              {children}
           </>
         </GoogleMap>
       </>
