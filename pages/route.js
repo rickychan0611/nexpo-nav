@@ -8,10 +8,10 @@ import styled from "styled-components/native";
 import WayPointList from "../components/WayPointList";
 import GenRouteBtn from "../components/GenRouteBtn";
 import OpenNavBtn from "../components/OpenNavBtn";
+import Loader from "../components/Loader";
 import { Marker } from '@react-google-maps/api';
 import Map from "../components/Map";
-import { firebase, db, auth } from "../firebase";
-import { error } from "firebase-functions/lib/logger";
+import { db} from "../firebase";
 
 
 function Route() {
@@ -26,6 +26,7 @@ function Route() {
   const [showList, setShowList] = useState(false)
   const [origin, setOrigin] = useState("")
   const [destination, setDestination] = useState("")
+  const [loading, setLoading] = useState(false)
 
   let INPUTQTY = 22;
   // const origin = "8828 Healther Street, Vancouver, BC"
@@ -42,10 +43,12 @@ function Route() {
   }
 
   const onSubmit = () => {
+    setLoading(true)
     setErr({})
     //del all empty keys
     if (!destination) {
       setErr({ destination: "Required. Please enter your end point"})
+      setLoading(false)
       return
     }
 
@@ -112,17 +115,21 @@ function Route() {
           setRunDirectionsService(true)
           setOrdersList(idAndAddress)
       })
-      .catch((err)=>console.log(err))
+      .catch((err)=>{
+        setLoading(false)
+        console.log(err)})
       }
 
       else {//no routesKeyNames
         console.log("routesKeyNames is empty")
+        setLoading(false)
         return
       }
     }
     else { //no route
       console.log("route is empty")
       setErr({point0 : "Please enter an ID"})
+      setLoading(false)
       return
     }
   }
@@ -149,6 +156,8 @@ function Route() {
 
   return (
     <>
+        {loading && <Loader/>}
+
       <ContextArea>
         <ScrollView>
           <View style={{
@@ -164,6 +173,7 @@ function Route() {
               runDirectionsService={runDirectionsService}
               setRunDirectionsService={setRunDirectionsService}
               setShowList={setShowList}
+              setLoading={setLoading}
             >
               <Marker
                 // onLoad={onLoad}
@@ -205,25 +215,8 @@ function Route() {
 
                 <Divider />
 
-
-                {/* <TextInput
-                  style={{ padding: 10, paddingTop: 20 }}
-
-                  label={"Starting Location"}
-                  placeholder='Address'
-                  theme={{ colors: { primary: "grey" } }}
-                  mode="outlined"
-                  dense
-                  value={"8828 Healther Street. Vancouver, BC"}
-                  onChangeText={value => { onChange("point" + index, value) }}
-                  />
-                // error={err.chineseName} */}
-                {/* <HelperText type="error" visible={error.chineseName}>
-            {err.chineseName}
-          </HelperText> */}
-
                 <TextInput
-                  style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
+                  style={{ padding: 5, paddingTop: 20, paddingBottom: 20 }}
 
                   label={"End Point"}
                   placeholder="Name of the place, address or postal code"
