@@ -207,11 +207,17 @@ function Route() {
                     fontWeight: "bold",
                   }}
                 >
-                  Route Generator</Headline>
+                  Delivery Route Generator</Headline>
                 <Text style={{
-                  paddingTop: 25,
+                  paddingTop: 15,
+                }}>- Route starts at your currect positin. (Please allow access to device's location.)</Text>
+                <Text style={{
+                  paddingTop: 10,
+                }}>- End point is where you want to go after delivery.</Text>
+                <Text style={{
+                  paddingTop: 10,
                   paddingBottom: 25,
-                }}>Please enter the last digits after "A" of the order number. (Max. 22 locations)</Text>
+                }}>- For each waypoint, please enter the last digits after "A" of the order number. (Max. 22 locations)</Text>
 
                 <Divider />
 

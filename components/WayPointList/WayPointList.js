@@ -52,7 +52,7 @@ export default function WayPointList({
             fontWeight: "bold",
           }}
         >
-          Your Shipping Route</Headline>
+          Your Optimized Route</Headline>
         <Button
           style={{
             justifyContent: "flex-start",
