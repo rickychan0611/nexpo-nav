@@ -216,4 +216,4 @@ class InvoiceToPrint extends React.Component {
   };
 };
 
-export default ComponentToPrint;
+export default InvoiceToPrint;
