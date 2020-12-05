@@ -5,7 +5,7 @@ import { TextInput, Headline, Divider, HelperText } from 'react-native-paper';
 import { Platform, ScrollView, Image, View, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
-import BottomBar from "../components/BottomBar";
+import WayPointList from "../components/WayPointList";
 import GenRouteBtn from "../components/GenRouteBtn";
 import Map from "../components/Map";
 import { firebase, db, auth } from "../firebase";
@@ -17,7 +17,7 @@ function Route({ google }) {
   const [wayPointIds, setWayPointIds] = useState()
   const [err, setErr] = useState({})
   const [arr, setArr] = useState([])
-  const [orders, setOrders] = useState([])
+  const [ordersList, setOrdersList] = useState([])
   const [waypoints, setWaypoints] = useState([])
   const [mapResponse, setMapResponse] = useState()
   const [runDirectionsService, setRunDirectionsService] = useState(false);
@@ -79,6 +79,7 @@ function Route({ google }) {
 
         Promise.all(promises).then(() => {
           let addresses = []
+          let idAndAddress = []
           console.log("Done: ")
           console.log(orders)
 
@@ -90,12 +91,14 @@ function Route({ google }) {
             const country = item.shippingAddress.country
             const addressStr = address1 + address2 + city + province + country
             addresses.push({ location: addressStr })
+            idAndAddress.push({ location: addressStr, orderId: item.orderId })
           })
 
           console.log("addresses: ")
           console.log(addresses)
           setWaypoints(addresses)
           setRunDirectionsService(true)
+          setOrdersList(idAndAddress)
         })
       }
 
@@ -108,69 +111,6 @@ function Route({ google }) {
       console.log("route is empty")
       return
     }
-    // setMapResponse()
-    // setWaypoints()
-    // setOrders([])
-    // setResponded(false)
-    // const routesNames = Object.getOwnPropertyNames(routes)
-    // console.log(routesNames)
-    // let counter = 0;
-    // let tempArr = [];
-    // const query = new Promise((resolve, reject) => {
-    //   for (let i = 0; i < routesNames.length; i++) {
-    //     // console.log(routes[routesNames[i]])
-    //     setTimeout(() => {
-    //       if (routes[routesNames[i]]) {
-    //         counter = counter + 1;
-    //         db.collection("orders").where("index", "==", routes[routesNames[i]]).get()
-    //           .then((snapshot) => {
-    //              
-    //               tempArr.push(doc.data())
-    //               if (counter === routesNames.length) {
-    //                 setOrders(tempArr)
-    //                 resolve();
-    //               }
-    //             })
-    //             // else reject("Uable to get data. Please try again");
-    //           })
-    //           .catch(err => {
-    //             reject(err)
-    //           })
-    //       }
-    //     }, [500])
-    //   }
-    // })
-    // query.then(() => {
-    //   const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    //   let addressStr = ""
-
-    //   // item.shippingAddress.address2 ? (item.shippingAddress.address2 + " ") : ""
-
-    //   const createAddressStr = new Promise((resolve, reject) => {
-    //     let tempArr = []
-    //     orders.map((item, index) => {
-    //       console.log("addressStr")
-    //       const address1 = item.shippingAddress.address1 + ", "
-    //       const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
-    //       const city = item.shippingAddress.city + ", "
-    //       const province = item.shippingAddress.province + ", "
-    //       const country = item.shippingAddress.country
-    //       const addressStr = address1 + address2 + city + province + country
-    //       console.log(addressStr)
-    //       // console.log(tempArr)
-    //       tempArr.push({ location: addressStr })
-    //       if (index === orders.length - 1) {
-    //         resolve(tempArr)
-    //       }
-    //     })
-    //   })
-    //   createAddressStr.then((tempArr) => {
-    //     console.log(tempArr)
-    //     setWaypoints(tempArr)
-    //   })
-    // })
-
-    // query.catch(err => console.log(err))
   }
 
   useEffect(() => {
@@ -202,6 +142,13 @@ function Route({ google }) {
         <ScrollView style={{
           padding: 25,
         }}>
+          {<WayPointList 
+          waypoints={waypoints} 
+          mapResponse={mapResponse}
+          ordersList={ordersList}
+          origin={origin}
+          destination={destination}
+          /> }
           <Headline
             style={{
               // paddingHorizontal: 25,
