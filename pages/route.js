@@ -14,7 +14,6 @@ import { firebase, db, auth } from "../firebase";
 
 function Route() {
   const { navigate } = useRouting();
-  const { user, setUser, newOrderProductList } = useContext(Context)
   const [wayPointIds, setWayPointIds] = useState()
   const [err, setErr] = useState({})
   const [arr, setArr] = useState([])
@@ -125,114 +124,115 @@ function Route() {
   return (
     <>
       <ContextArea>
+        <ScrollView>
+          <View style={{
+            flex: 1,
+            marginBottom: 300
+          }}>
+            <Map
+              mapResponse={mapResponse}
+              setMapResponse={setMapResponse}
+              waypoints={waypoints}
+              destination={destination}
+              origin={origin}
+              runDirectionsService={runDirectionsService}
+              setRunDirectionsService={setRunDirectionsService}
+              setShowList={setShowList}
+            />
+          </View>
 
-        <View style={{
-          flex: 1,
-          marginBottom: 300
-        }}>
-          <Map
-            mapResponse={mapResponse}
-            setMapResponse={setMapResponse}
-            waypoints={waypoints}
-            destination={destination}
-            origin={origin}
-            runDirectionsService={runDirectionsService}
-            setRunDirectionsService={setRunDirectionsService}
-            setShowList={setShowList}
-          />
-        </View>
 
+          {showList ?
 
-        {showList ?
-
-          <WayPointList
-            waypoints={waypoints}
-            mapResponse={mapResponse}
-            ordersList={ordersList}
-            origin={origin}
-            destination={destination}
-            setShowList={setShowList}
-          />
-          :
-          <>
-            <ScrollView
-              style={{
-                padding: 25
-              }}>
-              <Headline
+            <WayPointList
+              waypoints={waypoints}
+              mapResponse={mapResponse}
+              ordersList={ordersList}
+              origin={origin}
+              destination={destination}
+              setShowList={setShowList}
+            />
+            :
+            <>
+              <View
                 style={{
-                  // paddingHorizontal: 25,
-                  fontWeight: "bold",
-                }}
-              >
-                Route Generator</Headline>
-              <Text style={{
-                paddingTop: 25,
-                paddingBottom: 25,
-              }}>Please enter the last digits after "A" of the order number. (Max. 20 locations)</Text>
+                  padding: 25
+                }}>>
+              <Headline
+                  style={{
+                    // paddingHorizontal: 25,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Route Generator</Headline>
+                <Text style={{
+                  paddingTop: 25,
+                  paddingBottom: 25,
+                }}>Please enter the last digits after "A" of the order number. (Max. 20 locations)</Text>
 
-              <Divider />
+                <Divider />
 
 
-              <TextInput
-                style={{ padding: 10, paddingTop: 20 }}
+                <TextInput
+                  style={{ padding: 10, paddingTop: 20 }}
 
-                label={"Starting Location"}
-                placeholder='Address'
-                theme={{ colors: { primary: "grey" } }}
-                mode="outlined"
-                dense
-                value={"8828 Healther Street. Vancouver, BC"}
-                onChangeText={value => { onChange("point" + index, value) }}
-              // error={err.chineseName}
-              />
-              {/* <HelperText type="error" visible={error.chineseName}>
+                  label={"Starting Location"}
+                  placeholder='Address'
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={"8828 Healther Street. Vancouver, BC"}
+                  onChangeText={value => { onChange("point" + index, value) }}
+                // error={err.chineseName}
+                />
+                {/* <HelperText type="error" visible={error.chineseName}>
             {err.chineseName}
           </HelperText> */}
 
-              <TextInput
-                style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
+                <TextInput
+                  style={{ padding: 10, paddingTop: 20, paddingBottom: 20 }}
 
-                label={"Destination"}
-                placeholder='Your Address / Home'
-                theme={{ colors: { primary: "grey" } }}
-                mode="outlined"
-                dense
-                value={"8828 Healther Street. Vancouver, BC"}
-                onChangeText={value => { onChange("point" + index, value) }}
-              // error={err.chineseName}
-              />
-              {/* <HelperText type="error" visible={error.chineseName}>
+                  label={"Destination"}
+                  placeholder='Your Address / Home'
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={"8828 Healther Street. Vancouver, BC"}
+                  onChangeText={value => { onChange("point" + index, value) }}
+                // error={err.chineseName}
+                />
+                {/* <HelperText type="error" visible={error.chineseName}>
             {err.chineseName}
           </HelperText> */}
 
-              <Divider />
+                <Divider />
 
-              <RouteContent>
-                {arr[0] && arr.map((item, index) => {
-                  return (
-                    <InputView>
-                      <TextInput
-                        label={"Way Point #" + (index + 1)}
-                        placeholder={'#' + (index + 1)}
-                        theme={{ colors: { primary: "grey" } }}
-                        mode="outlined"
-                        dense
-                        value={wayPointIds && wayPointIds["point" + index]}
-                        onChangeText={value => { onChange("point" + index, value) }}
-                        error={err["point" + index]}
-                      />
-                      <HelperText type="error" visible={err["point" + index]}>
-                        {err["point" + index]}
-                      </HelperText>
-                    </InputView>
-                  )
-                })}
-              </RouteContent>
-              <View style={{ height: 100 }}></View>
-            </ScrollView>
-          </>
-        }
+                <RouteContent>
+                  {arr[0] && arr.map((item, index) => {
+                    return (
+                      <InputView>
+                        <TextInput
+                          label={"Way Point #" + (index + 1)}
+                          placeholder={'#' + (index + 1)}
+                          theme={{ colors: { primary: "grey" } }}
+                          mode="outlined"
+                          dense
+                          value={wayPointIds && wayPointIds["point" + index]}
+                          onChangeText={value => { onChange("point" + index, value) }}
+                          error={err["point" + index]}
+                        />
+                        <HelperText type="error" visible={err["point" + index]}>
+                          {err["point" + index]}
+                        </HelperText>
+                      </InputView>
+                    )
+                  })}
+                </RouteContent>
+                <View style={{ height: 100 }}></View>
+              </View>
+            </>
+          }
+        </ScrollView>
 
       </ContextArea>
       {showList ?
