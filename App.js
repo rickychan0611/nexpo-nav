@@ -17,7 +17,7 @@ import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import order_details from "./pages/admin/order-details";
-// import orders from "./pages/admin/orders";
+import shipping from "./pages/checkout/shipping";
 import createProduct from "./pages/admin/create-product";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
@@ -84,7 +84,7 @@ function App() {
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
-          {/* <Stack.Screen name="admin/create-product" component={createProduct} options={options("Create Prodcut")} /> */}
+          <Stack.Screen name="shipping" component={shipping} options={options("Checkout - Shipping")} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

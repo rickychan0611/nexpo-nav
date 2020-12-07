@@ -6,10 +6,10 @@ import { Divider, TextInput, Title, HelperText } from "react-native-paper";
 import { Context } from "../../context/Context";
 import validator from 'validator';
 
-export default function ShippingAddress({err, setErr}) {
+export default function ShippingAddress({ err, setErr }) {
   const { theme } = useContext(ThemeContext);
   const { shippingAddress, setShippingAddress } = useContext(Context);
-  
+
   const handleChanage = (name, value) => {
     setShippingAddress(prev => {
       return { ...prev, [name]: value }
@@ -19,7 +19,9 @@ export default function ShippingAddress({err, setErr}) {
   return (
     <>
       <View style={{ padding: 25 }}>
-        <Title>Shipping Info:</Title>
+        <Title style={{ color: "black", fontWeight: 700, fontSize: 18, marginBottom: 20 }}>
+          Billing Address:
+          </Title>
 
         <Row>
           <InputView style={{ flex: 1 }}>
@@ -57,10 +59,10 @@ export default function ShippingAddress({err, setErr}) {
               keyboardType="default"
               textContentType="familyName"
 
-              />
-              <HelperText type="error" visible={err.lastName}>
-                {err.lastName}
-              </HelperText>
+            />
+            <HelperText type="error" visible={err.lastName}>
+              {err.lastName}
+            </HelperText>
           </InputView>
         </Row>
 
@@ -72,17 +74,18 @@ export default function ShippingAddress({err, setErr}) {
             mode="outlined"
             dense
             value={shippingAddress.phoneNumber}
-            onChangeText={value => { 
-              if (!value || validator.isInt(value)) handleChanage("phoneNumber", value) }}
+            onChangeText={value => {
+              if (!value || validator.isInt(value)) handleChanage("phoneNumber", value)
+            }}
             error={err.phoneNumber}
             returnKeyLabel="next"
             keyboardType="phone-pad"
             textContentType="telephoneNumber"
             maxLength={10}
-            />
-            <HelperText type="error" visible={err.phoneNumber}>
-              {err.phoneNumber}
-            </HelperText>
+          />
+          <HelperText type="error" visible={err.phoneNumber}>
+            {err.phoneNumber}
+          </HelperText>
         </InputView>
 
         <InputView>
@@ -98,10 +101,10 @@ export default function ShippingAddress({err, setErr}) {
             returnKeyLabel="next"
             keyboardType="default"
             textContentType="streetAddressLine1"
-            />
-            <HelperText type="error" visible={err.address1}>
-              {err.address1}
-            </HelperText>
+          />
+          <HelperText type="error" visible={err.address1}>
+            {err.address1}
+          </HelperText>
         </InputView>
 
         <InputView>
@@ -117,10 +120,10 @@ export default function ShippingAddress({err, setErr}) {
             returnKeyLabel="next"
             keyboardType="default"
             textContentType="streetAddressLine2"
-            />
-            <HelperText type="error" visible={err.address2}>
-              {err.address2}
-            </HelperText>
+          />
+          <HelperText type="error" visible={err.address2}>
+            {err.address2}
+          </HelperText>
         </InputView>
 
         <Row>
@@ -138,10 +141,10 @@ export default function ShippingAddress({err, setErr}) {
               returnKeyLabel="next"
               keyboardType="default"
               textContentType="addressCity"
-              />
-              <HelperText type="error" visible={err.city}>
-                {err.city}
-              </HelperText>
+            />
+            <HelperText type="error" visible={err.city}>
+              {err.city}
+            </HelperText>
           </InputView>
 
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>
@@ -158,10 +161,10 @@ export default function ShippingAddress({err, setErr}) {
               returnKeyLabel="next"
               keyboardType="default"
               textContentType="postalCode"
-              />
-              <HelperText type="error" visible={err.postalCode}>
-                {err.postalCode}
-              </HelperText>
+            />
+            <HelperText type="error" visible={err.postalCode}>
+              {err.postalCode}
+            </HelperText>
           </InputView>
         </Row>
 
@@ -180,10 +183,10 @@ export default function ShippingAddress({err, setErr}) {
               returnKeyLabel="next"
               keyboardType="default"
               textContentType="addressState"
-              />
-              <HelperText type="error" visible={err.Province}>
-                {err.Province}
-              </HelperText>
+            />
+            <HelperText type="error" visible={err.Province}>
+              {err.Province}
+            </HelperText>
           </InputView>
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>
             <TextInput
@@ -199,10 +202,10 @@ export default function ShippingAddress({err, setErr}) {
               returnKeyLabel="next"
               keyboardType="default"
               textContentType="countryName"
-              />
-              <HelperText type="error" visible={err.country}>
-                {err.country}
-              </HelperText>
+            />
+            <HelperText type="error" visible={err.country}>
+              {err.country}
+            </HelperText>
           </InputView>
         </Row>
 
@@ -220,10 +223,10 @@ export default function ShippingAddress({err, setErr}) {
             error={err.message}
             multiline={true}
             numberOfLines={2}
-            />
-            <HelperText type="error" visible={err.message}>
-              {err.message}
-            </HelperText>
+          />
+          <HelperText type="error" visible={err.message}>
+            {err.message}
+          </HelperText>
         </InputView>
 
       </View>
