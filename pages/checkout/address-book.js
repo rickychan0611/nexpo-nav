@@ -14,98 +14,38 @@ import Loader from "../../components/Loader";
 import { route } from "next/dist/next-server/server/router";
 
 export default function shipping() {
-  const { navigate, getParam } = useRouting();
+  const { navigate, getParam, goBack } = useRouting();
 
   const userId = getParam('userId')
-  const type = getParam('type')
+  const addressType = getParam('type')
 
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
-  const { shippingAddress, setShippingAddress } = useContext(Context);
 
   const {
-    total, user, setSelected,
-    newOrderProductList, setNewOrderProductList,
-    primaryeemPoint, setprimaryeemPoint,
-    deliveryMsg, setDeliveryMsg
+    user, addressBook
   } = useContext(Context);
 
-  const shippingDefault = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
+   const updateAddress = (addressType, address) => {
+    const key = `addressType.${addressType}`
+    db.collection("users").doc(user.email).update({
+      [key] : address
+    })
+    goBack()
   }
-
-  const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
-    
+
   }
-
-  useEffect(() => {
-    setNewOrderProductList(prev => prev)
-  }, [newOrderProductList])
-
-  useEffect(() => {
-    setLoading(false)
-    if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
-  }, [user])
 
   return (
     <>
       {loading && <Loader />}
       <ContextArea>
+        <IconButton icon="arrow-left" onPress={() => { goBack() }} />
         <ScrollView>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              // width: Platform.OS === "web" ? "100vw" : "100%",
-            }}>
-
-            <Headline
-              style={{
-                padding: 25,
-                paddingBottom: 0,
-                fontWeight: "bold",
-                color: theme.black
-              }}
-            >
-              Checkout</Headline>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-              flexWrap: "nowrap",
-              width: Platform.OS === "web" ? "100vw" : "100%",
-              maxWidth: 500,
-              marginBottom: 10
-            }}>
-            <IconButton icon="circle" size={14} color={theme.green} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-          </View>
-          <Divider />
-
-          <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
-            Choose an address:
+          <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
+            Choose your {addressType} address:
           </Title>
           <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
             <Edit theme={theme}
@@ -113,48 +53,52 @@ export default function shipping() {
                 navigate({
                   routeName: "checkout/new-address",
                   params: {
-                    type, 
+                    type,
                     userId
                   }
                 })
               }}>{"+ Add a New Address"}</Edit>
           </View>
-          <Surface style={{ marginHorizontal: 20, borderWidth: 1, borderColor: theme.lightGrey }}>
-            <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
-              <Text style={{ fontWeight: 600, fontSize: 15 }}>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
-              <Text>{shippingAddress.address1}</Text>
-              <Text>{shippingAddress.address2}</Text>
+
+
+          {addressBook && addressBook.map((address) => {
+            return (
+              <Surface style={{
+                elevation: 4,
+                marginHorizontal: 20,
+                marginBottom: 20,
+                borderWidth: 1,
+                borderColor: theme.lightGrey
+              }}>
+                <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
+                  {/* <Text style={{ fontWeight: "bold", fontSize: 15 }}>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
+                  <Text>{address.address1}</Text>
+                  {/* {shippingAddress.address2 ?  <Text>{shippingAddress.address2}</Text> : null}
               <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
               <Text>{shippingAddress.country}</Text>
-              <Text>{shippingAddress.phoneNumber}</Text>
-              <Text> </Text>
-              <Button mode="contained" color={theme.primary} dark uppercase={false}
-                labelStyle={{ fontSize: 14, fontWeight: 600 }}
-                style={{ marginBottom: 10 }}
-                onPress={() => {
-                  navigate({
-                    routeName: "addressBook",
-                    params: {
-                      type: "billing",
-                      userId: user.email
-                    }
-                  })
-                }}>Select</Button>
-              <View style={{
-                flexDirection: "row",
-                flexWrap: "nowrap",
-                justifyContent: "center",
-              }}>
-                <Edit theme={theme}>Edit</Edit>
-                <Text>{"     |     "}</Text>
-                <Edit theme={theme} disabled>Delete</Edit>
-              </View>
-            </View>
-          </Surface>
+              <Text>{shippingAddress.phoneNumber}</Text> */}
+                  <Text> </Text>
+                  <Button mode="contained" color={theme.primary} dark uppercase={false}
+                    labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                    style={{ marginBottom: 10 }}
+                    onPress={() => {
+                      updateAddress(addressType, address.address1)
+                    }}>Select</Button>
+                  <View style={{
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    justifyContent: "center",
+                  }}>
+                    <Edit theme={theme}>Edit</Edit>
+                    <Text>{"     |     "}</Text>
+                    <Edit theme={theme} disabled>Delete</Edit>
+                  </View>
+                </View>
+              </Surface>
+            )
+          })}
 
-
-
-          <View style={{ height: 100 }}></View>
+          <View style={{ height: 150 }}></View>
         </ScrollView>
       </ContextArea>
 

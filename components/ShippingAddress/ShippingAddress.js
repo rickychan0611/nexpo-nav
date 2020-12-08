@@ -6,13 +6,80 @@ import { Divider, TextInput, Title, HelperText, Button } from "react-native-pape
 import { Context } from "../../context/Context";
 import validator from 'validator';
 
-export default function ShippingAddress({ err, setErr }) {
+export default function ShippingAddress() {
+  const shippingDefault = {
+    address1: "",
+    address2: "",
+    city: "",
+    province: "",
+    country: "",
+    postalCode: "",
+    phoneNumber: ""
+  }
+
   const { theme } = useContext(ThemeContext);
   const { shippingAddress, setShippingAddress } = useContext(Context);
+  const [newAddress, setNewAddress] = useState(shippingDefault);
 
+
+  const [err, setErr] = useState(shippingDefault);
   const handleChanage = (name, value) => {
     setShippingAddress(prev => {
       return { ...prev, [name]: value }
+    })
+  }
+
+
+  const onSubmit = () => {
+    setErr(shippingDefault)
+
+    // if (!newOrderProductList[0]) {
+    //   alert("Your shopping Cart is empty. Please add something : )")
+    //   return
+    // }
+
+    let validate = new Promise((resolve, reject) => {
+
+      if (!newAddress.firstName) {
+        setErr(prev => ({ ...prev, firstName: "Required" }))
+        reject()
+      }
+      if (!newAddress.lastName) {
+        setErr(prev => ({ ...prev, lastName: "Required" }))
+        reject()
+      }
+      if (!newAddress.address1) {
+        setErr(prev => ({ ...prev, address1: "Required" }))
+        reject()
+      }
+      if (!newAddress.city) {
+        setErr(prev => ({ ...prev, city: "Required" }))
+        reject()
+      }
+      if (!newAddress.province) {
+        setErr(prev => ({ ...prev, province: "Required" }))
+        reject()
+      }
+      if (!newAddress.country) {
+        setErr(prev => ({ ...prev, country: "Required" }))
+        reject()
+      }
+      if (!newAddress.postalCode) {
+        setErr(prev => ({ ...prev, postalCode: "Required" }))
+        reject()
+      }
+      if (!newAddress.phoneNumber) {
+        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
+        reject()
+      }
+      else resolve()
+    })
+
+    validate.then(() => {
+
+
+      // setSelected("confirmOrder")
+      setEditAddress(false)
     })
   }
 
@@ -20,7 +87,7 @@ export default function ShippingAddress({ err, setErr }) {
     <>
       <View style={{ padding: 25 }}>
 
-        <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
+        <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
           Edit Your Address:
           </Title>
 
@@ -33,7 +100,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.firstName}
+              value={newAddress.firstName}
               onChangeText={value => { handleChanage("firstName", value) }}
               error={err.firstName}
               returnKeyLabel="next"
@@ -53,7 +120,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.lastName}
+              value={newAddress.lastName}
               onChangeText={value => { handleChanage("lastName", value) }}
               error={err.lastName}
               returnKeyLabel="next"
@@ -74,7 +141,7 @@ export default function ShippingAddress({ err, setErr }) {
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={shippingAddress.phoneNumber}
+            value={newAddress.phoneNumber}
             onChangeText={value => {
               if (!value || validator.isInt(value)) handleChanage("phoneNumber", value)
             }}
@@ -96,7 +163,7 @@ export default function ShippingAddress({ err, setErr }) {
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={shippingAddress.address1}
+            value={newAddress.address1}
             onChangeText={value => { handleChanage("address1", value) }}
             error={err.address1}
             returnKeyLabel="next"
@@ -115,7 +182,7 @@ export default function ShippingAddress({ err, setErr }) {
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={shippingAddress.address2}
+            value={newAddress.address2}
             onChangeText={value => { handleChanage("address2", value) }}
             error={err.address2}
             returnKeyLabel="next"
@@ -136,7 +203,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.city}
+              value={newAddress.city}
               onChangeText={value => { handleChanage("city", value) }}
               error={err.city}
               returnKeyLabel="next"
@@ -156,7 +223,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.postalCode}
+              value={newAddress.postalCode}
               onChangeText={value => { handleChanage("postalCode", value) }}
               error={err.postalCode}
               returnKeyLabel="next"
@@ -178,7 +245,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.province}
+              value={newAddress.province}
               onChangeText={value => { handleChanage("province", value) }}
               error={err.Province}
               returnKeyLabel="next"
@@ -197,7 +264,7 @@ export default function ShippingAddress({ err, setErr }) {
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={shippingAddress.country}
+              value={newAddress.country}
               onChangeText={value => { handleChanage("country", value) }}
               error={err.country}
               returnKeyLabel="next"
@@ -219,7 +286,7 @@ export default function ShippingAddress({ err, setErr }) {
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={shippingAddress.message}
+            value={newAddress.message}
             onChangeText={value => { handleChanage("message", value) }}
             error={err.message}
             multiline={true}
@@ -233,12 +300,13 @@ export default function ShippingAddress({ err, setErr }) {
         <Row >
           <>
             <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
-              labelStyle={{ fontSize: 14, fontWeight: 600 }}
+              labelStyle={{ fontSize: 14, fontWeight: "bold" }}
               style={{ marginBottom: 10 }}>
               Cancel</Button>
             <Button mode="contained" color={theme.primary} dark uppercase={false}
-              labelStyle={{ fontSize: 14, fontWeight: 600 }}
-              style={{ marginBottom: 10 }}>
+              labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+              style={{ marginBottom: 10 }}
+              onPress={() => { onSubmit() }}>
               Save</Button>
           </>
         </Row>

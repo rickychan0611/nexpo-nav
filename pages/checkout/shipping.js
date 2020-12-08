@@ -14,17 +14,16 @@ import Loader from "../../components/Loader";
 import { route } from "next/dist/next-server/server/router";
 
 export default function shipping() {
-  const { navigate } = useRouting();
-  const [loading, setLoading] = useState(false);
+  const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
-  const { shippingAddress, setShippingAddress } = useContext(Context);
-
   const {
     total, user, setSelected,
-    newOrderProductList, setNewOrderProductList,
-    redeemPoint, setRedeemPoint,
-    deliveryMsg, setDeliveryMsg
+    addressBook, setAddressBook
   } = useContext(Context);
+
+  const [loading, setLoading] = useState(false);
+  const [billing, setBilling] = useState()
+  const [shipping, setShipping] = useState()
 
   const shippingDefault = {
     address1: "",
@@ -39,32 +38,32 @@ export default function shipping() {
   const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
-    navigate({routeName: "payment"})
+    navigate({ routeName: "payment" })
   }
 
   useEffect(() => {
-    setNewOrderProductList(prev => prev)
-  }, [newOrderProductList])
+    addressBook && addressBook.map((address) => {
+      console.log(user.addressType.billing)
+      console.log(address.address1)
+      if (user.addressType.billing === address.address1) {
+        setBilling(address)
+      }
+      if (user.addressType.shipping === address.address1) {
+        setShipping(address)
+      }
+    })
 
-  useEffect(() => {
-    setLoading(false)
-    if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
+    return () => {
+      setBilling()
+      setShipping()
     }
-  }, [user])
+  }, [addressBook])
 
   return (
     <>
-      {loading && <Loader />}
+      {/* {!billing && !shipping && <Loader />} */}
       <ContextArea>
+        <IconButton icon="arrow-left" onPress={() => { goBack() }} />
         <ScrollView>
           <View
             style={{
@@ -75,8 +74,7 @@ export default function shipping() {
 
             <Headline
               style={{
-                padding: 25,
-                paddingBottom: 0,
+                paddingBottom: 20,
                 fontWeight: "bold",
                 color: theme.black
               }}
@@ -100,47 +98,63 @@ export default function shipping() {
           </View>
           <Divider />
 
-          <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
-            Delivery Address:
-          </Title>
-          <View style={{ paddingHorizontal: 25 }}>
-            <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
-            <Text>{shippingAddress.address1}</Text>
-            <Text>{shippingAddress.address2}</Text>
-            <Text>{shippingAddress.city}, {shippingAddress.province}</Text>
-            <Text>{shippingAddress.postalCode}</Text>
-            <Text>{shippingAddress.phoneNumber}</Text>
-            <Text> </Text>
-            <Text style={{ paddingBottom: 20, color: theme.primary }}
-            onPress={()=>{
-              navigate({
-                routeName: "checkout/address-book",
-                params: {
-                  type: "billing",
-                  userId: user.uid
-                }
-              })
-            }}>Change</Text>
-          </View>
-            <Divider />
+          {!billing && !shipping ?
+            <Text>input form</Text> 
+            :
+            <>
+              <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
+                Delivery Address:
+              </Title>
 
-            <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
-            Billing Address:
-          </Title>
-          <View style={{ paddingHorizontal: 25 }}>
-            <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
-            <Text>{shippingAddress.address1}</Text>
-            <Text>{shippingAddress.address2}</Text>
-            <Text>{shippingAddress.city}, {shippingAddress.province}</Text>
-            <Text>{shippingAddress.postalCode}</Text>
-            <Text>{shippingAddress.phoneNumber}</Text>
-            <Text> </Text>
-            <Text style={{ paddingBottom: 20, color: theme.primary }}>Change</Text>
-          </View>
-            <Divider />
+              <View style={{ paddingHorizontal: 25 }}>
+                {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
+                <Text>{billing.address1}</Text>
+                {/* {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
+                <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
+                <Text>{shippingAddress.phoneNumber}</Text> */}
+                <Text style={{ paddingBottom: 20, color: theme.primary }}
+                  onPress={() => {
+                    navigate({
+                      routeName: "checkout/address-book",
+                      params: {
+                        type: "billing",
+                        userId: user.uid
+                      }
+                    })
+                  }}>Change</Text>
+              </View>
 
 
-          <View style={{ height: 100 }}></View>
+              <Divider />
+
+              <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
+                Billing Address:
+              </Title>
+              <View style={{ paddingHorizontal: 25 }}>
+                {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
+                <Text>{shipping.address1}</Text>
+                {/* {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
+                <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
+                <Text>{shippingAddress.phoneNumber}</Text> */}
+                <Text style={{ paddingBottom: 20, color: theme.primary }}
+                  onPress={() => {
+                    navigate({
+                      routeName: "checkout/address-book",
+                      params: {
+                        type: "shipping",
+                        userId: user.uid
+                      }
+                    })
+                  }}>Change</Text>
+              </View>
+              <Divider />
+            </>
+
+
+          }
+
+          <Text style={{ height: 240 }}>{" "}</Text>
+
         </ScrollView>
       </ContextArea>
 
@@ -175,7 +189,7 @@ const Content = styled.View`
   align-items: flex-start;
 `;
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;

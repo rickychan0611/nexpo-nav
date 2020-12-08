@@ -48,7 +48,7 @@ export default function payment() {
   useEffect(() => {
     setLoading(false)
     if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
+      db.collection('addressBook').where("userId", "==", user.email).get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             setShippingAddress(prev => ({ ...prev, ...doc.data() }))
@@ -99,7 +99,7 @@ export default function payment() {
           </View>
           <Divider />
 
-          <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
+          <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
             Select a pyament method:
           </Title>
           <View style={{ paddingHorizontal: 25 }}>
@@ -114,7 +114,7 @@ export default function payment() {
           </View>
             <Divider />
 
-            <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
+            <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
             Billing Address:
           </Title>
           <View style={{ paddingHorizontal: 25 }}>
@@ -165,7 +165,7 @@ const Content = styled.View`
   align-items: flex-start;
 `;
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;

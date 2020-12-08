@@ -44,38 +44,30 @@ const ContextProvider = ({ children }) => {
   const [newOrderId, setNewOrderId] = useState("");
   const [selectedOrder, setSelectedOrder] = useState();
   const [orders, setOrders] = useState([]);
-  const [shippingAddress, setShippingAddress] = useState(
-    {
-      address1: "",
-      address2: "",
-      city: "",
-      province: "BC",
-      country: "Canada",
-      postalCode: "",
-      phoneNumber: ""
-    });
+  const [addressBook, setAddressBook] = useState();
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
+
       if (user) {
         console.log("logged in", user.email);
-        db.collection("users").doc(user.email).get()
-          .then((doc) => {
-            setUser(doc.data());
-            setShippingAddress(
-              {
-                address1: doc.data().address1 || "",
-                address2: doc.data().address2 || "",
-                city: doc.data().city || "",
-                province: doc.data().province || "BC",
-                country: doc.data().country || "Canada",
-                postalCode: doc.data().postalCode || "",
-                phoneNumber: doc.data().phoneNumnber || ""
-              }
-            )
-          })
-          .catch((err) => console.log(err))
+
+        db.collection("users").doc(user.email).onSnapshot((doc)=>{
+          setUser(doc.data());
+
+          //convert addressBook to array
+          let addressBook = doc.data().addressBook
+          let tempArr = []
+          console.log(Object.keys(addressBook).length)
+          Object.keys(addressBook) && Object.keys(addressBook)[0] &&
+            Object.keys(addressBook).map((address, index) => {
+              tempArr.push(addressBook[index + 1])
+            })
+          setAddressBook(tempArr)
+          console.log(tempArr)
+        })
       }
+
       else console.log("Not logged in")
     })
   }, [])
@@ -143,11 +135,11 @@ const ContextProvider = ({ children }) => {
           error, setError,
           counter, setCounter,
           redeemPoint, setRedeemPoint,
-          shippingAddress, setShippingAddress,
           deliveryMsg, setDeliveryMsg,
           newOrderId, setNewOrderId,
           selectedOrder, setSelectedOrder,
-          orders, setOrders
+          orders, setOrders,
+          addressBook, setAddressBook
         }
       }
     >

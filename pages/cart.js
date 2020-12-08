@@ -43,56 +43,60 @@ export default function Cart() {
   const [err, setErr] = useState(shippingDefault);
 
   const onSubmit = () => {
-    setErr(shippingDefault)
 
     if (!newOrderProductList[0]) {
       alert("Your shopping Cart is empty. Please add something : )")
       return
     }
 
-    let validate = new Promise((resolve, reject) => {
-
-      if (!shippingAddress.firstName) {
-        setErr(prev => ({ ...prev, firstName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.lastName) {
-        setErr(prev => ({ ...prev, lastName: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.address1) {
-        setErr(prev => ({ ...prev, address1: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.city) {
-        setErr(prev => ({ ...prev, city: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.province) {
-        setErr(prev => ({ ...prev, province: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.country) {
-        setErr(prev => ({ ...prev, country: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.postalCode) {
-        setErr(prev => ({ ...prev, postalCode: "Required" }))
-        reject()
-      }
-      if (!shippingAddress.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
-      else resolve()
+    navigate({
+      routeName: "checkout/shipping",
     })
 
-    validate.then(() => {
-      setSelected("confirmOrder")
-      navigate({
-        routeName: "confirmOrder",
-      })   
-    })
+    // setErr(shippingDefault)
+    // let validate = new Promise((resolve, reject) => {
+
+    //   if (!shippingAddress.firstName) {
+    //     setErr(prev => ({ ...prev, firstName: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.lastName) {
+    //     setErr(prev => ({ ...prev, lastName: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.address1) {
+    //     setErr(prev => ({ ...prev, address1: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.city) {
+    //     setErr(prev => ({ ...prev, city: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.province) {
+    //     setErr(prev => ({ ...prev, province: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.country) {
+    //     setErr(prev => ({ ...prev, country: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.postalCode) {
+    //     setErr(prev => ({ ...prev, postalCode: "Required" }))
+    //     reject()
+    //   }
+    //   if (!shippingAddress.phoneNumber) {
+    //     setErr(prev => ({ ...prev, phoneNumber: "Required" }))
+    //     reject()
+    //   }
+    //   else resolve()
+    // })
+
+    // validate.then(() => {
+    //   setSelected("confirmOrder")
+    //   navigate({
+    //     routeName: "confirmOrder",
+    //   })   
+    // })
   }
 
   useEffect(() => {
@@ -102,7 +106,7 @@ export default function Cart() {
   useEffect(() => {
     setLoading(false)
     if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
+      db.collection('addressBook').where("userId", "==", user.uid).get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             setShippingAddress(prev => ({ ...prev, ...doc.data() }))
@@ -163,26 +167,26 @@ export default function Cart() {
           </View>
           <Divider />
 
-          <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
+          <TotalContainer style={{ paddingTop: 20, paddingRight: 30 }}>
             <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
+          <TotalContainer style={{ paddingRight: 30 }}>
             <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
+          <TotalContainer style={{ paddingRight: 30 }}>
             <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
             <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
           </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
+          <TotalContainer style={{ paddingBottom: 20, paddingRight: 30 }}>
             <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black", fontWeight: 500, fontSize: 18 }}>${(+total * 1.15).toFixed(2)}</Text></Price>
+            <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>${(+total * 1.15).toFixed(2)}</Text></Price>
           </TotalContainer>
 
           <Divider />
 
-          <ShippingAddress err={err} setErr={setErr} />
+          {/* <ShippingAddress err={err} setErr={setErr} /> */}
 
           <View style={{ height: 100 }}></View>
 
@@ -220,7 +224,7 @@ const Content = styled.View`
   align-items: flex-start;
 `;
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;

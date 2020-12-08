@@ -27,10 +27,10 @@ export default function ImageSwiper({ images, uploading }) {
             prevPos: 'left',
             nextPos: 'right',
             nextTitle: '>',
-            nextTitleStyle: { color: 'black', fontSize: 24, fontWeight: '700' },
+            nextTitleStyle: { color: 'black', fontSize: 24, fontWeight: "bold" },
             PrevComponent: ({ onPress }) => (
               <TouchableOpacity onPress={onPress}>
-                <Text style={{ color: 'black', fontSize: 24, fontWeight: '700' }}>
+                <Text style={{ color: 'black', fontSize: 24, fontWeight: "bold" }}>
                   {'<'}
                 </Text>
               </TouchableOpacity>

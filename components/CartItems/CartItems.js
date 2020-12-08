@@ -48,7 +48,7 @@ const ItemsContainer = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 500px;
-  padding: 15px 40px 15px 25px;
+  padding: 15px 30px 15px 25px;
 `;
 
 const Qty = styled.View`
@@ -62,7 +62,7 @@ const Content = styled.View`
   align-items: flex-start;
 `;
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;

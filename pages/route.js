@@ -290,7 +290,7 @@ const RouteContent = styled.View`
 `;
 
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;

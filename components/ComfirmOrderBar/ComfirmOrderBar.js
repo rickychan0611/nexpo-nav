@@ -59,7 +59,7 @@ export default function ComfirmOrderBar() {
       //shipping address exist / update. 
       if (shippingAddress.uid) {
         setLoading(true)
-        const shippingAddressRef = db.collection("shippingAddresses").doc(shippingAddress.uid)
+        const shippingAddressRef = db.collection("addressBook").doc(shippingAddress.uid)
         shippingAddressRef.update({
           ...shippingAddress,
           createAt: timestamp,
@@ -80,9 +80,9 @@ export default function ComfirmOrderBar() {
       }
 
       //create new shipping address. 
-      else if (!shippingAddresses.uid) {
+      else if (!addressBook.uid) {
         setLoading(true)
-        const shippingAddressRef = db.collection("shippingAddresses").doc()
+        const shippingAddressRef = db.collection("addressBook").doc()
         shippingAddressRef.add({
           ...shippingAddress,
           uid: shippingAddressRef.id,

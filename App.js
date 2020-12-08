@@ -70,6 +70,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
@@ -86,8 +87,7 @@ function App() {
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
-          <Stack.Screen name="shipping" component={shipping} options={options("Checkout - Shipping")} />
-          <Stack.Screen name="address-book" component={addressBook} options={options("Address Book")} />
+          <Stack.Screen name="checkout/address-book" component={addressBook} options={options("Address Book")} />
           <Stack.Screen name="payment" component={payment} options={options("Choose a Payment")} />
           <Stack.Screen name="new-address" component={newAddress} options={options("Add a New Address")} />
         </Stack.Navigator>

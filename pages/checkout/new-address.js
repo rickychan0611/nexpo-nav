@@ -97,7 +97,7 @@ export default function newAddress() {
   useEffect(() => {
     setLoading(false)
     if (user) {
-      db.collection('shippingAddresses').where("userId", "==", user.email).get()
+      db.collection('addressBook').where("userId", "==", user.email).get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             setShippingAddress(prev => ({ ...prev, ...doc.data() }))
@@ -183,7 +183,7 @@ const Content = styled.View`
   align-items: flex-start;
 `;
 const Price = styled.View`
-  flex: 2;
+  flex: 6;
   justify-content: center;
   align-items: flex-end;
 `;
