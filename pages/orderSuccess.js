@@ -95,7 +95,7 @@ export default function orderSuccess() {
             color="white"
               style={{
                 marginTop: 60,
-                backgroundColor: theme.red,
+                backgroundColor: theme.primary,
                 borderWidth: 1,
                 borderRadius: 25,
                 // width: 100,

@@ -6,6 +6,7 @@ export const ThemeContext = createContext();
 const ThemeProvider = ({ children }) => {
 
   const red = "#ff5c5c"
+  const primary = red
   const lightGrey = "#f0f0f0"
   const darkGrey = "#636363"
   const lightYellow = "#fffff2"
@@ -22,7 +23,7 @@ const ThemeProvider = ({ children }) => {
 
     titleColor:darkGrey,
 
-    red, lightGrey, darkGrey, lightYellow, green, black
+    red, lightGrey, darkGrey, lightYellow, green, black, primary
 
   }
 

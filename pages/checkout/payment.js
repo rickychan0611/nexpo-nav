@@ -11,9 +11,8 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../../components/BottomBar";
 import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
-import { route } from "next/dist/next-server/server/router";
 
-export default function shipping() {
+export default function payment() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
@@ -101,7 +100,7 @@ export default function shipping() {
           <Divider />
 
           <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 10 }}>
-            Delivery Address:
+            Select a pyament method:
           </Title>
           <View style={{ paddingHorizontal: 25 }}>
             <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
@@ -111,16 +110,7 @@ export default function shipping() {
             <Text>{shippingAddress.postalCode}</Text>
             <Text>{shippingAddress.phoneNumber}</Text>
             <Text> </Text>
-            <Text style={{ paddingBottom: 20, color: theme.primary }}
-            onPress={()=>{
-              navigate({
-                routeName: "checkout/address-book",
-                params: {
-                  type: "billing",
-                  userId: user.uid
-                }
-              })
-            }}>Change</Text>
+            <Text style={{ paddingBottom: 20 }}>Change</Text>
           </View>
             <Divider />
 
@@ -135,7 +125,7 @@ export default function shipping() {
             <Text>{shippingAddress.postalCode}</Text>
             <Text>{shippingAddress.phoneNumber}</Text>
             <Text> </Text>
-            <Text style={{ paddingBottom: 20, color: theme.primary }}>Change</Text>
+            <Text style={{ paddingBottom: 20 }}>Change</Text>
           </View>
             <Divider />
 

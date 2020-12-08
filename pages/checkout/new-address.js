@@ -1,23 +1,18 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
-import { Context } from "../context/Context";
-import { ThemeContext } from "../context/ThemeContext";
-import { Divider, TextInput, Headline } from "react-native-paper";
-import { db } from "../firebase";
+import { Context } from "../../context/Context";
+import { ThemeContext } from "../../context/ThemeContext";
+import { Divider, TextInput, Headline, IconButton } from "react-native-paper";
+import { db } from "../../firebase";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
-import emptyCart from "../public/emptyCart.jpg"
 
-import BottomBar from "../components/BottomBar";
-import ProductCard from "../components/ProductCard";
-import CartCheckoutBar from "../components/CartCheckoutBar";
-import CartItems from "../components/CartItems";
-import ShippingAddress from "../components/ShippingAddress";
-import { forEach } from "react-native-elevation";
-import Loader from "../components/Loader";
+import BottomBar from "../../components/BottomBar";
+import ShippingAddress from "../../components/ShippingAddress";
+import Loader from "../../components/Loader";
 
-export default function Cart() {
+export default function newAddress() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
@@ -119,77 +114,45 @@ export default function Cart() {
       {loading && <Loader />}
       <ContextArea>
         <ScrollView>
-          <Headline
+          <View
             style={{
-              padding: 25,
-              fontWeight: "bold",
-              color: theme.primary
-            }}
-          >
-            Your order</Headline>
+              justifyContent: "center",
+              alignItems: "center",
+              // width: Platform.OS === "web" ? "100vw" : "100%",
+            }}>
 
-          <Divider />
-
-          {newOrderProductList[0] ?
-            <CartItems />
-            :
-            <>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Image
-                  style={{
-                    width: 200,
-                    height: 200,
-                    resizeMode: "cover"
-                  }}
-                  source={emptyCart} />
-                <Title style={{ textAlign: "center" }}>Your shopping cart is empty!</Title>
-              </View>
-              <Divider />
-            </>
-          }
-
-          <View style={{ padding: 25 }}>
-            <Text>Your points: 10000</Text>
-            <TextInput
-              label="Redeem your point"
-              placeholder='Enter the number of points that you want to redeem'
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              value={redeemPoint}
-              onChangeText={value => { handleChanage(value) }}
-            // error={catErrMsg.englishName}
-            />
+            <Headline
+              style={{
+                padding: 25,
+                paddingBottom: 0,
+                fontWeight: "bold",
+                color: theme.black
+              }}
+            >
+              Checkout</Headline>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "nowrap",
+              width: Platform.OS === "web" ? "100vw" : "100%",
+              maxWidth: 500,
+              marginBottom: 10
+            }}>
+            <IconButton icon="circle" size={14} color={theme.green} />
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
           </View>
           <Divider />
 
-          <TotalContainer style={{ paddingTop: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 40 }}>
-            <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20, paddingRight: 40 }}>
-            <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black", fontWeight: 500, fontSize: 18 }}>${(+total * 1.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-
-          <Divider />
-
-          <ShippingAddress err={err} setErr={setErr} />
+          <ShippingAddress err={err} setErr={setErr} onSubmit={onSubmit}/>
 
           <View style={{ height: 100 }}></View>
-
         </ScrollView>
       </ContextArea>
-
-      <CartCheckoutBar onSubmit={onSubmit} />
 
       <BottomBar style={{
         shadowColor: "#000",

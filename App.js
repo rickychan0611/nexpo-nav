@@ -18,7 +18,9 @@ import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import order_details from "./pages/admin/order-details";
 import shipping from "./pages/checkout/shipping";
-import createProduct from "./pages/admin/create-product";
+import addressBook from "./pages/checkout/address-book";
+import payment from "./pages/checkout/payment";
+import newAddress from "./pages/checkout/new-address";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
 import signUp from "./pages/signUp";
@@ -85,6 +87,9 @@ function App() {
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />
           <Stack.Screen name="shipping" component={shipping} options={options("Checkout - Shipping")} />
+          <Stack.Screen name="address-book" component={addressBook} options={options("Address Book")} />
+          <Stack.Screen name="payment" component={payment} options={options("Choose a Payment")} />
+          <Stack.Screen name="new-address" component={newAddress} options={options("Add a New Address")} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

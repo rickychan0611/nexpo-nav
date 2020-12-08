@@ -63,7 +63,7 @@ export default function login() {
             contained
             color="white"
               style={{
-                backgroundColor: theme.red,
+                backgroundColor: theme.primary,
                 borderWidth: 1,
                 borderRadius: 25,
                 width: Platform.OS === "web" ? "90vw" : vw - 60,

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { View, Platform, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 import { ThemeContext } from "../../context/ThemeContext";
-import { Divider, TextInput, Title, HelperText } from "react-native-paper";
+import { Divider, TextInput, Title, HelperText, Button } from "react-native-paper";
 import { Context } from "../../context/Context";
 import validator from 'validator';
 
@@ -19,8 +19,9 @@ export default function ShippingAddress({ err, setErr }) {
   return (
     <>
       <View style={{ padding: 25 }}>
-        <Title style={{ color: "black", fontWeight: 700, fontSize: 18, marginBottom: 20 }}>
-          Billing Address:
+
+        <Title style={{ color: "black", fontWeight: 700, fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
+          Edit Your Address:
           </Title>
 
         <Row>
@@ -211,7 +212,7 @@ export default function ShippingAddress({ err, setErr }) {
 
         <Divider style={{ marginBottom: 20 }} />
 
-        <InputView>
+        {/* <InputView>
           <TextInput
             label="Note for delivery"
             placeholder='Leave you message'
@@ -227,8 +228,20 @@ export default function ShippingAddress({ err, setErr }) {
           <HelperText type="error" visible={err.message}>
             {err.message}
           </HelperText>
-        </InputView>
+        </InputView> */}
 
+        <Row >
+          <>
+            <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
+              labelStyle={{ fontSize: 14, fontWeight: 600 }}
+              style={{ marginBottom: 10 }}>
+              Cancel</Button>
+            <Button mode="contained" color={theme.primary} dark uppercase={false}
+              labelStyle={{ fontSize: 14, fontWeight: 600 }}
+              style={{ marginBottom: 10 }}>
+              Save</Button>
+          </>
+        </Row>
       </View>
     </>
   )

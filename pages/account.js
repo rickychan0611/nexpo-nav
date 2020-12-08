@@ -119,7 +119,7 @@ export default function account() {
             style={{
               padding: 25,
               fontWeight: "bold",
-              color: theme.red,
+              color: theme.primary,
               backgroundColor: theme.lightGrey
             }}
           >
@@ -131,7 +131,7 @@ export default function account() {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-              <ActivityIndicator color={theme.red} size="large" />
+              <ActivityIndicator color={theme.primary} size="large" />
             </View> :
             <>
               {orders && orders[0] && orders.map((item) => {

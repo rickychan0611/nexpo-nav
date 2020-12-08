@@ -20,10 +20,10 @@ export default function ShippingNextBtn({ onSubmit }) {
         onSubmit()
       }}>
         <Bar theme={theme}>
-          <IconButton icon="cart" color="white"></IconButton>
           <Total>
-            Check out
+            Next
           </Total>
+          <IconButton icon="chevron-right" color="white"></IconButton>
         </Bar>
       </Wrapper>
     </>

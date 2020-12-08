@@ -13,7 +13,6 @@ import { Marker } from '@react-google-maps/api';
 import Map from "../components/Map";
 import { db} from "../firebase";
 
-
 function Route() {
   const { navigate } = useRouting();
   const [wayPointIds, setWayPointIds] = useState()
