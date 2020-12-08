@@ -38,6 +38,14 @@ export default function shipping() {
 
   }
 
+  useEffect(()=>{
+    if (userId === user.uid && addressType === "billing" || addressType === "shipping") {
+      null
+    }
+    else navigate({routeName: "home"})
+
+  },[userId, addressType])
+
   return (
     <>
       {loading && <Loader />}
@@ -59,7 +67,6 @@ export default function shipping() {
                 })
               }}>{"+ Add a New Address"}</Edit>
           </View>
-
 
           {addressBook && addressBook.map((address) => {
             return (

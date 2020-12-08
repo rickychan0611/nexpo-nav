@@ -9,7 +9,7 @@ import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 
 import BottomBar from "../../components/BottomBar";
-import ShippingAddress from "../../components/ShippingAddress";
+import AddressForm from "../../components/AddressForm";
 import Loader from "../../components/Loader";
 
 export default function newAddress() {
@@ -148,7 +148,7 @@ export default function newAddress() {
           </View>
           <Divider />
 
-          <ShippingAddress err={err} setErr={setErr} onSubmit={onSubmit}/>
+          <AddressForm err={err} setErr={setErr} onSubmit={onSubmit}/>
 
           <View style={{ height: 100 }}></View>
         </ScrollView>

@@ -5,8 +5,9 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, TextInput, Title, HelperText, Button } from "react-native-paper";
 import { Context } from "../../context/Context";
 import validator from 'validator';
+import { db } from "../../firebase";
 
-export default function ShippingAddress() {
+export default function AddressForm({ type, isNewShipping }) {
   const shippingDefault = {
     address1: "",
     address2: "",
@@ -18,13 +19,13 @@ export default function ShippingAddress() {
   }
 
   const { theme } = useContext(ThemeContext);
-  const { shippingAddress, setShippingAddress } = useContext(Context);
+  const { user, shippingAddress, setShippingAddress } = useContext(Context);
   const [newAddress, setNewAddress] = useState(shippingDefault);
 
 
   const [err, setErr] = useState(shippingDefault);
   const handleChanage = (name, value) => {
-    setShippingAddress(prev => {
+    setNewAddress(prev => {
       return { ...prev, [name]: value }
     })
   }
@@ -76,10 +77,15 @@ export default function ShippingAddress() {
     })
 
     validate.then(() => {
-
-
-      // setSelected("confirmOrder")
-      setEditAddress(false)
+      if (isNewShipping) {
+        // setShippingAddress(newAddress)
+        db.collection("users").doc(user.email).update({
+          "addressBook.1" : newAddress,
+          "addressType.shipping" : newAddress.address1,
+          createAt: new Date(),
+          active: true
+        })
+      }
     })
   }
 
@@ -88,7 +94,7 @@ export default function ShippingAddress() {
       <View style={{ padding: 25 }}>
 
         <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
-          Edit Your Address:
+          Enter your {type} address:
           </Title>
 
         <Row>
@@ -277,39 +283,45 @@ export default function ShippingAddress() {
           </InputView>
         </Row>
 
+        {/* 
         <Divider style={{ marginBottom: 20 }} />
-
-        {/* <InputView>
+        <InputView>
           <TextInput
-            label="Note for delivery"
-            placeholder='Leave you message'
-            theme={{ colors: { primary: "grey" } }}
-            mode="outlined"
-            dense
-            value={newAddress.message}
-            onChangeText={value => { handleChanage("message", value) }}
-            error={err.message}
-            multiline={true}
-            numberOfLines={2}
+          label="Note for delivery"
+          placeholder='Leave you message'
+          theme={{ colors: { primary: "grey" } }}
+          mode="outlined"
+          dense
+          value={newAddress.message}
+          onChangeText={value => { handleChanage("message", value) }}
+          error={err.message}
+          multiline={true}
+          numberOfLines={2}
           />
           <HelperText type="error" visible={err.message}>
-            {err.message}
+          {err.message}
           </HelperText>
         </InputView> */}
 
-        <Row >
-          <>
-            <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
-              labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-              style={{ marginBottom: 10 }}>
-              Cancel</Button>
-            <Button mode="contained" color={theme.primary} dark uppercase={false}
-              labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-              style={{ marginBottom: 10 }}
-              onPress={() => { onSubmit() }}>
-              Save</Button>
-          </>
-        </Row>
+        <>
+          <Divider style={{ marginBottom: 20 }} />
+          <Row>
+            <>
+              {!isNewShipping ?
+                <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
+                  labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                  style={{ marginBottom: 10 }}>
+                  Cancel</Button>
+                : <View style={{flex: 1}}></View>
+              }
+              <Button mode="contained" color={theme.primary} dark uppercase={false}
+                labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                style={{ marginBottom: 10 }}
+                onPress={() => { onSubmit() }}>
+                Save</Button>
+            </>
+          </Row>
+        </>
       </View>
     </>
   )

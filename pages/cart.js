@@ -13,7 +13,7 @@ import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
 import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
-import ShippingAddress from "../components/ShippingAddress";
+import AddressForm from "../components/AddressForm";
 import { forEach } from "react-native-elevation";
 import Loader from "../components/Loader";
 
@@ -186,7 +186,7 @@ export default function Cart() {
 
           <Divider />
 
-          {/* <ShippingAddress err={err} setErr={setErr} /> */}
+          {/* <AddressForm err={err} setErr={setErr} /> */}
 
           <View style={{ height: 100 }}></View>
 

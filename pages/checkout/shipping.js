@@ -11,7 +11,8 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../../components/BottomBar";
 import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
-import { route } from "next/dist/next-server/server/router";
+import AddressForm from "../../components/AddressForm";
+import Row from "../../components/Row";
 
 export default function shipping() {
   const { navigate, goBack } = useRouting();
@@ -98,34 +99,19 @@ export default function shipping() {
           </View>
           <Divider />
 
+          <>
+            <AddressForm type="shipping" isNewShipping/>
+            <Divider />
+          </>
+
           {!billing && !shipping ?
-            <Text>input form</Text> 
+            <>
+              <AddressForm type="shipping" />
+              <Divider />
+            </>
             :
             <>
-              <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-                Delivery Address:
-              </Title>
-
-              <View style={{ paddingHorizontal: 25 }}>
-                {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
-                <Text>{billing.address1}</Text>
-                {/* {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
-                <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
-                <Text>{shippingAddress.phoneNumber}</Text> */}
-                <Text style={{ paddingBottom: 20, color: theme.primary }}
-                  onPress={() => {
-                    navigate({
-                      routeName: "checkout/address-book",
-                      params: {
-                        type: "billing",
-                        userId: user.uid
-                      }
-                    })
-                  }}>Change</Text>
-              </View>
-
-
-              <Divider />
+             
 
               <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
                 Billing Address:
@@ -141,7 +127,7 @@ export default function shipping() {
                     navigate({
                       routeName: "checkout/address-book",
                       params: {
-                        type: "shipping",
+                        type: "billing",
                         userId: user.uid
                       }
                     })
@@ -158,7 +144,7 @@ export default function shipping() {
         </ScrollView>
       </ContextArea>
 
-      <ShippingNextBtn onSubmit={onSubmit} />
+      {shipping && <ShippingNextBtn onSubmit={onSubmit} />}
 
       <BottomBar style={{
         shadowColor: "#000",

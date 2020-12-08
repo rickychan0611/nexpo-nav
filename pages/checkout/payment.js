@@ -16,7 +16,7 @@ export default function payment() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
-  const { shippingAddress, setShippingAddress } = useContext(Context);
+  const { shippingAddress, setAddressForm } = useContext(Context);
 
   const {
     total, user, setSelected,
