@@ -32,23 +32,25 @@ export default function addressBook() {
 
   const updateAddress = (addressType, address) => {
     const key = `addressType.${addressType}`
+    console.log("key:" + key)
     db.collection("users").doc(user.email).update({
       [key]: address
     })
-    goBack()
   }
 
-  const onSubmit = () => {
-
+  const deleteAddress = (address, index) => {
+    db.collection("users").doc(user.email).update({
+      [key]: address
+    })
   }
 
-  useEffect(() => {
-    if (userId === user.uid && addressType === "billing" || addressType === "shipping") {
-      null
-    }
-    else navigate({ routeName: "home" })
+  // useEffect(() => {
+  //   if (userId === user.uid && addressType === "billing" || addressType === "shipping") {
+  //     null
+  //   }
+  //   else navigate({ routeName: "home" })
 
-  }, [userId, addressType])
+  // }, [userId, addressType])
 
   return (
     <>
@@ -74,21 +76,29 @@ export default function addressBook() {
 
               <Surface style={{
                 elevation: onEdit || onAddNew ? 0 : 4,
-                marginHorizontal: onEdit || onAddNew ? 0 :20,
-                marginBottom: onEdit || onAddNew ? 0 :20,
-                borderWidth: onEdit || onAddNew ? 0 :1,
+                marginHorizontal: onEdit || onAddNew ? 0 : 20,
+                marginBottom: onEdit || onAddNew ? 0 : 20,
+                borderWidth: onEdit || onAddNew ? 0 : 1,
                 borderColor: theme.lightGrey
               }}>
 
                 {onEdit || onAddNew ?
+                  <>
+                    {onEdit && address === editAddress &&
+                      <AddressForm
+                        index={index}
+                        isEdit setOnEdit={setOnEdit}
+                        onAddNew={onAddNew}
+                        setOnAddNew={setOnAddNew} />}
 
-                  address === editAddress &&
-                  <AddressForm
-                    index={index}
-                    isEdit setOnEdit={setOnEdit}
-                    onAddNew={onAddNew}
-                    setOnAddNew={setOnAddNew} />
+                    {onAddNew && index === 0 &&
+                      <AddressForm
+                        index={index}
+                        isEdit setOnEdit={setOnEdit}
+                        onAddNew={onAddNew}
+                        setOnAddNew={setOnAddNew} />}
 
+                  </>
                   :
 
                   <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
@@ -100,14 +110,23 @@ export default function addressBook() {
                     <Text>{address.phoneNumber}</Text>
                     <Text> </Text>
 
-
-                    <Button mode="contained" color={theme.primary} dark uppercase={false}
-                      labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                      style={{ marginBottom: 10 }}
-                      onPress={() => {
-                        updateAddress(addressType, address.address1)
-                      }}>Select</Button>
-
+                    {user.addressType.shipping === address.address1 ?
+                      <Button mode="outlined"
+                        color={theme.primary}
+                        dark uppercase={false}
+                        labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                        style={{ marginBottom: 10 }}
+                      >Selected</Button>
+                      :
+                      <Button mode="contained"
+                        color={theme.primary}
+                        dark uppercase={false}
+                        labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                        style={{ marginBottom: 10 }}
+                        onPress={() => {
+                          updateAddress(addressType, address.address1)
+                        }}>Select</Button>
+                    }
 
                     <View style={{
                       flexDirection: "row",
@@ -124,9 +143,17 @@ export default function addressBook() {
 
                       <Text>{"     |     "}</Text>
 
-                      <Edit theme={theme} disabled>
-                        Delete</Edit>
+                      {user.addressType.shipping === address.address1 ?
 
+                        <Edit theme={theme} style={{ color: theme.lightGrey }}>
+                          Delete</Edit>
+                        :
+                        <Edit theme={theme} disabled
+                        onPress={()=>{
+                          deleteAddress(address, index)
+                        }}>
+                          Delete</Edit>
+                      }
 
                     </View>
                   </View>

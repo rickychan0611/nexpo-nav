@@ -101,15 +101,16 @@ export default function AddressForm({
           active: true
         })
       }
-      // if (isEdit) {
-      //   const addressKey = `addressBook.${index + 1}`
-      //   db.collection("users").doc(user.email).update({
-      //     [addressKey]: newAddress,
-      //     createAt: new Date(),
-      //     active: true
-      //   })
-      //   setOnEdit(false)
-      // }
+      if (isEdit) {
+        const addressKey = `addressBook.${index + 1}`
+        db.collection("users").doc(user.email).update({
+          [addressKey]: newAddress,
+          createAt: new Date(),
+          active: true
+        })
+        setOnEdit(false)
+        setOnAddNew(false)
+      }
       if (onAddNew) {
 
         const addAddressKey = `addressBook.${addressBook.length + 1}`
@@ -120,6 +121,7 @@ export default function AddressForm({
           active: true
         })
         setOnEdit(false)
+        setOnAddNew(false)
       }
     })
   }
