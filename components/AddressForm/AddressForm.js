@@ -14,6 +14,9 @@ export default function AddressForm({
   isEdit, setOnEdit,
   onAddNew, setOnAddNew
 }) {
+
+  const { user, addressBook, editAddress, setEditAddress } = useContext(Context);
+
   const empty = {
     address1: "",
     address2: "",
@@ -24,10 +27,9 @@ export default function AddressForm({
     phoneNumber: ""
   }
 
-  const shippingDefault = address && !onAddNew ? address : empty
+  const shippingDefault = editAddress && !onAddNew ? editAddress : empty
 
   const { theme } = useContext(ThemeContext);
-  const { user, addressBook } = useContext(Context);
   const [newAddress, setNewAddress] = useState(shippingDefault);
 
   const { navigate, goBack } = useRouting();

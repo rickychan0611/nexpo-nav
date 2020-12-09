@@ -47,6 +47,7 @@ const ContextProvider = ({ children }) => {
   const [addressBook, setAddressBook] = useState();
   const [onEdit, setOnEdit] = useState(false);
   const [onAddNew, setOnAddNew] = useState(false);
+  const [editAddress, setEditAddress] = useState(false);
   
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -145,7 +146,8 @@ const ContextProvider = ({ children }) => {
           orders, setOrders,
           addressBook, setAddressBook,
           onEdit, setOnEdit,
-          onAddNew, setOnAddNew
+          onAddNew, setOnAddNew,
+          editAddress, setEditAddress
         }
       }
     >

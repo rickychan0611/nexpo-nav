@@ -26,7 +26,8 @@ export default function addressBook() {
   const {
     user, addressBook,
     onEdit, setOnEdit,
-    onAddNew, setOnAddNew
+    onAddNew, setOnAddNew,
+    editAddress, setEditAddress
   } = useContext(Context);
 
   const updateAddress = (addressType, address) => {
@@ -67,21 +68,22 @@ export default function addressBook() {
                   }}>{"+ Add a New Address"}</Edit>
               </View>
             </>}
+
           {addressBook && addressBook.map((address, index) => {
             return (
 
               <Surface style={{
-                elevation: 4,
-                marginHorizontal: 20,
-                marginBottom: 20,
-                borderWidth: 1,
+                elevation: onEdit || onAddNew ? 0 : 4,
+                marginHorizontal: onEdit || onAddNew ? 0 :20,
+                marginBottom: onEdit || onAddNew ? 0 :20,
+                borderWidth: onEdit || onAddNew ? 0 :1,
                 borderColor: theme.lightGrey
               }}>
 
                 {onEdit || onAddNew ?
 
+                  address === editAddress &&
                   <AddressForm
-                    address={address}
                     index={index}
                     isEdit setOnEdit={setOnEdit}
                     onAddNew={onAddNew}
@@ -97,23 +99,35 @@ export default function addressBook() {
                     <Text>{address.country}</Text>
                     <Text>{address.phoneNumber}</Text>
                     <Text> </Text>
+
+
                     <Button mode="contained" color={theme.primary} dark uppercase={false}
                       labelStyle={{ fontSize: 14, fontWeight: "bold" }}
                       style={{ marginBottom: 10 }}
                       onPress={() => {
                         updateAddress(addressType, address.address1)
                       }}>Select</Button>
+
+
                     <View style={{
                       flexDirection: "row",
                       flexWrap: "nowrap",
                       justifyContent: "center",
                     }}>
+
+
                       <Edit theme={theme}
                         onPress={() => {
                           setOnEdit(true)
+                          setEditAddress(address)
                         }}>Edit</Edit>
+
                       <Text>{"     |     "}</Text>
-                      <Edit theme={theme} disabled>Delete</Edit>
+
+                      <Edit theme={theme} disabled>
+                        Delete</Edit>
+
+
                     </View>
                   </View>
                 }
@@ -142,14 +156,6 @@ export default function addressBook() {
   );
 }
 
-const TotalContainer = styled.View`
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
-  flex-direction: row;
-  flex-wrap: nowrap;
-  max-width: 500px;
-  padding: 5px 25px 5px 25px;
-
-`;
 const Edit = styled.Text`
  font-size: 14px;
  font-weight: 600;
