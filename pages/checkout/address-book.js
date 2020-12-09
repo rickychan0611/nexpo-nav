@@ -11,6 +11,7 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../../components/BottomBar";
 import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
+import AddressForm from "../../components/AddressForm";
 import { route } from "next/dist/next-server/server/router";
 
 export default function shipping() {
@@ -20,16 +21,17 @@ export default function shipping() {
   const addressType = getParam('type')
 
   const [loading, setLoading] = useState(false);
+  const [onEdit, setOnEdit] = useState(false);
   const { theme } = useContext(ThemeContext);
 
   const {
     user, addressBook
   } = useContext(Context);
 
-   const updateAddress = (addressType, address) => {
+  const updateAddress = (addressType, address) => {
     const key = `addressType.${addressType}`
     db.collection("users").doc(user.email).update({
-      [key] : address
+      [key]: address
     })
     goBack()
   }
@@ -38,13 +40,13 @@ export default function shipping() {
 
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (userId === user.uid && addressType === "billing" || addressType === "shipping") {
       null
     }
-    else navigate({routeName: "home"})
+    else navigate({ routeName: "home" })
 
-  },[userId, addressType])
+  }, [userId, addressType])
 
   return (
     <>
@@ -68,8 +70,9 @@ export default function shipping() {
               }}>{"+ Add a New Address"}</Edit>
           </View>
 
-          {addressBook && addressBook.map((address) => {
+          {addressBook && addressBook.map((address, index) => {
             return (
+
               <Surface style={{
                 elevation: 4,
                 marginHorizontal: 20,
@@ -77,30 +80,39 @@ export default function shipping() {
                 borderWidth: 1,
                 borderColor: theme.lightGrey
               }}>
-                <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
-                  {/* <Text style={{ fontWeight: "bold", fontSize: 15 }}>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
-                  <Text>{address.address1}</Text>
-                  {/* {shippingAddress.address2 ?  <Text>{shippingAddress.address2}</Text> : null}
-              <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
-              <Text>{shippingAddress.country}</Text>
-              <Text>{shippingAddress.phoneNumber}</Text> */}
-                  <Text> </Text>
-                  <Button mode="contained" color={theme.primary} dark uppercase={false}
-                    labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                    style={{ marginBottom: 10 }}
-                    onPress={() => {
-                      updateAddress(addressType, address.address1)
-                    }}>Select</Button>
-                  <View style={{
-                    flexDirection: "row",
-                    flexWrap: "nowrap",
-                    justifyContent: "center",
-                  }}>
-                    <Edit theme={theme}>Edit</Edit>
-                    <Text>{"     |     "}</Text>
-                    <Edit theme={theme} disabled>Delete</Edit>
+
+                {onEdit ?
+                  <AddressForm address={address} index={index} isEdit setOnEdit={setOnEdit}/>
+                  :
+
+                  <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
+                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>{address.firstName} {address.lastName}</Text>
+                    <Text>{address.address1}</Text>
+                    {address.address2 ? <Text>{address.address2}</Text> : null}
+                    <Text>{address.city}, {address.province} {address.postalCode}</Text>
+                    <Text>{address.country}</Text>
+                    <Text>{address.phoneNumber}</Text>
+                    <Text> </Text>
+                    <Button mode="contained" color={theme.primary} dark uppercase={false}
+                      labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                      style={{ marginBottom: 10 }}
+                      onPress={() => {
+                        updateAddress(addressType, address.address1)
+                      }}>Select</Button>
+                    <View style={{
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      justifyContent: "center",
+                    }}>
+                      <Edit theme={theme}
+                        onPress={() => {
+                          setOnEdit(true)
+                        }}>Edit</Edit>
+                      <Text>{"     |     "}</Text>
+                      <Edit theme={theme} disabled>Delete</Edit>
+                    </View>
                   </View>
-                </View>
+                }
               </Surface>
             )
           })}

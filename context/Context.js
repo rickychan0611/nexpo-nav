@@ -56,6 +56,7 @@ const ContextProvider = ({ children }) => {
           setUser(doc.data());
 
           //convert addressBook to array
+          if (doc.data().addressBook) {
           let addressBook = doc.data().addressBook
           let tempArr = []
           console.log(Object.keys(addressBook).length)
@@ -65,6 +66,7 @@ const ContextProvider = ({ children }) => {
             })
           setAddressBook(tempArr)
           console.log(tempArr)
+        }
         })
       }
 

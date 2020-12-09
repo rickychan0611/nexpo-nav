@@ -53,11 +53,6 @@ export default function shipping() {
         setShipping(address)
       }
     })
-
-    return () => {
-      setBilling()
-      setShipping()
-    }
   }, [addressBook])
 
   return (
@@ -99,35 +94,29 @@ export default function shipping() {
           </View>
           <Divider />
 
-          <>
-            <AddressForm type="shipping" isNewShipping/>
-            <Divider />
-          </>
-
           {!billing && !shipping ?
             <>
-              <AddressForm type="shipping" />
-              <Divider />
+              <AddressForm type="shipping" isNewShipping />
             </>
             :
             <>
              
 
               <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-                Billing Address:
+                Shipping Address:
               </Title>
               <View style={{ paddingHorizontal: 25 }}>
-                {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
+                <Text>{shipping.firstName} {shipping.lastName}</Text>
                 <Text>{shipping.address1}</Text>
-                {/* {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
-                <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
-                <Text>{shippingAddress.phoneNumber}</Text> */}
-                <Text style={{ paddingBottom: 20, color: theme.primary }}
+                {shipping.address2 ? <Text>{shipping.address2}</Text> : null}
+                <Text>{shipping.city}, {shipping.province} {shipping.postalCode}</Text>
+                <Text>{shipping.phoneNumber}</Text>
+                <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
                   onPress={() => {
                     navigate({
                       routeName: "checkout/address-book",
                       params: {
-                        type: "billing",
+                        type: "shipping",
                         userId: user.uid
                       }
                     })
@@ -135,8 +124,6 @@ export default function shipping() {
               </View>
               <Divider />
             </>
-
-
           }
 
           <Text style={{ height: 240 }}>{" "}</Text>

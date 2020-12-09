@@ -6,10 +6,12 @@ import { Divider, TextInput, Title, HelperText, Button } from "react-native-pape
 import { Context } from "../../context/Context";
 import validator from 'validator';
 import { db } from "../../firebase";
+import { useRouting } from "expo-next-react-navigation";
 
-export default function AddressForm({ type, isNewShipping }) {
-  const shippingDefault = {
-    address1: "",
+export default function AddressForm({ type, isNewShipping, address, index, isEdit, setOnEdit}) {
+  const shippingDefault = address ? address : 
+  {
+    address1: "", 
     address2: "",
     city: "",
     province: "",
@@ -22,6 +24,7 @@ export default function AddressForm({ type, isNewShipping }) {
   const { user, shippingAddress, setShippingAddress } = useContext(Context);
   const [newAddress, setNewAddress] = useState(shippingDefault);
 
+  const { navigate, getParam, goBack } = useRouting();
 
   const [err, setErr] = useState(shippingDefault);
   const handleChanage = (name, value) => {
@@ -78,13 +81,21 @@ export default function AddressForm({ type, isNewShipping }) {
 
     validate.then(() => {
       if (isNewShipping) {
-        // setShippingAddress(newAddress)
         db.collection("users").doc(user.email).update({
           "addressBook.1" : newAddress,
           "addressType.shipping" : newAddress.address1,
           createAt: new Date(),
           active: true
         })
+      }
+      if (isEdit) {
+        const addressKey = `addressBook.${index + 1}`
+        db.collection("users").doc(user.email).update({
+          [addressKey] : newAddress,
+          createAt: new Date(),
+          active: true
+        })
+        setOnEdit(false)
       }
     })
   }
@@ -310,7 +321,9 @@ export default function AddressForm({ type, isNewShipping }) {
               {!isNewShipping ?
                 <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
                   labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                  style={{ marginBottom: 10 }}>
+                  style={{ marginBottom: 10 }}
+                    onPress={()=> goBack()}
+                    >
                   Cancel</Button>
                 : <View style={{flex: 1}}></View>
               }
