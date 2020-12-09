@@ -71,7 +71,7 @@ export default function SaveProductButton() {
                   // setProduct(productInitValue)
                   // setSelectedCategory([])
                   // navigate({
-                  //   routeName: "home"
+                  //   routeName: "/"
                   // })
                 })
                 .catch((err) => console.log(category, " NOT added. Err: ", err))

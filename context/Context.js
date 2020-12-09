@@ -45,28 +45,30 @@ const ContextProvider = ({ children }) => {
   const [selectedOrder, setSelectedOrder] = useState();
   const [orders, setOrders] = useState([]);
   const [addressBook, setAddressBook] = useState();
-
+  const [onEdit, setOnEdit] = useState(false);
+  const [onAddNew, setOnAddNew] = useState(false);
+  
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
 
       if (user) {
         console.log("logged in", user.email);
 
-        db.collection("users").doc(user.email).onSnapshot((doc)=>{
+        db.collection("users").doc(user.email).onSnapshot((doc) => {
           setUser(doc.data());
 
           //convert addressBook to array
           if (doc.data().addressBook) {
-          let addressBook = doc.data().addressBook
-          let tempArr = []
-          console.log(Object.keys(addressBook).length)
-          Object.keys(addressBook) && Object.keys(addressBook)[0] &&
-            Object.keys(addressBook).map((address, index) => {
-              tempArr.push(addressBook[index + 1])
-            })
-          setAddressBook(tempArr)
-          console.log(tempArr)
-        }
+            let addressBook = doc.data().addressBook
+            let tempArr = []
+            console.log(Object.keys(addressBook).length)
+            Object.keys(addressBook) && Object.keys(addressBook)[0] &&
+              Object.keys(addressBook).map((address, index) => {
+                tempArr.push(addressBook[index + 1])
+              })
+            setAddressBook(tempArr)
+            console.log(tempArr)
+          }
         })
       }
 
@@ -141,7 +143,9 @@ const ContextProvider = ({ children }) => {
           newOrderId, setNewOrderId,
           selectedOrder, setSelectedOrder,
           orders, setOrders,
-          addressBook, setAddressBook
+          addressBook, setAddressBook,
+          onEdit, setOnEdit,
+          onAddNew, setOnAddNew
         }
       }
     >

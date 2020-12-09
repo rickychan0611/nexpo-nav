@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Platform, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -8,10 +8,14 @@ import validator from 'validator';
 import { db } from "../../firebase";
 import { useRouting } from "expo-next-react-navigation";
 
-export default function AddressForm({ type, isNewShipping, address, index, isEdit, setOnEdit}) {
-  const shippingDefault = address ? address : 
-  {
-    address1: "", 
+export default function AddressForm({
+  type, isNewShipping,
+  address, index,
+  isEdit, setOnEdit,
+  onAddNew, setOnAddNew
+}) {
+  const empty = {
+    address1: "",
     address2: "",
     city: "",
     province: "",
@@ -20,19 +24,26 @@ export default function AddressForm({ type, isNewShipping, address, index, isEdi
     phoneNumber: ""
   }
 
+  const shippingDefault = address && !onAddNew ? address : empty
+
   const { theme } = useContext(ThemeContext);
-  const { user, shippingAddress, setShippingAddress } = useContext(Context);
+  const { user, addressBook } = useContext(Context);
   const [newAddress, setNewAddress] = useState(shippingDefault);
 
-  const { navigate, getParam, goBack } = useRouting();
+  const { navigate, goBack } = useRouting();
 
-  const [err, setErr] = useState(shippingDefault);
+  const [err, setErr] = useState(empty);
   const handleChanage = (name, value) => {
     setNewAddress(prev => {
       return { ...prev, [name]: value }
     })
   }
 
+  // useEffect(()=>{
+  //   if (address) {
+  //     setNewAddress(address)
+  //   }
+  // },[])
 
   const onSubmit = () => {
     setErr(shippingDefault)
@@ -82,16 +93,27 @@ export default function AddressForm({ type, isNewShipping, address, index, isEdi
     validate.then(() => {
       if (isNewShipping) {
         db.collection("users").doc(user.email).update({
-          "addressBook.1" : newAddress,
-          "addressType.shipping" : newAddress.address1,
+          "addressBook.1": newAddress,
+          "addressType.shipping": newAddress.address1,
           createAt: new Date(),
           active: true
         })
       }
-      if (isEdit) {
-        const addressKey = `addressBook.${index + 1}`
+      // if (isEdit) {
+      //   const addressKey = `addressBook.${index + 1}`
+      //   db.collection("users").doc(user.email).update({
+      //     [addressKey]: newAddress,
+      //     createAt: new Date(),
+      //     active: true
+      //   })
+      //   setOnEdit(false)
+      // }
+      if (onAddNew) {
+
+        const addAddressKey = `addressBook.${addressBook.length + 1}`
+        console.log(addressBook)
         db.collection("users").doc(user.email).update({
-          [addressKey] : newAddress,
+          [addAddressKey]: newAddress,
           createAt: new Date(),
           active: true
         })
@@ -100,12 +122,18 @@ export default function AddressForm({ type, isNewShipping, address, index, isEdi
     })
   }
 
+  // useEffect(()=>{
+  //   if (!user || !addressBook || !address) {
+  //     navigate({routeName: "home"})
+  //   }
+  // },[])
+
   return (
     <>
       <View style={{ padding: 25 }}>
 
         <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
-          Enter your {type} address:
+          Enter your address:
           </Title>
 
         <Row>
@@ -322,10 +350,13 @@ export default function AddressForm({ type, isNewShipping, address, index, isEdi
                 <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
                   labelStyle={{ fontSize: 14, fontWeight: "bold" }}
                   style={{ marginBottom: 10 }}
-                    onPress={()=> goBack()}
-                    >
+                  onPress={() => {
+                    setOnEdit(false)
+                    setOnAddNew(false)
+                  }}
+                >
                   Cancel</Button>
-                : <View style={{flex: 1}}></View>
+                : <View style={{ flex: 1 }}></View>
               }
               <Button mode="contained" color={theme.primary} dark uppercase={false}
                 labelStyle={{ fontSize: 14, fontWeight: "bold" }}

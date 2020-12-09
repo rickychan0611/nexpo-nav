@@ -14,18 +14,19 @@ import Loader from "../../components/Loader";
 import AddressForm from "../../components/AddressForm";
 import { route } from "next/dist/next-server/server/router";
 
-export default function shipping() {
+export default function addressBook() {
   const { navigate, getParam, goBack } = useRouting();
 
   const userId = getParam('userId')
   const addressType = getParam('type')
 
   const [loading, setLoading] = useState(false);
-  const [onEdit, setOnEdit] = useState(false);
   const { theme } = useContext(ThemeContext);
 
   const {
-    user, addressBook
+    user, addressBook,
+    onEdit, setOnEdit,
+    onAddNew, setOnAddNew
   } = useContext(Context);
 
   const updateAddress = (addressType, address) => {
@@ -54,22 +55,18 @@ export default function shipping() {
       <ContextArea>
         <IconButton icon="arrow-left" onPress={() => { goBack() }} />
         <ScrollView>
-          <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-            Choose your {addressType} address:
+          {onEdit || onAddNew ? null :
+            <>
+              <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
+                Choose your {addressType} address:
           </Title>
-          <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
-            <Edit theme={theme}
-              onPress={() => {
-                navigate({
-                  routeName: "checkout/new-address",
-                  params: {
-                    type,
-                    userId
-                  }
-                })
-              }}>{"+ Add a New Address"}</Edit>
-          </View>
-
+              <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
+                <Edit theme={theme}
+                  onPress={() => {
+                    setOnAddNew(true)
+                  }}>{"+ Add a New Address"}</Edit>
+              </View>
+            </>}
           {addressBook && addressBook.map((address, index) => {
             return (
 
@@ -81,8 +78,15 @@ export default function shipping() {
                 borderColor: theme.lightGrey
               }}>
 
-                {onEdit ?
-                  <AddressForm address={address} index={index} isEdit setOnEdit={setOnEdit}/>
+                {onEdit || onAddNew ?
+
+                  <AddressForm
+                    address={address}
+                    index={index}
+                    isEdit setOnEdit={setOnEdit}
+                    onAddNew={onAddNew}
+                    setOnAddNew={setOnAddNew} />
+
                   :
 
                   <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
@@ -121,7 +125,7 @@ export default function shipping() {
         </ScrollView>
       </ContextArea>
 
-      <ShippingNextBtn onSubmit={onSubmit} />
+      {/* <ShippingNextBtn onSubmit={onSubmit} /> */}
 
       <BottomBar style={{
         shadowColor: "#000",

@@ -19,7 +19,9 @@ export default function shipping() {
   const { theme } = useContext(ThemeContext);
   const {
     total, user, setSelected,
-    addressBook, setAddressBook
+    addressBook, setAddressBook,
+    onEdit, setOnEdit,
+    onAddNew, setOnAddNew
   } = useContext(Context);
 
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,8 @@ export default function shipping() {
         </ScrollView>
       </ContextArea>
 
-      {shipping && <ShippingNextBtn onSubmit={onSubmit} />}
+      {shipping && !onEdit && !onAddNew &&
+       <ShippingNextBtn onSubmit={onSubmit} />}
 
       <BottomBar style={{
         shadowColor: "#000",
