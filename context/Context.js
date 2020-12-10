@@ -48,16 +48,14 @@ const ContextProvider = ({ children }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
-  const [initLoading, setInitLoading] = useState(false);
+  const [initLoaded, setInitLoaded] = useState(false);
   
   useEffect(() => {
-    setInitLoading(true)
     auth.onAuthStateChanged((user) => {
-
+      console.log(initLoaded)
+      
       if (user) {
         console.log("logged in", user.email);
-        setInitLoading(false)
-
         db.collection("users").doc(user.email).onSnapshot((doc) => {
           setUser(doc.data());
 
@@ -76,10 +74,12 @@ const ContextProvider = ({ children }) => {
             setAddressBook(tempArr)
           }
         })
+        setInitLoaded(true)
+        console.log(initLoaded)
       }
 
       else {
-        setInitLoading(false)
+        setInitLoaded(true)
         console.log("Not logged in")
       }
     })
@@ -156,8 +156,7 @@ const ContextProvider = ({ children }) => {
           onEdit, setOnEdit,
           onAddNew, setOnAddNew,
           editAddress, setEditAddress,
-          initLoading, setInitLoading
-        }
+          initLoaded, setInitLoaded        }
       }
     >
       {children}

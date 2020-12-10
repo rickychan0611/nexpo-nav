@@ -61,10 +61,7 @@ export default function shipping() {
 
   return (
     <>
-    {visible ?
-      <InitLoader visible={visible} setVisible={setVisible}/>
-:
-<>
+      <InitLoader/>
 
       {/* {!billing && !shipping && <Loader />} */}
       <ContextArea>
@@ -153,8 +150,7 @@ export default function shipping() {
         shadowRadius: 5,
         elevation: 10,
       }} />
-      </>
-    }
+
     </>
   );
 }

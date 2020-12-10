@@ -3,10 +3,10 @@ import { Modal, Portal, ActivityIndicator } from 'react-native-paper';
 import { Context } from "../../context/Context";
 import { useRouting } from "expo-next-react-navigation";
 
-export default function InitLoader({visible, setVisible}) {
+export default function InitLoader() {
   const { navigate } = useRouting();
-  // const [visible, setVisible] = useState(true)
-  const { initLoading, setInitLoading, user } = useContext(Context)
+  const [visible, setVisible] = useState(true)
+  const { initLoaded, setInitLoading, user } = useContext(Context)
 
   const containerStyle = {
     padding: 20,
@@ -15,25 +15,23 @@ export default function InitLoader({visible, setVisible}) {
   };
 
   useEffect(() => {
-    console.log(initLoading)
-    if (!visible && !initLoading && !user) {
-      console.log("init jumb")
-      navigate({ routeName: "home" })
-    }
-    else if (initLoading && user){
-      setVisible(false)
+    console.log(initLoaded)
+    if (initLoaded ) {
+      if (!user && !visible) {
+        console.log("init jumb")
+        navigate({ routeName: "home" })
       }
-  }, [initLoading, user])
+      else setVisible(false)
+    }
+  }, [initLoaded, user])
 
   return (
       <>
-      {initLoading &&
       <Portal>
         <Modal visible={visible}  contentContainerStyle={containerStyle}>
         <ActivityIndicator size="large" color="white"/>
         </Modal>
       </Portal>
-      }
       </>
     )
 };

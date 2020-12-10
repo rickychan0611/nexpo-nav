@@ -1,7 +1,6 @@
-// import panel from './admin/panel';
+// import Home from './home';
 
-// export default panel;
+// export default Home;
+import Cart from './Cart';
 
-import Home from './home';
-
-export default Home;
+export default Cart;
