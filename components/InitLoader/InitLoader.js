@@ -16,7 +16,9 @@ export default function InitLoader() {
 
   useEffect(() => {
     console.log(initLoaded)
-    if (initLoaded ) {
+    console.log(user)
+    console.log(visible)
+    if ( initLoaded ) {
       if (!user && !visible) {
         console.log("init jumb")
         navigate({ routeName: "home" })

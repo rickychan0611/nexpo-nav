@@ -84,6 +84,7 @@ function App() {
           <Stack.Screen name="forgotPassword" component={forgotPassword} options={options("Forgot Password")} />
           <Stack.Screen name="login" component={login} options={options("Login")} />
           <Stack.Screen name="/" component={home} options={options("Home")} />
+          <Stack.Screen name="home" component={home} options={options("Home")} />
           <Stack.Screen name="panel" component={panel} options={options("Admin Panel")} />
           <Stack.Screen name="admin" component={admin} options={options("Admin Login")} />
           <Stack.Screen name="product" component={product} options={options("Product Details")} />

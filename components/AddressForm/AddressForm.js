@@ -14,7 +14,7 @@ import InitLoader from "../InitLoader";
 export default function AddressForm({
   type, isNewShipping,
   address, index,
-  isEdit, setOnEdit,
+  onEdit, setOnEdit,
   onAddNew, setOnAddNew,
   hasShippingAddress, setHasShippingAddress,
   tasker
@@ -99,6 +99,8 @@ export default function AddressForm({
     })
 
     validate.then(() => {
+      setErr(empty)
+
       console.log(hasShippingAddress)
       if (tasker === "1stAddress") {
         const id = moment().unix()
@@ -107,6 +109,7 @@ export default function AddressForm({
         db.collection("users").doc(user.email).update({
           [keyName]: { ...newAddress, id },
           "addressType.shipping": id,
+        }).then(() => {
         })
       }
       else if (onAddNew) {
@@ -124,7 +127,7 @@ export default function AddressForm({
           })
 
       }
-      else if (isEdit) {
+      else if (onEdit) {
         const keyName = `addressBook.${editAddress.id}`
         db.collection("users").doc(user.email).update({
           [keyName]: newAddress,
@@ -145,7 +148,7 @@ export default function AddressForm({
 
   return (
     <>
-      <InitLoader />
+      {/* <InitLoader /> */}
 
       <View style={{ padding: 25 }}>
 
