@@ -13,6 +13,7 @@ import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
 import AddressForm from "../../components/AddressForm";
 import Row from "../../components/Row";
+import InitLoader from "../../components/InitLoader";
 
 export default function shipping() {
   const { navigate, goBack } = useRouting();
@@ -28,6 +29,7 @@ export default function shipping() {
   const [billing, setBilling] = useState()
   const [shipping, setShipping] = useState()
   const [hasShippingAddress, setHasShippingAddress] = useState(false)
+  const [visible, setVisible] = useState(true)
 
   const shippingDefault = {
     address1: "",
@@ -59,6 +61,11 @@ export default function shipping() {
 
   return (
     <>
+    {visible ?
+      <InitLoader visible={visible} setVisible={setVisible}/>
+:
+<>
+
       {/* {!billing && !shipping && <Loader />} */}
       <ContextArea>
         <IconButton icon="arrow-left" onPress={() => { goBack() }} />
@@ -96,13 +103,13 @@ export default function shipping() {
           </View>
           <Divider />
 
-          {!shipping ?
+          {!addressBook ?
             <>
-              <AddressForm type="shipping" tasker={"1stAddress"}/>
+              <AddressForm type="shipping" tasker={"1stAddress"} />
             </>
             :
             <>
-             
+
 
               <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
                 Shipping Address:
@@ -134,7 +141,7 @@ export default function shipping() {
       </ContextArea>
 
       {shipping && !onEdit && !onAddNew &&
-       <ShippingNextBtn onSubmit={onSubmit} />}
+        <ShippingNextBtn onSubmit={onSubmit} />}
 
       <BottomBar style={{
         shadowColor: "#000",
@@ -146,7 +153,8 @@ export default function shipping() {
         shadowRadius: 5,
         elevation: 10,
       }} />
-
+      </>
+    }
     </>
   );
 }

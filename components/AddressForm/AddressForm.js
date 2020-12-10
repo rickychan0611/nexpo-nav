@@ -8,6 +8,8 @@ import validator from 'validator';
 import { db } from "../../firebase";
 import { useRouting } from "expo-next-react-navigation";
 import moment from "moment";
+import Loader from "../Loader";
+import InitLoader from "../InitLoader";
 
 export default function AddressForm({
   type, isNewShipping,
@@ -18,7 +20,8 @@ export default function AddressForm({
   tasker
 }) {
 
-  const { user, addressBook, editAddress, setEditAddress } = useContext(Context);
+  const { user, addressBook, editAddress, setEditAddress,
+    initLoading, setInitLoading } = useContext(Context);
 
   const empty = {
     address1: "",
@@ -134,14 +137,16 @@ export default function AddressForm({
     })
   }
 
-  useEffect(() => {
-    if (!user) {
-      navigate({ routeName: "home" })
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!initLoading && !user) {
+  //     navigate({ routeName: "home" })
+  //   }
+  // }, [initLoading])
 
   return (
     <>
+      <InitLoader />
+
       <View style={{ padding: 25 }}>
 
         <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>

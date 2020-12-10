@@ -32,7 +32,12 @@ export default function BottomBar() {
     if (router) {
       let pathname = router.pathname.substring(1)
       console.log(pathname)
-      setSelected(pathname)
+      if (
+        pathname === "checkout" ||
+        pathname === "checkout/shipping" 
+        )
+        {setSelected("cart")}
+      else setSelected(pathname)
     }
   }, [router])
 

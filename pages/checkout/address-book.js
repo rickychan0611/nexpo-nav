@@ -13,6 +13,7 @@ import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
 import AddressForm from "../../components/AddressForm";
 import { route } from "next/dist/next-server/server/router";
+import InitLoader from "../../components/InitLoader";
 
 export default function addressBook() {
   const { navigate, getParam, goBack } = useRouting();
@@ -30,31 +31,40 @@ export default function addressBook() {
     editAddress, setEditAddress
   } = useContext(Context);
 
-  const updateAddress = (addressType, address) => {
-    const key = `addressType.${addressType}`
+  const updateAddress = (addressType, addressId) => {
+    const key = `addressBook.${addressType}`
     console.log("key:" + key)
     db.collection("users").doc(user.email).update({
-      [key]: address
+      [key]: addressId
     })
   }
 
-  const deleteAddress = (address, index) => {
+  const deleteAddress = (addressID, index) => {
+    const key = `addressBook.${addressID}`
     db.collection("users").doc(user.email).update({
-      [key]: address
+      [key]: firebase.firestore.FieldValue.delete()
     })
   }
 
-  useEffect(() => {
-    if (!user){
-      navigate({routeName:"home"})
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate({ routeName: "home" })
+  //   }
+  // }, [user])
 
   return (
     <>
-      {loading && <Loader />}
+      <InitLoader />
       <ContextArea>
-        <IconButton icon="arrow-left" onPress={() => { goBack() }} />
+        <IconButton icon="arrow-left" onPress={
+          onEdit || onAddNew ?
+            () => {
+              setOnEdit(false)
+              setOnAddNew(false)
+            }
+            : 
+            () => goBack()
+        } />
         <ScrollView>
           {onEdit || onAddNew ? null :
             <>
@@ -122,7 +132,7 @@ export default function addressBook() {
                         labelStyle={{ fontSize: 14, fontWeight: "bold" }}
                         style={{ marginBottom: 10 }}
                         onPress={() => {
-                          updateAddress(addressType, address.address1)
+                          updateAddress(addressType, address.id)
                         }}>Select</Button>
                     }
 
@@ -147,9 +157,9 @@ export default function addressBook() {
                           Delete</Edit>
                         :
                         <Edit theme={theme} disabled
-                        onPress={()=>{
-                          deleteAddress(address, index)
-                        }}>
+                          onPress={() => {
+                            deleteAddress(address.id, index)
+                          }}>
                           Delete</Edit>
                       }
 

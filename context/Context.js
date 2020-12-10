@@ -56,6 +56,7 @@ const ContextProvider = ({ children }) => {
 
       if (user) {
         console.log("logged in", user.email);
+        setInitLoading(false)
 
         db.collection("users").doc(user.email).onSnapshot((doc) => {
           setUser(doc.data());
@@ -74,7 +75,6 @@ const ContextProvider = ({ children }) => {
               })
             setAddressBook(tempArr)
           }
-          setInitLoading(false)
         })
       }
 
@@ -155,7 +155,8 @@ const ContextProvider = ({ children }) => {
           addressBook, setAddressBook,
           onEdit, setOnEdit,
           onAddNew, setOnAddNew,
-          editAddress, setEditAddress
+          editAddress, setEditAddress,
+          initLoading, setInitLoading
         }
       }
     >
