@@ -7,12 +7,15 @@ import { Context } from "../../context/Context";
 import validator from 'validator';
 import { db } from "../../firebase";
 import { useRouting } from "expo-next-react-navigation";
+import moment from "moment";
 
 export default function AddressForm({
   type, isNewShipping,
   address, index,
   isEdit, setOnEdit,
-  onAddNew, setOnAddNew
+  onAddNew, setOnAddNew,
+  hasShippingAddress, setHasShippingAddress,
+  tasker
 }) {
 
   const { user, addressBook, editAddress, setEditAddress } = useContext(Context);
@@ -47,7 +50,7 @@ export default function AddressForm({
   //   }
   // },[])
 
-  const onSubmit = () => {
+  const onSubmit = (clicker) => {
     setErr(shippingDefault)
 
     // if (!newOrderProductList[0]) {
@@ -93,44 +96,49 @@ export default function AddressForm({
     })
 
     validate.then(() => {
-      if (isNewShipping) {
-        db.collection("users").doc(user.email).update({
-          "addressBook.1": newAddress,
-          "addressType.shipping": newAddress.address1,
-          createAt: new Date(),
-          active: true
-        })
-      }
-      if (isEdit) {
-        const addressKey = `addressBook.${index + 1}`
-        db.collection("users").doc(user.email).update({
-          [addressKey]: newAddress,
-          createAt: new Date(),
-          active: true
-        })
-        setOnEdit(false)
-        setOnAddNew(false)
-      }
-      if (onAddNew) {
+      console.log(hasShippingAddress)
+      if (tasker === "1stAddress") {
+        const id = moment().unix()
+        const keyName = `addressBook.${id}`
 
-        const addAddressKey = `addressBook.${addressBook.length + 1}`
-        console.log(addressBook)
         db.collection("users").doc(user.email).update({
-          [addAddressKey]: newAddress,
-          createAt: new Date(),
-          active: true
+          [keyName]: { ...newAddress, id },
+          "addressType.shipping": id,
         })
-        setOnEdit(false)
-        setOnAddNew(false)
+      }
+      else if (onAddNew) {
+        const id = moment().unix()
+        const keyName = `addressBook.${id}`
+        db.collection("users").doc(user.email).update({
+          [keyName]: { 
+            ...newAddress, 
+            id 
+          },
+        })
+          .then(() => {
+            setOnEdit(false)
+            setOnAddNew(false)
+          })
+
+      }
+      else if (isEdit) {
+        const keyName = `addressBook.${editAddress.id}`
+        db.collection("users").doc(user.email).update({
+          [keyName]: newAddress,
+        })
+        .then(() => {
+          setOnEdit(false)
+          setOnAddNew(false)
+        })
       }
     })
   }
 
-  // useEffect(()=>{
-  //   if (!user || !addressBook || !address) {
-  //     navigate({routeName: "home"})
-  //   }
-  // },[])
+  useEffect(() => {
+    if (!user) {
+      navigate({ routeName: "home" })
+    }
+  }, [])
 
   return (
     <>
@@ -296,13 +304,13 @@ export default function AddressForm({
               dense
               value={newAddress.province}
               onChangeText={value => { handleChanage("province", value) }}
-              error={err.Province}
+              error={err.province}
               returnKeyLabel="next"
               keyboardType="default"
               textContentType="addressState"
             />
-            <HelperText type="error" visible={err.Province}>
-              {err.Province}
+            <HelperText type="error" visible={err.province}>
+              {err.province}
             </HelperText>
           </InputView>
           <InputView style={{ flex: 1, alignItems: "flex-end" }}>

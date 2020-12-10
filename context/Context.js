@@ -48,8 +48,10 @@ const ContextProvider = ({ children }) => {
   const [onEdit, setOnEdit] = useState(false);
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
+  const [initLoading, setInitLoading] = useState(false);
   
   useEffect(() => {
+    setInitLoading(true)
     auth.onAuthStateChanged((user) => {
 
       if (user) {
@@ -63,17 +65,23 @@ const ContextProvider = ({ children }) => {
             let addressBook = doc.data().addressBook
             let tempArr = []
             console.log(Object.keys(addressBook).length)
-            Object.keys(addressBook) && Object.keys(addressBook)[0] &&
-              Object.keys(addressBook).map((address, index) => {
-                tempArr.push(addressBook[index + 1])
+
+            let sortedKey = Object.keys(addressBook) && Object.keys(addressBook)[0] &&
+              Object.keys(addressBook).sort((a , b) => b -a)
+
+              sortedKey && sortedKey.map((key) => {
+                tempArr.push(addressBook[key])
               })
             setAddressBook(tempArr)
-            console.log(tempArr)
           }
+          setInitLoading(false)
         })
       }
 
-      else console.log("Not logged in")
+      else {
+        setInitLoading(false)
+        console.log("Not logged in")
+      }
     })
   }, [])
 

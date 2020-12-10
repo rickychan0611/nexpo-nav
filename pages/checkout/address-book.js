@@ -44,13 +44,11 @@ export default function addressBook() {
     })
   }
 
-  // useEffect(() => {
-  //   if (userId === user.uid && addressType === "billing" || addressType === "shipping") {
-  //     null
-  //   }
-  //   else navigate({ routeName: "home" })
-
-  // }, [userId, addressType])
+  useEffect(() => {
+    if (!user){
+      navigate({routeName:"home"})
+    }
+  }, [user])
 
   return (
     <>
@@ -110,7 +108,7 @@ export default function addressBook() {
                     <Text>{address.phoneNumber}</Text>
                     <Text> </Text>
 
-                    {user.addressType.shipping === address.address1 ?
+                    {user.addressType.shipping === address.id ?
                       <Button mode="outlined"
                         color={theme.primary}
                         dark uppercase={false}
@@ -143,7 +141,7 @@ export default function addressBook() {
 
                       <Text>{"     |     "}</Text>
 
-                      {user.addressType.shipping === address.address1 ?
+                      {user.addressType.shipping === address.id ?
 
                         <Edit theme={theme} style={{ color: theme.lightGrey }}>
                           Delete</Edit>

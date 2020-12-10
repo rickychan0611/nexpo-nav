@@ -58,7 +58,7 @@ export default function ProductContent({item}) {
               <Icon
                 name='plus-circle'
                 type='font-awesome-5'
-                color='primary'
+                color='red'
                 size={20}
                 onPress={() => { handlePlus(item, ctx) }}
               />
@@ -122,7 +122,7 @@ const RegPrice = styled.Text`
 text-decoration: line-through;
 `;
 const DisPrice = styled.Text`
-color: primary;
+color: red;
 /* font-weight: bold; */
 `;
 const Container = styled.View`

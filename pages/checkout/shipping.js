@@ -27,6 +27,7 @@ export default function shipping() {
   const [loading, setLoading] = useState(false);
   const [billing, setBilling] = useState()
   const [shipping, setShipping] = useState()
+  const [hasShippingAddress, setHasShippingAddress] = useState(false)
 
   const shippingDefault = {
     address1: "",
@@ -38,21 +39,20 @@ export default function shipping() {
     phoneNumber: ""
   }
 
-  const [err, setErr] = useState(shippingDefault);
-
   const onSubmit = () => {
     navigate({ routeName: "payment" })
   }
 
   useEffect(() => {
     addressBook && addressBook.map((address) => {
-      console.log(user.addressType.billing)
-      console.log(address.address1)
-      if (user.addressType.billing === address.address1) {
-        setBilling(address)
-      }
-      if (user.addressType.shipping === address.address1) {
+      // console.log(user.addressType && user.addressType.shipping)
+      // console.log(address.id)
+      // if (user.addressType.shipping === address.id) {
+      //   setBilling(address)
+      // }
+      if (user && user.addressType && user.addressType.shipping === address.id) {
         setShipping(address)
+        setHasShippingAddress(true)
       }
     })
   }, [addressBook])
@@ -96,9 +96,9 @@ export default function shipping() {
           </View>
           <Divider />
 
-          {!billing && !shipping ?
+          {!shipping ?
             <>
-              <AddressForm type="shipping" isNewShipping />
+              <AddressForm type="shipping" tasker={"1stAddress"}/>
             </>
             :
             <>
