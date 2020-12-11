@@ -3,171 +3,172 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { Divider, TextInput, Headline, IconButton } from "react-native-paper";
+import { Divider, Surface, Headline, IconButton, RadioButton } from "react-native-paper";
 import { db } from "../../firebase";
-import { Image, Platform, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity, Platform, ScrollView, Text, View, Image } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
+import creditCards from "../../public/creditCards.png"
 
 import BottomBar from "../../components/BottomBar";
-import ShippingNextBtn from "../../components/ShippingNextBtn";
+import PaymentNextBtn from "../../components/PaymentNextBtn";
 import Loader from "../../components/Loader";
+import InitLoader from "../../components/InitLoader";
 
 export default function payment() {
-  const { navigate } = useRouting();
-  const [loading, setLoading] = useState(false);
+  const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
-  const { shippingAddress, setAddressForm } = useContext(Context);
-
   const {
-    total, user, setSelected,
-    newOrderProductList, setNewOrderProductList,
-    redeemPoint, setRedeemPoint,
-    deliveryMsg, setDeliveryMsg
+    initLoaded
   } = useContext(Context);
 
-  const shippingDefault = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
-  }
-
-  const [err, setErr] = useState(shippingDefault);
+  const [paymentMethod, setPaymentMethod] = useState("credit")
+  const [checked, setChecked] = useState('credit');
 
   const onSubmit = () => {
-    navigate({routeName: "payment"})
+    navigate({ routeName: "checkout/payment" })
   }
-
-  useEffect(() => {
-    setNewOrderProductList(prev => prev)
-  }, [newOrderProductList])
-
-  useEffect(() => {
-    setLoading(false)
-    if (user) {
-      db.collection('addressBook').where("userId", "==", user.email).get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }
-  }, [user])
 
   return (
     <>
-      {loading && <Loader />}
-      <ContextArea>
-        <ScrollView>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              // width: Platform.OS === "web" ? "100vw" : "100%",
-            }}>
+      {!initLoaded ? <InitLoader /> :
+        <>
+          <ContextArea>
+            <IconButton icon="arrow-left" onPress={() => { goBack() }} />
+            <ScrollView>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  // width: Platform.OS === "web" ? "100vw" : "100%",
+                }}>
 
-            <Headline
-              style={{
-                padding: 25,
-                paddingBottom: 0,
+                <Headline
+                  style={{
+                    paddingBottom: 20,
+                    fontWeight: "bold",
+                    color: theme.black
+                  }}
+                >
+                  Checkout</Headline>
+              </View>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  width: Platform.OS === "web" ? "100vw" : "100%",
+                  maxWidth: 500,
+                  marginBottom: 10
+                }}>
+                <IconButton icon="circle" size={14} color={theme.lightGrey} />
+                <IconButton icon="circle" size={14} color={theme.green} />
+                <IconButton icon="circle" size={14} color={theme.lightGrey} />
+                <IconButton icon="circle" size={14} color={theme.lightGrey} />
+              </View>
+              <Divider />
+
+              <Title style={{
+                color: "black",
                 fontWeight: "bold",
-                color: theme.black
-              }}
-            >
-              Checkout</Headline>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-              flexWrap: "nowrap",
-              width: Platform.OS === "web" ? "100vw" : "100%",
-              maxWidth: 500,
-              marginBottom: 10
-            }}>
-            <IconButton icon="circle" size={14} color={theme.green} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-            <IconButton icon="circle" size={14} color={theme.lightGrey} />
-          </View>
-          <Divider />
+                fontSize: 16,
+                marginHorizontal: 10,
+                marginVertical: 20
+              }}>
+                Choose your payment method:
+              </Title>
 
-          <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-            Select a pyament method:
-          </Title>
-          <View style={{ paddingHorizontal: 25 }}>
-            <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
-            <Text>{shippingAddress.address1}</Text>
-            <Text>{shippingAddress.address2}</Text>
-            <Text>{shippingAddress.city}, {shippingAddress.province}</Text>
-            <Text>{shippingAddress.postalCode}</Text>
-            <Text>{shippingAddress.phoneNumber}</Text>
-            <Text> </Text>
-            <Text style={{ paddingBottom: 20 }}>Change</Text>
-          </View>
-            <Divider />
+              <TouchableOpacity onPress={() => setChecked('credit')}>
+                <Surface style={{
+                  elevation: 4,
+                  marginHorizontal: 20,
+                  marginBottom: 30,
+                  borderWidth: 1,
+                  borderColor: checked === "credit" ? theme.primary : theme.lightGrey,
+                  backgroundColor: "white",
+                  padding: 20
+                }}
+                >
+                  <Row style={{ justifyContent: "flex-start" }}>
+                    <RadioButton
+                      value="credit"
+                      status={checked === 'credit' ? 'checked' : 'unchecked'}
+                      color={theme.primary}
+                    />
+                    <View style={{
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      paddingLeft: 20
+                    }}>
+                      <Text style={{
+                        fontSize: 16
+                      }}>
+                        Pay by credit card
+                    </Text>
+                    <Image source={creditCards} />
+                    </View>
+                  </Row>
+                </Surface>
+              </TouchableOpacity>
 
-            <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-            Billing Address:
-          </Title>
-          <View style={{ paddingHorizontal: 25 }}>
-            <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
-            <Text>{shippingAddress.address1}</Text>
-            <Text>{shippingAddress.address2}</Text>
-            <Text>{shippingAddress.city}, {shippingAddress.province}</Text>
-            <Text>{shippingAddress.postalCode}</Text>
-            <Text>{shippingAddress.phoneNumber}</Text>
-            <Text> </Text>
-            <Text style={{ paddingBottom: 20 }}>Change</Text>
-          </View>
-            <Divider />
+              <TouchableOpacity onPress={() => setChecked('cash')}>
+                <Surface style={{
+                  elevation: 4,
+                  marginHorizontal: 20,
+                  marginBottom: 30,
+                  borderWidth: 1,
+                  borderColor: checked === "cash" ? theme.primary : theme.lightGrey,
+                  backgroundColor: "white",
+                  padding: 20
+                }}
+                >
+                  <Row style={{ justifyContent: "flex-start" }}>
+                    <RadioButton
+                      value="cash"
+                      status={checked === 'cash' ? 'checked' : 'unchecked'}
+                      color={theme.primary}
+                    />
+                    <View style={{
+                      justifyContent: "center",
+                      alignItems: "flex-start",
+                      paddingLeft: 20
+                    }}>
+                      <Text style={{
+                        fontSize: 16
+                      }}>
+                        Pay upon delivery
+                    </Text>
+                    </View>
+                  </Row>
+                </Surface>
+              </TouchableOpacity>
+            
+            <View style={{height: 100}}></View>
+            </ScrollView>
+          </ContextArea>
 
+          <PaymentNextBtn onSubmit={onSubmit} />
 
-          <View style={{ height: 100 }}></View>
-        </ScrollView>
-      </ContextArea>
-
-      <ShippingNextBtn onSubmit={onSubmit} />
-
-      <BottomBar style={{
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 5,
-        elevation: 10,
-      }} />
-
+          <BottomBar style={{
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 0,
+            },
+            shadowOpacity: 0.4,
+            shadowRadius: 5,
+            elevation: 10,
+          }} />
+        </>
+      }
     </>
   );
 }
 
-const TotalContainer = styled.View`
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
-  flex-direction: row;
-  flex-wrap: nowrap;
-  max-width: 500px;
-  padding: 5px 25px 5px 25px;
-
-`;
-const Content = styled.View`
-  flex: 8;
-  justify-content: center;
-  align-items: flex-start;
-`;
-const Price = styled.View`
-  flex: 6;
-  justify-content: center;
-  align-items: flex-end;
+const Row = styled.View`
+ flex-direction: row;
+ flex-wrap: nowrap;
+ justify-content: flex-start;
 `;
 const Title = styled.Text`
   font-size: 18px;

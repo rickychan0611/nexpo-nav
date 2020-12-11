@@ -116,9 +116,9 @@ export default function AddressForm({
         const id = moment().unix()
         const keyName = `addressBook.${id}`
         db.collection("users").doc(user.email).update({
-          [keyName]: { 
-            ...newAddress, 
-            id 
+          [keyName]: {
+            ...newAddress,
+            id
           },
         })
           .then(() => {
@@ -132,10 +132,10 @@ export default function AddressForm({
         db.collection("users").doc(user.email).update({
           [keyName]: newAddress,
         })
-        .then(() => {
-          setOnEdit(false)
-          setOnAddNew(false)
-        })
+          .then(() => {
+            setOnEdit(false)
+            setOnAddNew(false)
+          })
       }
     })
   }
@@ -151,12 +151,18 @@ export default function AddressForm({
       {/* <InitLoader /> */}
 
       <View style={{ padding: 25 }}>
-
-        <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
-          Enter your address:
-          </Title>
-
         <Row>
+          <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
+            Enter your address:
+          </Title>
+          <Button mode="contained" color={theme.primary} dark uppercase={false}
+            labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+            style={{ marginBottom: 15 }}
+            onPress={() => { onSubmit() }}>
+            Save</Button>
+        </Row>
+        <Divider/>
+        <Row style={{marginTop: 20}}>
           <InputView style={{ flex: 1 }}>
             <TextInput
               style={{ width: "96%" }}

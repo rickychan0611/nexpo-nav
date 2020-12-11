@@ -43,7 +43,7 @@ export default function shipping() {
   }
 
   const onSubmit = () => {
-    navigate({ routeName: "payment" })
+    navigate({ routeName: "checkout/payment" })
   }
 
   useEffect(() => {

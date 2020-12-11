@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, Button, Headline, IconButton, Surface } from "react-native-paper";
 import { firebase, db } from "../../firebase";
-import { Image, Platform, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 
 import BottomBar from "../../components/BottomBar";
@@ -144,12 +144,13 @@ export default function addressBook() {
                           justifyContent: "center",
                         }}>
 
-
-                          <Edit theme={theme}
-                            onPress={() => {
-                              setOnEdit(true)
-                              setEditAddress(address)
-                            }}>Edit</Edit>
+                          <TouchableOpacity onPress={() => {
+                            setOnEdit(true)
+                            setEditAddress(address)
+                          }}>
+                            <Edit theme={theme}
+                            >Edit</Edit>
+                          </TouchableOpacity>
 
                           <Text>{"     |     "}</Text>
 
@@ -158,11 +159,13 @@ export default function addressBook() {
                             <Edit theme={theme} style={{ color: theme.lightGrey }}>
                               Delete</Edit>
                             :
-                            <Edit theme={theme} disabled
-                              onPress={() => {
-                                deleteAddress(address.id, index)
-                              }}>
-                              Delete</Edit>
+                            <TouchableOpacity onPress={() => {
+                              deleteAddress(address.id, index)
+                            }}>
+                              <Edit theme={theme} disabled
+                              >
+                                Delete</Edit>
+                            </TouchableOpacity>
                           }
 
                         </View>

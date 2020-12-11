@@ -1,6 +1,6 @@
 // import Home from './home';
 
 // export default Home;
-import Cart from './Cart';
+import Cart from './cart';
 
 export default Cart;
