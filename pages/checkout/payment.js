@@ -5,7 +5,7 @@ import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, Surface, Headline, IconButton, RadioButton } from "react-native-paper";
 import { db } from "../../firebase";
-import { TouchableOpacity, Platform, ScrollView, Text, View, Image } from "react-native";
+import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import creditCards from "../../public/creditCards.png"
 
@@ -89,23 +89,33 @@ export default function payment() {
                   padding: 20
                 }}
                 >
-                  <Row style={{ justifyContent: "flex-start" }}>
-                    <RadioButton
-                      value="credit"
-                      status={checked === 'credit' ? 'checked' : 'unchecked'}
-                      color={theme.primary}
-                    />
+                  <Row>
                     <View style={{
+                      flexDirection: "column",
+                      flexWrap: "nowrap",
                       justifyContent: "center",
-                      alignItems: "flex-start",
-                      paddingLeft: 20
+                      alignItems: "center",
+                    }}>
+                      <RadioButton
+                        value="credit"
+                        status={checked === 'credit' ? 'checked' : 'unchecked'}
+                        color={theme.primary}
+                      />
+                    </View>
+                    <View style={{
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      paddingLeft: 10
                     }}>
                       <Text style={{
-                        fontSize: 16
+                        fontSize: 16,
+                        marginRight: 10
                       }}>
                         Pay by credit card
                     </Text>
-                    <Image source={creditCards} />
+                      <Image source={creditCards} />
                     </View>
                   </Row>
                 </Surface>
@@ -131,7 +141,7 @@ export default function payment() {
                     <View style={{
                       justifyContent: "center",
                       alignItems: "flex-start",
-                      paddingLeft: 20
+                      paddingLeft: 10
                     }}>
                       <Text style={{
                         fontSize: 16
@@ -142,8 +152,8 @@ export default function payment() {
                   </Row>
                 </Surface>
               </TouchableOpacity>
-            
-            <View style={{height: 100}}></View>
+
+              <View style={{ height: 100 }}></View>
             </ScrollView>
           </ContextArea>
 
@@ -169,6 +179,7 @@ const Row = styled.View`
  flex-direction: row;
  flex-wrap: nowrap;
  justify-content: flex-start;
+ 
 `;
 const Title = styled.Text`
   font-size: 18px;
@@ -183,4 +194,11 @@ const ContextArea = styled.View`
   max-width: 500px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
+`;
+
+const Image = styled.Image`
+      /* flex: 1; */
+      width: 80px;
+      height: 30px;
+      resize-mode: contain;
 `;
