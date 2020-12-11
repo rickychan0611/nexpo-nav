@@ -49,7 +49,8 @@ const ContextProvider = ({ children }) => {
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [initLoaded, setInitLoaded] = useState(false);
-  
+  const [checked, setChecked] = useState('credit');
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       console.log(initLoaded)
@@ -156,7 +157,9 @@ const ContextProvider = ({ children }) => {
           onEdit, setOnEdit,
           onAddNew, setOnAddNew,
           editAddress, setEditAddress,
-          initLoaded, setInitLoaded        }
+          initLoaded, setInitLoaded,
+          checked, setChecked
+       }
       }
     >
       {children}

@@ -14,7 +14,7 @@ import PaymentNextBtn from "../../components/PaymentNextBtn";
 import Loader from "../../components/Loader";
 import InitLoader from "../../components/InitLoader";
 
-export default function payment() {
+export default function review() {
   const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
   const {
@@ -25,8 +25,7 @@ export default function payment() {
   const [paymentMethod, setPaymentMethod] = useState("credit")
 
   const onSubmit = () => {
-    console.log(checked)
-    navigate({ routeName: "checkout/review" })
+    navigate({ routeName: "checkout/payment" })
   }
 
   return (
@@ -50,7 +49,7 @@ export default function payment() {
                     color: theme.black
                   }}
                 >
-                  Checkout</Headline>
+                  Checkout - {checked} </Headline>
               </View>
               <View
                 style={{

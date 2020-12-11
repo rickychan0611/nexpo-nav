@@ -18,8 +18,9 @@ import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import order_details from "./pages/admin/order-details";
 import shipping from "./pages/checkout/shipping";
+import review from "./pages/checkout/review";
 import addressBook from "./pages/checkout/address-book";
-import payment from "./pages/checkout/payment";
+import paymentMethod from "./pages/checkout/review";
 import newAddress from "./pages/checkout/new-address";
 import login from "./pages/login";
 import signIn from "./pages/signIn";
@@ -70,7 +71,8 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="checkout/payment" component={payment} options={options("Choose a Payment")} />
+          <Stack.Screen name="checkout/payment-method" component={paymentMethod} options={options("Choose a Payment")} />
+          <Stack.Screen name="checkout/review" component={review} options={options("Choose a Payment")} />
           <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
