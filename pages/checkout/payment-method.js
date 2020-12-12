@@ -14,19 +14,23 @@ import PaymentNextBtn from "../../components/PaymentNextBtn";
 import Loader from "../../components/Loader";
 import InitLoader from "../../components/InitLoader";
 
-export default function payment() {
+export default function paymentMethod() {
   const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
   const {
     initLoaded,
-    checked, setChecked
+    paymentMethod, setPaymentMethod
   } = useContext(Context);
 
-  const [paymentMethod, setPaymentMethod] = useState("credit")
 
   const onSubmit = () => {
-    console.log(checked)
-    navigate({ routeName: "checkout/review" })
+    console.log(paymentMethod)
+    if (paymentMethod === "cash") {
+      navigate({ routeName: "confirmOrder" })
+    }
+    else if (paymentMethod === "credit") {
+      navigate({ routeName: "checkout/credit-card" })
+    }
   }
 
   return (
@@ -50,7 +54,7 @@ export default function payment() {
                     color: theme.black
                   }}
                 >
-                  Checkout</Headline>
+                  Payment Method</Headline>
               </View>
               <View
                 style={{
@@ -79,13 +83,13 @@ export default function payment() {
                 Choose your payment method:
               </Title>
 
-              <TouchableOpacity onPress={() => setChecked('credit')}>
+              <TouchableOpacity onPress={() => setPaymentMethod('credit')}>
                 <Surface style={{
                   elevation: 4,
                   marginHorizontal: 20,
                   marginBottom: 30,
                   borderWidth: 1,
-                  borderColor: checked === "credit" ? theme.primary : theme.lightGrey,
+                  borderColor: paymentMethod === "credit" ? theme.primary : theme.lightGrey,
                   backgroundColor: "white",
                   padding: 20
                 }}
@@ -99,7 +103,7 @@ export default function payment() {
                     }}>
                       <RadioButton
                         value="credit"
-                        status={checked === 'credit' ? 'checked' : 'unchecked'}
+                        status={paymentMethod === 'credit' ? 'checked' : 'unchecked'}
                         color={theme.primary}
                       />
                     </View>
@@ -122,13 +126,13 @@ export default function payment() {
                 </Surface>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => setChecked('cash')}>
+              <TouchableOpacity onPress={() => setPaymentMethod('cash')}>
                 <Surface style={{
                   elevation: 4,
                   marginHorizontal: 20,
                   marginBottom: 30,
                   borderWidth: 1,
-                  borderColor: checked === "cash" ? theme.primary : theme.lightGrey,
+                  borderColor: paymentMethod === "cash" ? theme.primary : theme.lightGrey,
                   backgroundColor: "white",
                   padding: 20
                 }}
@@ -136,7 +140,7 @@ export default function payment() {
                   <Row style={{ justifyContent: "flex-start" }}>
                     <RadioButton
                       value="cash"
-                      status={checked === 'cash' ? 'checked' : 'unchecked'}
+                      status={paymentMethod === 'cash' ? 'checked' : 'unchecked'}
                       color={theme.primary}
                     />
                     <View style={{

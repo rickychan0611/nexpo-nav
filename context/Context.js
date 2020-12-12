@@ -49,7 +49,9 @@ const ContextProvider = ({ children }) => {
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [initLoaded, setInitLoaded] = useState(false);
-  const [checked, setChecked] = useState('credit');
+  const [paymentMethod, setPaymentMethod] = useState('credit');
+  const [shippingAddress, setShippingAddress] = useState()
+  const [ billingAddress, setBillingAddress ] = useState()
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -158,7 +160,9 @@ const ContextProvider = ({ children }) => {
           onAddNew, setOnAddNew,
           editAddress, setEditAddress,
           initLoaded, setInitLoaded,
-          checked, setChecked
+          paymentMethod, setPaymentMethod,
+          shippingAddress, setShippingAddress,
+          billingAddress, setBillingAddress
        }
       }
     >

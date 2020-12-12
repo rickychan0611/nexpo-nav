@@ -31,14 +31,14 @@ export default function ComfirmOrderBar() {
       await orderIdRef.update({ orderId: increment })
       const snapshot = await orderIdRef.get()
       const orderId = await snapshot.data().orderId
-      
+
       console.log(orderId)
-      
+
       const orderRef = db.collection("orders").doc(now + "A" + orderId)
       setNewOrderId(now + "A" + orderId)
       await orderRef.set({
         orderId: now + "A" + orderId,
-        index: orderId+"",
+        index: orderId + "",
         orderItems: newOrderProductList,
         shippingAddress,
         userId: user.email,
@@ -51,56 +51,63 @@ export default function ComfirmOrderBar() {
         status: "In Progress",
         paymentStatus: "Not paid"
       })
+        .then(() => {
+          setLoading(false)
+          setSelected("orderSuccess")
+          navigate({
+            routeName: "orderSuccess",
+          })
+        })
         .catch(error => {
           setLoading(false)
           console.log(error)
         })
 
       //shipping address exist / update. 
-      if (shippingAddress.uid) {
-        setLoading(true)
-        const shippingAddressRef = db.collection("addressBook").doc(shippingAddress.uid)
-        shippingAddressRef.update({
-          ...shippingAddress,
-          createAt: timestamp,
-          userId: user.email
-        })
-          .then(() => {
-            setLoading(false)
-            setSelected("orderSuccess")
-            navigate({
-              routeName: "orderSuccess",
-            })
-          })
-          .catch(error => {
-            setLoading(false)
-            console.log(error)
-          })
+      // if (shippingAddress.uid) {
+      //   setLoading(true)
+      //   const shippingAddressRef = db.collection("addressBook").doc(shippingAddress.uid)
+      //   shippingAddressRef.update({
+      //     ...shippingAddress,
+      //     createAt: timestamp,
+      //     userId: user.email
+      //   })
+      //     .then(() => {
+      //       setLoading(false)
+      //       setSelected("orderSuccess")
+      //       navigate({
+      //         routeName: "orderSuccess",
+      //       })
+      //     })
+      //     .catch(error => {
+      //       setLoading(false)
+      //       console.log(error)
+      //     })
 
-      }
+      // }
 
       //create new shipping address. 
-      else if (!addressBook.uid) {
-        setLoading(true)
-        const shippingAddressRef = db.collection("addressBook").doc()
-        shippingAddressRef.add({
-          ...shippingAddress,
-          uid: shippingAddressRef.id,
-          createAt: timestamp,
-          userId: user.email
-        })
-          .then(() => {
-            setLoading(false)
-            setSelected("orderSuccess")
-            navigate({
-              routeName: "orderSuccess",
-            })
-          })
-          .catch(error => {
-            setLoading(false)
-            console.log(error)
-          })
-      }
+      // else if (!addressBook.uid) {
+      //   setLoading(true)
+      //   const shippingAddressRef = db.collection("addressBook").doc()
+      //   shippingAddressRef.add({
+      //     ...shippingAddress,
+      //     uid: shippingAddressRef.id,
+      //     createAt: timestamp,
+      //     userId: user.email
+      //   })
+      //     .then(() => {
+      //       setLoading(false)
+      //       setSelected("orderSuccess")
+      //       navigate({
+      //         routeName: "orderSuccess",
+      //       })
+      //     })
+      //     .catch(error => {
+      //       setLoading(false)
+      //       console.log(error)
+      //     })
+      // }
     }
     catch (err) { console.log(err) }
   }

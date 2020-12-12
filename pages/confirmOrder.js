@@ -2,7 +2,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
-import { Divider, TextInput, Headline } from "react-native-paper";
+import { ThemeContext } from "../context/ThemeContext";
+
+import { Divider, Surface, Headline, IconButton, RadioButton } from "react-native-paper";
 import { db } from "../firebase";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -16,13 +18,16 @@ import { forEach } from "react-native-elevation";
 import ComfirmOrderBar from "../components/ComfirmOrderBar";
 
 export default function confirmOrder() {
-  const { navigate } = useRouting();
+  const { navigate, goBack } = useRouting();
+  const { theme } = useContext(ThemeContext);
+
   const {
     total, user,
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
-    deliveryMsg, setSelected
+    deliveryMsg, setSelected, 
+    paymentMethod
   } = useContext(Context);
 
   const shippingDefault = {
@@ -47,18 +52,169 @@ export default function confirmOrder() {
   return (
     <>
       <ContextArea>
+        <IconButton icon="arrow-left" onPress={() => { goBack() }} />
         <ScrollView>
-          <Headline
+          <View
             style={{
-              padding: 25
-            }}
-          >
-            Confirm Order</Headline>
+              justifyContent: "center",
+              alignItems: "center",
+              // width: Platform.OS === "web" ? "100vw" : "100%",
+            }}>
+
+            <Headline
+              style={{
+                paddingBottom: 20,
+                fontWeight: "bold",
+                color: theme.black
+              }}
+            >
+              Review
+            </Headline>
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              flexWrap: "nowrap",
+              width: Platform.OS === "web" ? "100vw" : "100%",
+              maxWidth: 500,
+              marginBottom: 10
+            }}>
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
+            <IconButton icon="circle" size={14} color={theme.green} />
+            <IconButton icon="circle" size={14} color={theme.lightGrey} />
+          </View>
+          <Divider />
+
+          <Title style={{
+            color: "black",
+            fontWeight: "bold",
+            fontSize: 16,
+            marginHorizontal: 10,
+            marginVertical: 20
+          }}>
+            Before ordering, please review your information, including your order details, below.
+              </Title>
 
           <Divider />
 
-          <CartItems />
+          <View style={{
+            backgroundColor: theme.lightGrey,
+            padding: 20,
+            marginBottom: 20
+          }}>
+            <TableRow style={{ paddingTop: 20, paddingBottom: 15 }}>
+              <Text style={{ fontSize: 18 }}>Order Total</Text>
+            </TableRow>
+            <Divider />
+            <TableRow style={{ paddingTop: 10 }}>
+              <Left><Text style={{ color: "grey" }}>Product Total</Text></Left>
+              <Right><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Right>
+            </TableRow>
+            <TableRow style={{ paddingRight: 25 }}>
+              <Left><Text style={{ color: "grey" }}>Discount</Text></Left>
+              <Right><Text style={{ color: "grey" }}>-$0.00</Text></Right>
+            </TableRow>
+            <TableRow style={{ paddingRight: 25 }}>
+              <Left><Text style={{ color: "grey" }}>Shipping</Text></Left>
+              <Right><Text style={{ color: "grey" }}>FREE</Text></Right>
+            </TableRow>
+            <TableRow style={{ paddingRight: 25, paddingBottom: 15 }}>
+              <Left><Text style={{ color: "grey" }}>GST</Text></Left>
+              <Right><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Right>
+            </TableRow>
+            <Divider />
+            <TableRow style={{ paddingTop: 20, paddingBottom: 20, paddingRight: 25 }}>
+              <Left><Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>You Pay:</Text></Left>
+              <Right><Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
+            </TableRow>
+          </View>
 
+          <Title style={{
+            color: "black",
+            fontWeight: "bold",
+            fontSize: 16,
+            marginHorizontal: 10,
+            paddingTop: 10
+          }}>
+            Shipping Address
+              </Title>
+
+          <TableRow style={{ paddingRight: 40 }}>
+            <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
+              {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
+              {shippingAddress.address1 + "\n"}
+              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+              {shippingAddress.city + "\n"}
+              {shippingAddress.province + ", "}
+              {shippingAddress.country + "\n"}
+              {shippingAddress.postalCode + "\n"}
+              {shippingAddress.phoneNumber + "\n"}
+            </Text></AddressLeft>
+          </TableRow>
+          {shippingAddress.message ?
+            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
+              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
+            </TableRow>
+            : null}
+
+
+          <Title style={{
+            color: "black",
+            fontWeight: "bold",
+            fontSize: 16,
+            marginHorizontal: 10,
+            paddingTop: 10
+          }}>
+            Billing Address
+          </Title>
+          <TableRow style={{ paddingRight: 40 }}>
+            <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
+              {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
+              {shippingAddress.address1 + "\n"}
+              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+              {shippingAddress.city + "\n"}
+              {shippingAddress.province + ", "}
+              {shippingAddress.country + "\n"}
+              {shippingAddress.postalCode + "\n"}
+              {shippingAddress.phoneNumber + "\n"}
+            </Text></AddressLeft>
+          </TableRow>
+          {shippingAddress.message ?
+            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
+              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
+            </TableRow>
+            : null}
+
+
+          <Title style={{
+            color: "black",
+            fontWeight: "bold",
+            fontSize: 16,
+            marginHorizontal: 10,
+            paddingTop: 10
+          }}>
+            Payment Infomation
+              </Title>
+
+          <TableRow style={{ paddingRight: 40 }}>
+            <AddressLeft><Text style={{ color: "grey" }}>
+              {paymentMethod === "cash" ? 
+               "Pay upon delivery" : "Credit Card"}
+              </Text></AddressLeft>
+          </TableRow>
+
+
+          <TableRow style={{ paddingTop: 40, paddingBottom: 15 }}>
+            <Text style={{ fontSize: 18 }}>Your order details.</Text>
+          </TableRow>
+
+          <Divider />
+          <CartItems />
           <Divider />
 
           <TableRow style={{ paddingTop: 20, paddingRight: 25 }}>
@@ -78,37 +234,6 @@ export default function confirmOrder() {
             <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
           </TableRow>
 
-          <Divider />
-
-          <Title>Delivery Info:</Title>
-
-          <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-            <Left><Text style={{ color: "grey" }}>Receiver:</Text></Left>
-            <Right><Text style={{ color: "grey" }}>{shippingAddress.firstName + " " + shippingAddress.lastName}</Text></Right>
-          </TableRow>
-          <TableRow style={{ paddingRight: 40 }}>
-            <Left><Text style={{ color: "grey" }}>Address:</Text></Left>
-            <Right><Text style={{ color: "grey", textAlign: "right" }}>
-              {shippingAddress.address1 + "\n"}
-              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
-              {shippingAddress.city + "\n"}
-              {shippingAddress.province + ", "}
-              {shippingAddress.country + "\n"}
-              {shippingAddress.postalCode}
-            </Text></Right>
-          </TableRow>
-
-          <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-            <Left><Text style={{ color: "grey" }}>Phone#:</Text></Left>
-            <Right><Text style={{ color: "grey" }}>{shippingAddress.phoneNumber}</Text></Right>
-          </TableRow>
-
-          {shippingAddress.message ?
-            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-              <Left><Text style={{ color: "grey" }}>Note:</Text></Left>
-              <Right><Text style={{ color: "grey" }}>{shippingAddress.message}</Text></Right>
-            </TableRow>
-            : null}
 
           <View style={{ height: 200 }}></View>
 
@@ -133,11 +258,16 @@ export default function confirmOrder() {
 }
 
 const TableRow = styled.View`
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
+  /* width: ${Platform.OS === "web" ? `100vw` : `null`}; */
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 500px;
   padding: 5px 25px 5px 25px;
+`;
+const AddressLeft = styled.View`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: flex-start;
 `;
 const Left = styled.View`
   flex: 1;
@@ -145,7 +275,7 @@ const Left = styled.View`
   align-items: flex-start;
 `;
 const Right = styled.View`
-  flex: 3;
+  flex: 2;
   justify-content: flex-end;
   align-items: flex-end;
   `;

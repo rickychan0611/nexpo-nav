@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { Divider, TextInput, Headline, IconButton } from "react-native-paper";
+import { Divider, Checkbox, Headline, IconButton } from "react-native-paper";
 import { db } from "../../firebase";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -11,54 +11,39 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../../components/BottomBar";
 import ShippingNextBtn from "../../components/ShippingNextBtn";
 import Loader from "../../components/Loader";
-import AddressForm from "../../components/AddressForm";
+import BillingAddressForm from "../../components/BillingAddressForm";
 import Row from "../../components/Row";
 import InitLoader from "../../components/InitLoader";
+import CreditCardForm from "../../components/CreditCardForm";
 
-export default function shipping() {
+export default function creditCard() {
   const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
   const {
     total, user, setSelected,
     addressBook, setAddressBook,
     shippingAddress, setShippingAddress,
+    billingAddress, setBillingAddress,
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
     initLoaded
   } = useContext(Context);
 
-  const [loading, setLoading] = useState(false);
-  const [billing, setBilling] = useState()
-  const [hasShippingAddress, setHasShippingAddress] = useState(false)
-  const [visible, setVisible] = useState(true)
-
-  const shippingDefault = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
-  }
+  const [checked, setChecked] = useState(false);
 
   const onSubmit = () => {
     navigate({ routeName: "checkout/payment-method" })
   }
 
-  useEffect(() => {
-    addressBook && addressBook.map((address) => {
-      // console.log(user.addressType && user.addressType.shipping)
-      // console.log(address.id)
-      // if (user.addressType.shipping === address.id) {
-      //   setBilling(address)
-      // }
-      if (user && user.addressType && user.addressType.shipping === address.id) {
-        setShippingAddress(address)
-        setHasShippingAddress(true)
-      }
-    })
-  }, [addressBook])
+  // useEffect(() => {
+  //   addressBook && addressBook.map((address) => {
+
+  //     if (user && user.addressType && user.addressType.shipping === address.id) {
+  //       setShippingAddress(address)
+  //       setHasShippingAddress(true)
+  //     }
+  //   })
+  // }, [addressBook])
 
   return (
     <>
@@ -82,7 +67,7 @@ export default function shipping() {
                     color: theme.black
                   }}
                 >
-                  Checkout</Headline>
+                  Credit Card Payment</Headline>
               </View>
               <View
                 style={{
@@ -94,24 +79,48 @@ export default function shipping() {
                   maxWidth: 500,
                   marginBottom: 10
                 }}>
+                <IconButton icon="circle" size={14} color={theme.lightGrey} />
+                <IconButton icon="circle" size={14} color={theme.lightGrey} />
                 <IconButton icon="circle" size={14} color={theme.green} />
                 <IconButton icon="circle" size={14} color={theme.lightGrey} />
-                <IconButton icon="circle" size={14} color={theme.lightGrey} />
-                <IconButton icon="circle" size={14} color={theme.lightGrey} />
               </View>
+
+              <Divider />
+              <CreditCardForm />
               <Divider />
 
-              {!shippingAddress ?
+              <Checker>
+                <Text style={{
+                  color: "black",
+                  fontWeight: "bold",
+                  fontSize: 16,
+                  marginHorizontal: 10,
+                }}>
+                  Use shipping address as billing address?
+                </Text>
+                <Checkbox
+                  status={checked ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    setChecked(!checked);
+                  }}
+                />
+              </Checker>
+
+              {!checked ?
                 <>
-                  <AddressForm type="shipping" tasker={"1stAddress"} />
+                  <BillingAddressForm type="billing" tasker={"1stBillingAddress"} />
                 </>
                 :
                 <>
-
-
-                  <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
-                    Shipping Address:
-              </Title>
+                  {/* <Text style={{ 
+                    color: "black", 
+                    fontWeight: "bold", 
+                    fontSize: 16, 
+                    marginHorizontal: 10,
+                    paddingLeft: 15
+                    }}>
+                    Billing Address:
+                  </Text> */}
                   <View style={{ paddingHorizontal: 25 }}>
                     <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
                     <Text>{shippingAddress.address1}</Text>
@@ -120,13 +129,7 @@ export default function shipping() {
                     <Text>{shippingAddress.phoneNumber}</Text>
                     <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
                       onPress={() => {
-                        navigate({
-                          routeName: "checkout/address-book",
-                          params: {
-                            type: "shipping",
-                            userId: user.uid
-                          }
-                        })
+                       setChecked(false)
                       }}>Change</Text>
                   </View>
                   <Divider />
@@ -163,23 +166,15 @@ const TotalContainer = styled.View`
   flex-wrap: nowrap;
   max-width: 500px;
   padding: 5px 25px 5px 25px;
-
 `;
-const Content = styled.View`
-  flex: 8;
-  justify-content: center;
-  align-items: flex-start;
-`;
-const Price = styled.View`
-  flex: 6;
-  justify-content: center;
-  align-items: flex-end;
-`;
-const Title = styled.Text`
-  font-size: 18px;
-  width: 100%;
-  padding: 15px;
-  background-color: white;   
+const Checker = styled.View`
+  flex-direction:row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  padding-left: 15px;
+  margin-top: 20;
 `;
 const ContextArea = styled.View`
   /* flex: 1; */
