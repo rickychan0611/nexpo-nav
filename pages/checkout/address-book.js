@@ -29,7 +29,9 @@ export default function addressBook() {
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
     editAddress, setEditAddress,
-    initLoaded
+    initLoaded, 
+    task, setTask,
+    setNewBillingBoxchecked
   } = useContext(Context);
 
   const updateShippingAddress = (addressId) => {
@@ -47,11 +49,9 @@ export default function addressBook() {
     })
   }
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate({ routeName: "home" })
-  //   }
-  // }, [user])
+  useEffect(() => {
+    return () => {setTask("newBillingAddress")}
+  }, [])
 
   return (
     <>
@@ -76,7 +76,12 @@ export default function addressBook() {
                   <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
                     <Edit theme={theme}
                       onPress={() => {
-                        setOnAddNew(true)
+                        if (task === "changeBillingAddress") {
+                          goBack()
+                          setTask("newBillingAddress")
+                          setNewBillingBoxchecked(false)
+                        }
+                        else setOnAddNew(true)
                       }}>{"+ Add a New Address"}</Edit>
                   </View>
                 </>}
@@ -97,14 +102,16 @@ export default function addressBook() {
                         {onEdit && address === editAddress &&
                           <AddressForm
                             index={index}
-                            onEdit setOnEdit={setOnEdit}
+                            onEdit 
+                            setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
 
                         {onAddNew && index === 0 &&
                           <AddressForm
                             index={index}
-                            onEdit setOnEdit={setOnEdit}
+                            onEdit 
+                            setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
 

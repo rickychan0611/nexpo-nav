@@ -51,7 +51,36 @@ const ContextProvider = ({ children }) => {
   const [initLoaded, setInitLoaded] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('credit');
   const [shippingAddress, setShippingAddress] = useState()
-  const [ billingAddress, setBillingAddress ] = useState()
+  const [billingAddress, setBillingAddress] = useState()
+  const [task, setTask] = useState("")
+  const [newBillingBoxchecked, setNewBillingBoxchecked] = useState(false)
+  const [newCard, setNewCard] = useState({
+    firstName: "Ka Kit",
+    lastName: "Chan",
+    cardNumber: "4012888888881881	",
+    CVV: "123",
+    expMonth: "11",
+    expYear: "21",
+    address1: "",
+    address2: "",
+    city: "",
+    province: "",
+    country: "",
+    postalCode: "",
+    
+    // firstName: "",
+    // lastName: "",
+    // cardNumber: "",
+    // CVV: "",
+    // expMonth: "",
+    // expYear: "",
+    // address1: "",
+    // address2: "",
+    // city: "",
+    // province: "",
+    // country: "",
+    // postalCode: "",
+  })
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -162,7 +191,10 @@ const ContextProvider = ({ children }) => {
           initLoaded, setInitLoaded,
           paymentMethod, setPaymentMethod,
           shippingAddress, setShippingAddress,
-          billingAddress, setBillingAddress
+          billingAddress, setBillingAddress,
+          newCard, setNewCard,
+          task, setTask,
+          newBillingBoxchecked, setNewBillingBoxchecked
        }
       }
     >

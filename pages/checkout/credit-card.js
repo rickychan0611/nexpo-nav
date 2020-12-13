@@ -9,7 +9,7 @@ import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 
 import BottomBar from "../../components/BottomBar";
-import ShippingNextBtn from "../../components/ShippingNextBtn";
+import CreditCardNextBtn from "../../components/CreditCardNextBtn";
 import Loader from "../../components/Loader";
 import BillingAddressForm from "../../components/BillingAddressForm";
 import Row from "../../components/Row";
@@ -20,30 +20,129 @@ export default function creditCard() {
   const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
   const {
-    total, user, setSelected,
+    user, setSelected,
     addressBook, setAddressBook,
+    newCard, setNewCard,
     shippingAddress, setShippingAddress,
     billingAddress, setBillingAddress,
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
-    initLoaded
+    initLoaded,
+    newBillingBoxchecked, setNewBillingBoxchecked,
+    task, setTask
   } = useContext(Context);
 
-  const [checked, setChecked] = useState(false);
-
-  const onSubmit = () => {
-    navigate({ routeName: "checkout/payment-method" })
+  const empty = {
+    firstName: "",
+    lastName: "",
+    cardNumber: "",
+    CVV: "",
+    expMonth: "",
+    expYear: "",
+    address1: "",
+    address2: "",
+    city: "",
+    province: "",
+    country: "",
+    postalCode: "",
   }
 
-  // useEffect(() => {
-  //   addressBook && addressBook.map((address) => {
+  const [err, setErr] = useState(empty);
 
-  //     if (user && user.addressType && user.addressType.shipping === address.id) {
-  //       setShippingAddress(address)
-  //       setHasShippingAddress(true)
-  //     }
-  //   })
-  // }, [addressBook])
+  const setShippingAsBilling = () => {
+    setNewBillingBoxchecked(!newBillingBoxchecked)
+    const { address1, address2, city, province, country, postalCode } = shippingAddress
+    if (newBillingBoxchecked) {
+      newCard.address1 = address1
+      newCard.address2 = address2
+      newCard.city = city
+      newCard.province = province
+      newCard.country = country
+      newCard.postalCode = postalCode
+    }
+
+    else {
+      newCard.address1 = ""
+      newCard.address2 = ""
+      newCard.city = ""
+      newCard.province = ""
+      newCard.country = ""
+      newCard.postalCode = ""
+    }
+  }
+
+  const onSubmit = (clicker) => {
+    setErr(empty)
+
+    let validate = new Promise((resolve, reject) => {
+
+      if (!newCard.firstName) {
+        setErr(prev => ({ ...prev, firstName: "Required" }))
+        reject()
+      }
+      if (!newCard.lastName) {
+        setErr(prev => ({ ...prev, lastName: "Required" }))
+        reject()
+      }
+      if (!newCard.cardNumber) {
+        setErr(prev => ({ ...prev, cardNumber: "Required" }))
+        reject()
+      }
+      if (!newCard.expMonth) {
+        setErr(prev => ({ ...prev, expMonth: "Required" }))
+        reject()
+      }
+      if (!newCard.expYear) {
+        setErr(prev => ({ ...prev, expYear: "Required" }))
+        reject()
+      }
+      if (!newCard.CVV) {
+        setErr(prev => ({ ...prev, CVV: "Required" }))
+        reject()
+      }
+      if (!newCard.address1) {
+        setErr(prev => ({ ...prev, address1: "Required" }))
+        reject()
+      }
+      if (!newCard.city) {
+        setErr(prev => ({ ...prev, city: "Required" }))
+        reject()
+      }
+      if (!newCard.province) {
+        setErr(prev => ({ ...prev, province: "Required" }))
+        reject()
+      }
+      if (!newCard.country) {
+        setErr(prev => ({ ...prev, country: "Required" }))
+        reject()
+      }
+      if (!newCard.postalCode) {
+        setErr(prev => ({ ...prev, postalCode: "Required" }))
+        reject()
+      }
+      if (!newCard.phoneNumber) {
+        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
+        reject()
+      }
+      else resolve()
+    })
+
+    validate.then(() => {
+      setErr(empty)
+
+        const id = moment().unix()
+        const keyName = `addressBook.${id}`
+
+        //TODO: validate credit card. save profit get a token. 
+
+
+
+        // db.collection("users").doc(user.email).update({
+        //   [keyName]: { ...newCard, id },
+        //   "addressType.billing": id,
+        // }).then(() => { })
+    })
+  }
 
   return (
     <>
@@ -86,7 +185,11 @@ export default function creditCard() {
               </View>
 
               <Divider />
-              <CreditCardForm />
+              <CreditCardForm
+                newCard={newCard}
+                setNewCard={setNewCard}
+                err={err}
+                setErr={setErr} />
               <Divider />
 
               <Checker>
@@ -99,50 +202,45 @@ export default function creditCard() {
                   Use shipping address as billing address?
                 </Text>
                 <Checkbox
-                  status={checked ? 'checked' : 'unchecked'}
+                  status={newBillingBoxchecked ? 'checked' : 'unchecked'}
                   onPress={() => {
-                    setChecked(!checked);
+                    setShippingAsBilling();
                   }}
                 />
               </Checker>
 
-              {!checked ?
+              {!newBillingBoxchecked ?
                 <>
-                  <BillingAddressForm type="billing" tasker={"1stBillingAddress"} />
+                  <BillingAddressForm
+                    type="billing"
+                    tasker={"1stBillingAddress"}
+                    newCard={newCard}
+                    setNewCard={setNewCard}
+                    err={err}
+                    setErr={setErr} />
                 </>
                 :
                 <>
-                  {/* <Text style={{ 
-                    color: "black", 
-                    fontWeight: "bold", 
-                    fontSize: 16, 
-                    marginHorizontal: 10,
-                    paddingLeft: 15
-                    }}>
-                    Billing Address:
-                  </Text> */}
                   <View style={{ paddingHorizontal: 25 }}>
-                    <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text>
+                    {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
                     <Text>{shippingAddress.address1}</Text>
                     {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
                     <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
                     <Text>{shippingAddress.phoneNumber}</Text>
                     <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
                       onPress={() => {
-                       setChecked(false)
+                        setTask("changeBillingAddress")
+                        navigate({routeName: "checkout/address-book"})
                       }}>Change</Text>
                   </View>
-                  <Divider />
                 </>
               }
-
-              <Text style={{ height: 240 }}>{" "}</Text>
+              <Text style={{ height: 200 }}>{" "}</Text>
 
             </ScrollView>
           </ContextArea>
 
-          {shippingAddress && !onEdit && !onAddNew &&
-            <ShippingNextBtn onSubmit={onSubmit} />}
+          <CreditCardNextBtn onSubmit={onSubmit} />
 
           <BottomBar style={{
             shadowColor: "#000",

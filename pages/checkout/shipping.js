@@ -48,11 +48,6 @@ export default function shipping() {
 
   useEffect(() => {
     addressBook && addressBook.map((address) => {
-      // console.log(user.addressType && user.addressType.shipping)
-      // console.log(address.id)
-      // if (user.addressType.shipping === address.id) {
-      //   setBilling(address)
-      // }
       if (user && user.addressType && user.addressType.shipping === address.id) {
         setShippingAddress(address)
         setHasShippingAddress(true)

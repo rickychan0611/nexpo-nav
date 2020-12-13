@@ -12,139 +12,16 @@ import Loader from "../Loader";
 import InitLoader from "../InitLoader";
 
 export default function BillingAddressForm({
-  type, isNewShipping,
-  address, index,
-  onEdit, setOnEdit,
-  onAddNew, setOnAddNew,
-  hasShippingAddress, setHasShippingAddress,
-  tasker
+  newCard, setNewCard, err, setErr
 }) {
 
-  const { user, addressBook, editAddress, setEditAddress,
-    initLoading, setInitLoading } = useContext(Context);
-
-  const empty = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
-  }
-
-  const shippingDefault = editAddress && !onAddNew ? editAddress : empty
-
   const { theme } = useContext(ThemeContext);
-  const [newAddress, setNewAddress] = useState(shippingDefault);
 
-  const { navigate, goBack } = useRouting();
-
-  const [err, setErr] = useState(empty);
   const handleChanage = (name, value) => {
-    setNewAddress(prev => {
+    setNewCard(prev => {
       return { ...prev, [name]: value }
     })
   }
-
-  // useEffect(()=>{
-  //   if (address) {
-  //     setNewAddress(address)
-  //   }
-  // },[])
-
-  const onSubmit = (clicker) => {
-    setErr(shippingDefault)
-
-    // if (!newOrderProductList[0]) {
-    //   alert("Your shopping Cart is empty. Please add something : )")
-    //   return
-    // }
-
-    let validate = new Promise((resolve, reject) => {
-
-      if (!newAddress.firstName) {
-        setErr(prev => ({ ...prev, firstName: "Required" }))
-        reject()
-      }
-      if (!newAddress.lastName) {
-        setErr(prev => ({ ...prev, lastName: "Required" }))
-        reject()
-      }
-      if (!newAddress.address1) {
-        setErr(prev => ({ ...prev, address1: "Required" }))
-        reject()
-      }
-      if (!newAddress.city) {
-        setErr(prev => ({ ...prev, city: "Required" }))
-        reject()
-      }
-      if (!newAddress.province) {
-        setErr(prev => ({ ...prev, province: "Required" }))
-        reject()
-      }
-      if (!newAddress.country) {
-        setErr(prev => ({ ...prev, country: "Required" }))
-        reject()
-      }
-      if (!newAddress.postalCode) {
-        setErr(prev => ({ ...prev, postalCode: "Required" }))
-        reject()
-      }
-      if (!newAddress.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
-      else resolve()
-    })
-
-    validate.then(() => {
-      setErr(empty)
-
-      console.log(hasShippingAddress)
-      if (tasker === "1stAddress") {
-        const id = moment().unix()
-        const keyName = `addressBook.${id}`
-
-        db.collection("users").doc(user.email).update({
-          [keyName]: { ...newAddress, id },
-          "addressType.shipping": id,
-        }).then(() => {
-        })
-      }
-      else if (onAddNew) {
-        const id = moment().unix()
-        const keyName = `addressBook.${id}`
-        db.collection("users").doc(user.email).update({
-          [keyName]: {
-            ...newAddress,
-            id
-          },
-        })
-          .then(() => {
-            setOnEdit(false)
-            setOnAddNew(false)
-          })
-
-      }
-      else if (onEdit) {
-        const keyName = `addressBook.${editAddress.id}`
-        db.collection("users").doc(user.email).update({
-          [keyName]: newAddress,
-        })
-          .then(() => {
-            setOnEdit(false)
-            setOnAddNew(false)
-          })
-      }
-    })
-  }
-
-  // useEffect(() => {
-  //   if (!initLoading && !user) {
-  //     navigate({ routeName: "home" })
-  //   }
-  // }, [initLoading])
 
   return (
     <>
@@ -161,7 +38,7 @@ export default function BillingAddressForm({
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={newAddress.address1}
+            value={newCard.address1}
             onChangeText={value => { handleChanage("address1", value) }}
             error={err.address1}
             returnKeyLabel="next"
@@ -180,7 +57,7 @@ export default function BillingAddressForm({
             theme={{ colors: { primary: "grey" } }}
             mode="outlined"
             dense
-            value={newAddress.address2}
+            value={newCard.address2}
             onChangeText={value => { handleChanage("address2", value) }}
             error={err.address2}
             returnKeyLabel="next"
@@ -201,7 +78,7 @@ export default function BillingAddressForm({
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={newAddress.city}
+              value={newCard.city}
               onChangeText={value => { handleChanage("city", value) }}
               error={err.city}
               returnKeyLabel="next"
@@ -221,7 +98,7 @@ export default function BillingAddressForm({
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={newAddress.postalCode}
+              value={newCard.postalCode}
               onChangeText={value => { handleChanage("postalCode", value) }}
               error={err.postalCode}
               returnKeyLabel="next"
@@ -243,7 +120,7 @@ export default function BillingAddressForm({
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={newAddress.province}
+              value={newCard.province}
               onChangeText={value => { handleChanage("province", value) }}
               error={err.province}
               returnKeyLabel="next"
@@ -262,7 +139,7 @@ export default function BillingAddressForm({
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={newAddress.country}
+              value={newCard.country}
               onChangeText={value => { handleChanage("country", value) }}
               error={err.country}
               returnKeyLabel="next"
@@ -274,51 +151,6 @@ export default function BillingAddressForm({
             </HelperText>
           </InputView>
         </Row>
-
-        {/* 
-        <Divider style={{ marginBottom: 20 }} />
-        <InputView>
-          <TextInput
-          label="Note for delivery"
-          placeholder='Leave you message'
-          theme={{ colors: { primary: "grey" } }}
-          mode="outlined"
-          dense
-          value={newAddress.message}
-          onChangeText={value => { handleChanage("message", value) }}
-          error={err.message}
-          multiline={true}
-          numberOfLines={2}
-          />
-          <HelperText type="error" visible={err.message}>
-          {err.message}
-          </HelperText>
-        </InputView> */}
-
-        {/* <>
-          <Divider style={{ marginBottom: 20 }} />
-          <Row>
-            <>
-              {!isNewShipping ?
-                <Button mode="contained" color={theme.darkGrey} dark uppercase={false}
-                  labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                  style={{ marginBottom: 10 }}
-                  onPress={() => {
-                    setOnEdit(false)
-                    setOnAddNew(false)
-                  }}
-                >
-                  Cancel</Button>
-                : <View style={{ flex: 1 }}></View>
-              }
-              <Button mode="contained" color={theme.primary} dark uppercase={false}
-                labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                style={{ marginBottom: 10 }}
-                onPress={() => { onSubmit() }}>
-                Save</Button>
-            </>
-          </Row>
-        </> */}
       </View>
     </>
   )

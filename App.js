@@ -72,11 +72,11 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="checkout/credit-card" component={creditCard} options={options("Shop")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="checkout/payment-method" component={paymentMethod} options={options("Choose a Payment")} />
           <Stack.Screen name="checkout/review" component={review} options={options("Choose a Payment")} />
-          <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />

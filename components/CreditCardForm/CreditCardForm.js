@@ -12,151 +12,25 @@ import Loader from "../Loader";
 import InitLoader from "../InitLoader";
 
 export default function CreditCardForm({
-  type, isNewShipping,
-  address, index,
-  onEdit, setOnEdit,
-  onAddNew, setOnAddNew,
-  hasShippingAddress, setHasShippingAddress,
-  tasker
+  newCard, setNewCard,
+  err, setErr
 }) {
-
-  const { user, addressBook, editAddress, setEditAddress,
-    initLoading, setInitLoading } = useContext(Context);
-
-  const empty = {
-    firstName: "",
-    lastName: "",
-    cardNumber: "",
-    CVV: "",
-    expMonth: "",
-    expYear: "",
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-  }
-
-  const creditInfoDefault = empty
 
   const { theme } = useContext(ThemeContext);
   // const [newAddress, setNewCard] = useState(shippingDefault);
-  const [newCard, setNewCard] = useState(creditInfoDefault);
 
   const { navigate, goBack } = useRouting();
 
-  const [err, setErr] = useState(empty);
   const handleChanage = (name, value) => {
     setNewCard(prev => {
       return { ...prev, [name]: value }
     })
   }
-
-  // useEffect(()=>{
-  //   if (address) {
-  //     setNewCard(address)
-  //   }
-  // },[])
-
-  const onSubmit = (clicker) => {
-    setErr(shippingDefault)
-
-    // if (!newOrderProductList[0]) {
-    //   alert("Your shopping Cart is empty. Please add something : )")
-    //   return
-    // }
-
-    let validate = new Promise((resolve, reject) => {
-
-      if (!newCard.firstName) {
-        setErr(prev => ({ ...prev, firstName: "Required" }))
-        reject()
-      }
-      if (!newCard.lastName) {
-        setErr(prev => ({ ...prev, lastName: "Required" }))
-        reject()
-      }
-      if (!newCard.address1) {
-        setErr(prev => ({ ...prev, address1: "Required" }))
-        reject()
-      }
-      if (!newCard.city) {
-        setErr(prev => ({ ...prev, city: "Required" }))
-        reject()
-      }
-      if (!newCard.province) {
-        setErr(prev => ({ ...prev, province: "Required" }))
-        reject()
-      }
-      if (!newCard.country) {
-        setErr(prev => ({ ...prev, country: "Required" }))
-        reject()
-      }
-      if (!newCard.postalCode) {
-        setErr(prev => ({ ...prev, postalCode: "Required" }))
-        reject()
-      }
-      if (!newCard.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
-      else resolve()
-    })
-
-    validate.then(() => {
-      setErr(empty)
-
-      console.log(hasShippingAddress)
-      if (tasker === "1stAddress") {
-        const id = moment().unix()
-        const keyName = `addressBook.${id}`
-
-        db.collection("users").doc(user.email).update({
-          [keyName]: { ...newCard, id },
-          "addressType.shipping": id,
-        }).then(() => {
-        })
-      }
-      else if (onAddNew) {
-        const id = moment().unix()
-        const keyName = `addressBook.${id}`
-        db.collection("users").doc(user.email).update({
-          [keyName]: {
-            ...newCard,
-            id
-          },
-        })
-          .then(() => {
-            setOnEdit(false)
-            setOnAddNew(false)
-          })
-
-      }
-      else if (onEdit) {
-        const keyName = `addressBook.${editAddress.id}`
-        db.collection("users").doc(user.email).update({
-          [keyName]: newCard,
-        })
-          .then(() => {
-            setOnEdit(false)
-            setOnAddNew(false)
-          })
-      }
-    })
-  }
-
-  // useEffect(() => {
-  //   if (!initLoading && !user) {
-  //     navigate({ routeName: "home" })
-  //   }
-  // }, [initLoading])
-
   return (
     <>
       {/* <InitLoader /> */}
 
-      <View style={{ padding: 25 }}>
+      <View style={{ paddingHorizontal: 25 }}>
         <Title style={{
           color: "black",
           fontWeight: "bold",
@@ -222,14 +96,14 @@ export default function CreditCardForm({
             returnKeyLabel="next"
             keyboardType="phone-pad"
             textContentType="creditCardNumber"
-            maxLength={10}
+            maxLength={16}
           />
           <HelperText type="error" visible={err.cardNumber}>
             {err.cardNumber}
           </HelperText>
         </InputView>
 
-        <Row style={{marginBottom: 0}}>
+        <Row style={{ marginBottom: 0 }}>
           <InputView style={{ flex: 1 }}>
             <TextInput
               style={{ width: "96%" }}
@@ -242,7 +116,8 @@ export default function CreditCardForm({
               onChangeText={value => { handleChanage("expMonth", value) }}
               error={err.expMonth}
               returnKeyLabel="next"
-              keyboardType="default"
+              keyboardType="phone-pad"
+              maxLength={2}
             />
             <HelperText type="error" visible={err.expYear}>
               {err.expMonth}
@@ -261,7 +136,8 @@ export default function CreditCardForm({
               onChangeText={value => { handleChanage("expYear", value) }}
               error={err.expYear}
               returnKeyLabel="next"
-              keyboardType="default"
+              keyboardType="phone-pad"
+              maxLength={2}
             />
             <HelperText type="error" visible={err.expYear}>
               {err.expYear}
@@ -276,14 +152,15 @@ export default function CreditCardForm({
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
-              value={newCard.lastName}
+              value={newCard.CVV}
               onChangeText={value => { handleChanage("newCard", value) }}
-              error={err.newCard}
+              error={err.CVV}
               returnKeyLabel="next"
-              keyboardType="default"
+              keyboardType="phone-pad"
+              maxLength={3}
             />
-            <HelperText type="error" visible={err.newCard}>
-              {err.newCard}
+            <HelperText type="error" visible={err.CVV}>
+              {err.CVV}
             </HelperText>
           </InputView>
         </Row>
