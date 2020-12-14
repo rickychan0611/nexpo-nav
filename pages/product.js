@@ -7,7 +7,7 @@ import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import ViewCartBar from "../components/ViewCartBar";
 import {handleMinus, handlePlus} from  "../hooks/onPlusMinusQty";
-import {db} from "../firebase";
+import {db} from "../firebaseApp";
 
 import BottomBar from "../components/BottomBar";
 import ImageSwiper from "../components/ImageSwiper";

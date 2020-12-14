@@ -7,7 +7,7 @@ import { SearchBar, Button } from 'react-native-elements';
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
-import { db } from "../firebase";
+import { db } from "../firebaseApp";
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";

@@ -7,7 +7,7 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import CartCheckoutBar from "../components/CartCheckoutBar";
-import { firebase, db, auth } from "../firebase";
+import { firebase, db, auth } from "../firebaseApp";
 import * as WebBrowser from 'expo-web-browser';
 // import * as Facebook from 'expo-auth-session/providers/facebook';
 // import { ResponseType } from 'expo-auth-session';

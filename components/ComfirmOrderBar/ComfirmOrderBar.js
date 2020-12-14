@@ -6,7 +6,7 @@ import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { db, firebase } from "../../firebase";
+import { db, firebase } from "../../firebaseApp";
 import Loader from "../Loader";
 import moment from "moment";
 

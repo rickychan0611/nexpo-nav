@@ -1,15 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Platform, Text, KeyboardAvoidingView } from "react-native";
+import { View, Platform, Text } from "react-native";
 import styled from "styled-components/native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, TextInput, Title, HelperText, Button } from "react-native-paper";
 import { Context } from "../../context/Context";
 import validator from 'validator';
-import { db } from "../../firebase";
+import { db } from "../../firebaseApp";
 import { useRouting } from "expo-next-react-navigation";
 import moment from "moment";
 import Loader from "../../components/Loader"
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview'
 
 export default function AddressForm({
   type, isNewShipping,
@@ -160,10 +159,6 @@ export default function AddressForm({
   return (
     <>
       {loading && <Loader />}
-      <KeyboardAwareScrollView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        enabled={true}
-      >
         <View style={{ padding: 25 }}>
           <Row>
             <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 5, marginBottom: 20 }}>
@@ -407,7 +402,6 @@ export default function AddressForm({
             </Row>
           </>
         </View>
-      </KeyboardAwareScrollView>
     </>
   )
 };

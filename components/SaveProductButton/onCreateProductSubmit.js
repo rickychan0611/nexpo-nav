@@ -1,4 +1,4 @@
-import { db } from "../../firebase";
+import { db } from "../../firebaseApp";
 import { Link, useRouting } from "expo-next-react-navigation";
 
 const onCreateProductSubmit = (ctx) => {

@@ -15,7 +15,7 @@ import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline
 
 import InputFields from "./InputFields";
 
-import { db } from "../../../firebase";
+import { db } from "../../../firebaseApp";
 import ImageSwiper from "../../../components/ImageSwiper";
 import * as ImagePicker from 'expo-image-picker';
 

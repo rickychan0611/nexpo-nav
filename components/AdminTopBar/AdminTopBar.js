@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { db } from "../../firebase";
+import { db } from "../../firebaseApp";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Context } from "../../context/Context";
 

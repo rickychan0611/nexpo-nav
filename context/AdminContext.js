@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Context } from "./Context";
-import { db } from "../firebase";
+import { db } from "../firebaseApp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from "moment";
 

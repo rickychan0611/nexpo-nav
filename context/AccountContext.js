@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from "react";
 import { Context } from "./Context";
-import { db } from "../firebase";
+import { db } from "../firebaseApp";
 
 export const AccountContext = createContext();
 

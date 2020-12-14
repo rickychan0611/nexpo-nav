@@ -5,7 +5,7 @@ import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
 
 import { Divider, Surface, Headline, IconButton, RadioButton } from "react-native-paper";
-import { db } from "../firebase";
+import { db } from "../firebaseApp";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 

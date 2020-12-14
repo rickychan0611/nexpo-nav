@@ -10,7 +10,7 @@ import styled from "styled-components/native";
 import moment from "moment";
 import { useRouting } from "expo-next-react-navigation";
 
-import { db } from "../../../firebase";
+import { db } from "../../../firebaseApp";
 import Loader from "../../../components/Loader";
 import PrinterWeb from "../../../components/Printer/PrinterWeb";
 import PrinterMobile from "../../../components/Printer/PrinterMobile";

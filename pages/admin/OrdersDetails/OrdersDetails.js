@@ -6,7 +6,7 @@ import { Divider, IconButton, Headline, Button, Paragraph, Dialog, Portal, Activ
 import { Image, Platform, ScrollView, View, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import moment from "moment";
-import { db } from "../../../firebase";
+import { db } from "../../../firebaseApp";
 
 import TotalDetails from "../../../components/TotalDetails";
 import Status from "../../../components/Status";

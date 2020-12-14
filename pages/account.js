@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
 import { Divider, IconButton, Headline, Drawer, ActivityIndicator } from "react-native-paper";
-import { db, auth } from "../firebase";
+import { db, auth } from "../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import pointBG from "../public/pointBG.jpg"

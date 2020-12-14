@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
 import { Divider, TextInput, Headline } from "react-native-paper";
-import { db } from "../firebase";
+import { db } from "../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import emptyCart from "../public/emptyCart.jpg"

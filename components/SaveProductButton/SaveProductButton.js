@@ -5,7 +5,7 @@ import { View, Text, Platform, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import { Link, useRouting } from "expo-next-react-navigation";
-import { db } from "../../firebase";
+import { db } from "../../firebaseApp";
 import * as firebase from 'firebase/app';
 
 export default function SaveProductButton() {

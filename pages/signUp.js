@@ -7,7 +7,7 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../components/BottomBar";
 import CartCheckoutBar from "../components/CartCheckoutBar";
-import { db, auth } from "../firebase";
+import { db, auth } from "../firebaseApp";
 import { ThemeContext } from "../context/ThemeContext";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import validator from 'validator';

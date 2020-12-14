@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-// import {firebase, db, auth} from "../firebase";
+// import {firebase, db, auth} from "../firebaseApp";
 
 export const ThemeContext = createContext();
 

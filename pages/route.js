@@ -11,7 +11,7 @@ import OpenNavBtn from "../components/OpenNavBtn";
 import Loader from "../components/Loader";
 import { Marker } from '@react-google-maps/api';
 import Map from "../components/Map";
-import { db} from "../firebase";
+import { db} from "../firebaseApp";
 
 function Route() {
   const { navigate } = useRouting();

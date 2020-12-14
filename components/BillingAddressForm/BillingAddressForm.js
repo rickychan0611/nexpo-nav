@@ -5,7 +5,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, TextInput, Title, HelperText, Checkbox  } from "react-native-paper";
 import { Context } from "../../context/Context";
 import validator from 'validator';
-import { db } from "../../firebase";
+import { db } from "../../firebaseApp";
 import { useRouting } from "expo-next-react-navigation";
 import moment from "moment";
 import Loader from "../Loader";
