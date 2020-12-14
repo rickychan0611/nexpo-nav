@@ -50,6 +50,7 @@ export default function creditCard() {
   }
 
   const [err, setErr] = useState(empty);
+  const [loading, setLoading] = useState(false);
 
 
   const setShippingAsBilling = () => {
@@ -136,7 +137,7 @@ export default function creditCard() {
 
     validate.then(() => {
       setErr(empty)
-
+      setLoading(true)
       if (!newBillingBoxchecked && newCard) {
         const id = moment().unix()
         const keyName = `addressBook.${id}`
@@ -165,38 +166,31 @@ export default function creditCard() {
 
       //TODO: validate credit card. save profit get a token. 
       //1. get a token
-      // functions.useFunctionsEmulator('http://localhost:5001')
+      functions.useFunctionsEmulator('http://localhost:5001')
       const getCardToken = functions.httpsCallable('cardToken')
       getCardToken({
-        "number": "4030000010001234",
-        "expiry_month": "02",
-        "expiry_year": "20",
-        "cvd": "123"
+        card: {
+          "number": "4030000010001234",
+          "expiry_month": "02",
+          "expiry_year": "20",
+          "cvv": "123"
+        },
+        user
       })
-      .then((result) => {
-        console.log(result)
-      })
+        .then((result) => {
+          if (result.data.profileToken.code !== 1){
+            throw result.data.profileToken.message
+          }
+          else console.log(result.data.profileToken.customer_code)
 
-
-      // fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({
-      //     "number": "4030000010001234",
-      //     "expiry_month": "02",
-      //     "expiry_year": "20",
-      //     "cvd": "123"
-      //   })
-      // })
-      //   .then(response => response.json())
-      //   .then(data => console.log(data))
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
+          setLoading(false)
+        })
+        .catch((err) => {
+          setLoading(false)
+          console.log(err)
+        })
     })
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -207,6 +201,7 @@ export default function creditCard() {
 
   return (
     <>
+      {loading && <Loader />}
       {!initLoaded ? <InitLoader /> :
         <>
           {/* {!billing && !shipping && <Loader />} */}
