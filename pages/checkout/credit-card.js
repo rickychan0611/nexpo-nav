@@ -7,6 +7,7 @@ import { Divider, Checkbox, Headline, IconButton } from "react-native-paper";
 import { db } from "../../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
+import moment from "moment";
 
 import BottomBar from "../../components/BottomBar";
 import CreditCardNextBtn from "../../components/CreditCardNextBtn";
@@ -15,6 +16,7 @@ import BillingAddressForm from "../../components/BillingAddressForm";
 import Row from "../../components/Row";
 import InitLoader from "../../components/InitLoader";
 import CreditCardForm from "../../components/CreditCardForm";
+import newAddress from "./new-address";
 
 export default function creditCard() {
   const { navigate, goBack } = useRouting();
@@ -49,30 +51,40 @@ export default function creditCard() {
 
   const [err, setErr] = useState(empty);
 
+
   const setShippingAsBilling = () => {
-    setNewBillingBoxchecked(!newBillingBoxchecked)
-    const { address1, address2, city, province, country, postalCode } = shippingAddress
+    console.log(newBillingBoxchecked)
+    // const { address1, address2, city, province, country, postalCode } = shippingAddress
+    // console.log("checkbox checked. line 57: shippingAddress")
+    // console.log(shippingAddress)
     if (newBillingBoxchecked) {
-      newCard.address1 = address1
-      newCard.address2 = address2
-      newCard.city = city
-      newCard.province = province
-      newCard.country = country
-      newCard.postalCode = postalCode
+      setNewCard(prev => ({ ...prev, ...shippingAddress }))
+      console.log("checkbox checked. line 62: store new address")
+      console.log(newCard)
     }
 
     else {
-      newCard.address1 = ""
-      newCard.address2 = ""
-      newCard.city = ""
-      newCard.province = ""
-      newCard.country = ""
-      newCard.postalCode = ""
+      setNewCard(prev => ({
+        ...prev,
+        address1: "",
+        address2: "",
+        city: "",
+        province: "",
+        country: "",
+        postalCode: "",
+        id: ""
+      }))
     }
   }
 
+  useEffect(() => {
+    setShippingAsBilling()
+  }, [newBillingBoxchecked])
+
   const onSubmit = (clicker) => {
     setErr(empty)
+    console.log("Clicked Next. this is newCard line 79")
+    console.log(newCard)
 
     let validate = new Promise((resolve, reject) => {
 
@@ -120,27 +132,73 @@ export default function creditCard() {
         setErr(prev => ({ ...prev, postalCode: "Required" }))
         reject()
       }
-      if (!newCard.phoneNumber) {
-        setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-        reject()
-      }
+      // if (!newCard.phoneNumber) {
+      //   setErr(prev => ({ ...prev, phoneNumber: "Required" }))
+      //   reject()
+      // }
       else resolve()
     })
+    console.log(err)
 
     validate.then(() => {
+      console.log("hello? 2")
       setErr(empty)
 
+      if (!newBillingBoxchecked) {
+        console.log("save billing")
+        console.log(newCard)
         const id = moment().unix()
         const keyName = `addressBook.${id}`
+        db.collection("users").doc(user.email).update({
+          "addressType.billing": id,
+          [keyName]: {
+            firstName: newCard.firstName,
+            lastName: newCard.lastName,
+            address1: newCard.address1,
+            address2: newCard.address2,
+            city: newCard.city,
+            province: newCard.province,
+            country: newCard.country,
+            postalCode: newCard.postalCode,
+            "id": id,
+            phoneNumber: shippingAddress.phoneNumber
+          },
+        })
+      }
 
-        //TODO: validate credit card. save profit get a token. 
+      else if (newBillingBoxchecked) {
+        db.collection("users").doc(user.email).update({
+          "addressType.billing": newCard.id,
+        })
+      }
+
+      //TODO: validate credit card. save profit get a token. 
+      //1. get a token
+      fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "number": "4030000010001234",
+          "expiry_month": "02",
+          "expiry_year": "20",
+          "cvd": "123"
+        })
+      })
+        .then((json) => {
+          console.log(json)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
 
-
-        // db.collection("users").doc(user.email).update({
-        //   [keyName]: { ...newCard, id },
-        //   "addressType.billing": id,
-        // }).then(() => { })
+      // db.collection("users").doc(user.email).update({
+      //   [keyName]: { ...newCard, id },
+      //   "addressType.billing": id,
+      // }).then(() => { })
     })
   }
 
@@ -204,7 +262,7 @@ export default function creditCard() {
                 <Checkbox
                   status={newBillingBoxchecked ? 'checked' : 'unchecked'}
                   onPress={() => {
-                    setShippingAsBilling();
+                    setNewBillingBoxchecked(!newBillingBoxchecked)
                   }}
                 />
               </Checker>
@@ -230,7 +288,7 @@ export default function creditCard() {
                     <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
                       onPress={() => {
                         setTask("changeBillingAddress")
-                        navigate({routeName: "checkout/address-book"})
+                        navigate({ routeName: "checkout/address-book" })
                       }}>Change</Text>
                   </View>
                 </>

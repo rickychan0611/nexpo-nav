@@ -57,7 +57,7 @@ const ContextProvider = ({ children }) => {
   const [newCard, setNewCard] = useState({
     firstName: "Ka Kit",
     lastName: "Chan",
-    cardNumber: "4012888888881881	",
+    cardNumber: "4012888888881881",
     CVV: "123",
     expMonth: "11",
     expYear: "21",

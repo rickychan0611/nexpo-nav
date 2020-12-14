@@ -4,6 +4,10 @@ require("firebase/auth");
 require("firebase/firestore");
 require("firebase/storage");
 
+// const functions = require('firebase-functions');
+// const admin = require('firebase-admin');
+// admin.initializeApp();
+
 if (!firebase.apps.length) {
     firebase.initializeApp({
         apiKey: "AIzaSyCOYD4TkCZvjzC_BIHSj82VujQXQ3gQ6jA",

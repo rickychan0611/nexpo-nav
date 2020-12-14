@@ -34,6 +34,7 @@ export default function addressBook() {
     setNewBillingBoxchecked
   } = useContext(Context);
 
+  //update addressType so that it is selected
   const updateShippingAddress = (addressId) => {
     const key = `addressType.shipping`
     console.log("key:" + key)
