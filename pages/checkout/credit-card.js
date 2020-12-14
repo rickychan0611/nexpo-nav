@@ -54,13 +54,9 @@ export default function creditCard() {
 
   const setShippingAsBilling = () => {
     console.log(newBillingBoxchecked)
-    // const { address1, address2, city, province, country, postalCode } = shippingAddress
-    // console.log("checkbox checked. line 57: shippingAddress")
-    // console.log(shippingAddress)
+
     if (newBillingBoxchecked) {
       setNewCard(prev => ({ ...prev, ...shippingAddress }))
-      console.log("checkbox checked. line 62: store new address")
-      console.log(newCard)
     }
 
     else {
@@ -83,8 +79,6 @@ export default function creditCard() {
 
   const onSubmit = (clicker) => {
     setErr(empty)
-    console.log("Clicked Next. this is newCard line 79")
-    console.log(newCard)
 
     let validate = new Promise((resolve, reject) => {
 
@@ -141,12 +135,9 @@ export default function creditCard() {
     console.log(err)
 
     validate.then(() => {
-      console.log("hello? 2")
       setErr(empty)
 
-      if (!newBillingBoxchecked) {
-        console.log("save billing")
-        console.log(newCard)
+      if (!newBillingBoxchecked && newCard) {
         const id = moment().unix()
         const keyName = `addressBook.${id}`
         db.collection("users").doc(user.email).update({
@@ -161,7 +152,7 @@ export default function creditCard() {
             country: newCard.country,
             postalCode: newCard.postalCode,
             "id": id,
-            phoneNumber: shippingAddress.phoneNumber
+            phoneNumber: shippingAddress && shippingAddress.phoneNumber
           },
         })
       }
@@ -187,20 +178,19 @@ export default function creditCard() {
           "cvd": "123"
         })
       })
-        .then((json) => {
-          console.log(json)
-        })
+        .then(response => response.json())
+        .then(data => console.log(data))
         .catch((error) => {
           console.error(error);
         });
-
-
-      // db.collection("users").doc(user.email).update({
-      //   [keyName]: { ...newCard, id },
-      //   "addressType.billing": id,
-      // }).then(() => { })
     })
   }
+
+  useEffect(()=>{
+    if (!shippingAddress) {
+      navigate({routeName: "checkout/shipping"})
+    }
+  },[])
 
   return (
     <>
@@ -279,18 +269,20 @@ export default function creditCard() {
                 </>
                 :
                 <>
-                  <View style={{ paddingHorizontal: 25 }}>
-                    {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
-                    <Text>{shippingAddress.address1}</Text>
-                    {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
-                    <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
-                    <Text>{shippingAddress.phoneNumber}</Text>
-                    <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
-                      onPress={() => {
-                        setTask("changeBillingAddress")
-                        navigate({ routeName: "checkout/address-book" })
-                      }}>Change</Text>
-                  </View>
+                  {shippingAddress &&
+                    <View style={{ paddingHorizontal: 25 }}>
+                      {/* <Text>{shippingAddress.firstName} {shippingAddress.lastName}</Text> */}
+                      <Text>{shippingAddress.address1}</Text>
+                      {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
+                      <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
+                      <Text>{shippingAddress.phoneNumber}</Text>
+                      <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
+                        onPress={() => {
+                          setTask("changeBillingAddress")
+                          navigate({ routeName: "checkout/address-book" })
+                        }}>Change</Text>
+                    </View>
+                  }
                 </>
               }
               <Text style={{ height: 200 }}>{" "}</Text>

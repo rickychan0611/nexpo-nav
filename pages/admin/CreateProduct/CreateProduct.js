@@ -4,7 +4,7 @@ import { Context } from "../../../context/Context";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { ProductsContext } from "../../../context/ProductsContext";
 import moment from "moment";
-import { storage } from '../../../firebase';
+import { storage } from '../../../firebaseApp';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";

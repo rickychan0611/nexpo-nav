@@ -26,7 +26,7 @@ export default function confirmOrder() {
     newOrderProductList, setNewOrderProductList,
     redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
-    deliveryMsg, setSelected, 
+    deliveryMsg, setSelected,
     paymentMethod
   } = useContext(Context);
 
@@ -142,53 +142,58 @@ export default function confirmOrder() {
             Shipping Address
               </Title>
 
-          <TableRow style={{ paddingRight: 40 }}>
-            <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
-              {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
-              {shippingAddress.address1 + "\n"}
-              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
-              {shippingAddress.city + "\n"}
-              {shippingAddress.province + ", "}
-              {shippingAddress.country + "\n"}
-              {shippingAddress.postalCode + "\n"}
-              {shippingAddress.phoneNumber + "\n"}
-            </Text></AddressLeft>
-          </TableRow>
-          {shippingAddress.message ?
-            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
-              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
-            </TableRow>
-            : null}
+              
+          {shippingAddress &&
+            <>
+              <TableRow style={{ paddingRight: 40 }}>
+                <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
+                  {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
+                  {shippingAddress.address1 + "\n"}
+                  {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+                  {shippingAddress.city + "\n"}
+                  {shippingAddress.province + ", "}
+                  {shippingAddress.country + "\n"}
+                  {shippingAddress.postalCode + "\n"}
+                  {shippingAddress.phoneNumber + "\n"}
+                </Text></AddressLeft>
+              </TableRow>
+              {shippingAddress.message ?
+                <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+                  <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
+                  <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
+                </TableRow>
+                : null}
 
 
-          <Title style={{
-            color: "black",
-            fontWeight: "bold",
-            fontSize: 16,
-            marginHorizontal: 10,
-            paddingTop: 10
-          }}>
-            Billing Address
+              <Title style={{
+                color: "black",
+                fontWeight: "bold",
+                fontSize: 16,
+                marginHorizontal: 10,
+                paddingTop: 10
+              }}>
+                Billing Address
           </Title>
-          <TableRow style={{ paddingRight: 40 }}>
-            <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
-              {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
-              {shippingAddress.address1 + "\n"}
-              {shippingAddress.address2 && shippingAddress.address2 + "\n"}
-              {shippingAddress.city + "\n"}
-              {shippingAddress.province + ", "}
-              {shippingAddress.country + "\n"}
-              {shippingAddress.postalCode + "\n"}
-              {shippingAddress.phoneNumber + "\n"}
-            </Text></AddressLeft>
-          </TableRow>
-          {shippingAddress.message ?
-            <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
-              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
-              <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
-            </TableRow>
-            : null}
+              <TableRow style={{ paddingRight: 40 }}>
+                <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
+                  {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
+                  {shippingAddress.address1 + "\n"}
+                  {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+                  {shippingAddress.city + "\n"}
+                  {shippingAddress.province + ", "}
+                  {shippingAddress.country + "\n"}
+                  {shippingAddress.postalCode + "\n"}
+                  {shippingAddress.phoneNumber + "\n"}
+                </Text></AddressLeft>
+              </TableRow>
+              {shippingAddress.message ?
+                <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
+                  <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
+                  <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
+                </TableRow>
+                : null}
+
+            </>}
 
 
           <Title style={{
@@ -203,9 +208,9 @@ export default function confirmOrder() {
 
           <TableRow style={{ paddingRight: 40 }}>
             <AddressLeft><Text style={{ color: "grey" }}>
-              {paymentMethod === "cash" ? 
-               "Pay upon delivery" : "Credit Card"}
-              </Text></AddressLeft>
+              {paymentMethod === "cash" ?
+                "Pay upon delivery" : "Credit Card"}
+            </Text></AddressLeft>
           </TableRow>
 
 
@@ -252,7 +257,6 @@ export default function confirmOrder() {
         shadowRadius: 5,
         elevation: 10,
       }} />
-
     </>
   );
 }

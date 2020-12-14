@@ -27,21 +27,6 @@ export default function shipping() {
     initLoaded
   } = useContext(Context);
 
-  const [loading, setLoading] = useState(false);
-  const [billing, setBilling] = useState()
-  const [hasShippingAddress, setHasShippingAddress] = useState(false)
-  const [visible, setVisible] = useState(true)
-
-  const shippingDefault = {
-    address1: "",
-    address2: "",
-    city: "",
-    province: "",
-    country: "",
-    postalCode: "",
-    phoneNumber: ""
-  }
-
   const onSubmit = () => {
     navigate({ routeName: "checkout/payment-method" })
   }
@@ -50,7 +35,6 @@ export default function shipping() {
     addressBook && addressBook.map((address) => {
       if (user && user.addressType && user.addressType.shipping === address.id) {
         setShippingAddress(address)
-        setHasShippingAddress(true)
       }
     })
   }, [addressBook])
@@ -152,24 +136,6 @@ export default function shipping() {
   );
 }
 
-const TotalContainer = styled.View`
-  width: ${Platform.OS === "web" ? `100vw` : `null`};
-  flex-direction: row;
-  flex-wrap: nowrap;
-  max-width: 500px;
-  padding: 5px 25px 5px 25px;
-
-`;
-const Content = styled.View`
-  flex: 8;
-  justify-content: center;
-  align-items: flex-start;
-`;
-const Price = styled.View`
-  flex: 6;
-  justify-content: center;
-  align-items: flex-end;
-`;
 const Title = styled.Text`
   font-size: 18px;
   width: 100%;
