@@ -3,10 +3,7 @@ export const firebase = require("firebase");
 require("firebase/auth");
 require("firebase/firestore");
 require("firebase/storage");
-
-// const functions = require('firebase-functions');
-// const admin = require('firebase-admin');
-// admin.initializeApp();
+require("firebase/functions");
 
 if (!firebase.apps.length) {
     firebase.initializeApp({
@@ -24,3 +21,4 @@ if (!firebase.apps.length) {
 export const db = firebase.firestore();
 export const auth = firebase.auth()
 export const storage = firebase.storage()
+export const functions = firebase.functions()

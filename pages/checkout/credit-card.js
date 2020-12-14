@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, Checkbox, Headline, IconButton } from "react-native-paper";
-import { db } from "../../firebaseApp";
+import { db, functions } from "../../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import moment from "moment";
@@ -165,32 +165,45 @@ export default function creditCard() {
 
       //TODO: validate credit card. save profit get a token. 
       //1. get a token
-      fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          "number": "4030000010001234",
-          "expiry_month": "02",
-          "expiry_year": "20",
-          "cvd": "123"
-        })
+      // functions.useFunctionsEmulator('http://localhost:5001')
+      const getCardToken = functions.httpsCallable('cardToken')
+      getCardToken({
+        "number": "4030000010001234",
+        "expiry_month": "02",
+        "expiry_year": "20",
+        "cvd": "123"
       })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch((error) => {
-          console.error(error);
-        });
+      .then((result) => {
+        console.log(result)
+      })
+
+
+      // fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     "number": "4030000010001234",
+      //     "expiry_month": "02",
+      //     "expiry_year": "20",
+      //     "cvd": "123"
+      //   })
+      // })
+      //   .then(response => response.json())
+      //   .then(data => console.log(data))
+      //   .catch((error) => {
+      //     console.error(error);
+      //   });
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!shippingAddress) {
-      navigate({routeName: "checkout/shipping"})
+      navigate({ routeName: "checkout/shipping" })
     }
-  },[])
+  }, [])
 
   return (
     <>
