@@ -4,16 +4,14 @@ import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, Button, Headline, IconButton, Surface } from "react-native-paper";
-import { firebase, db } from "../../firebaseApp";
+import { firebase, db, functions } from "../../firebaseApp";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 
 import BottomBar from "../../components/BottomBar";
-import ShippingNextBtn from "../../components/ShippingNextBtn";
-import Loader from "../../components/Loader";
 import AddressForm from "../../components/AddressForm";
-import { route } from "next/dist/next-server/server/router";
 import InitLoader from "../../components/InitLoader";
+import Loader from "../../components/Loader";
 
 export default function chooseCard() {
   const { navigate, getParam, goBack } = useRouting();
@@ -29,9 +27,11 @@ export default function chooseCard() {
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
     editAddress, setEditAddress,
-    initLoaded, 
+    initLoaded,
     task, setTask,
-    setNewBillingBoxchecked
+    setNewBillingBoxchecked,
+    cards, setCards,
+    selectedCard, setSelectedCard
   } = useContext(Context);
 
   //update addressType so that it is selected
@@ -51,11 +51,38 @@ export default function chooseCard() {
   }
 
   useEffect(() => {
-    return () => {setTask("newBillingAddress")}
-  }, [])
+    setLoading(true)
+    user && functions.useFunctionsEmulator('http://localhost:5001')
+    console.log(user)
+    const getCards = functions.httpsCallable('getCards')
+    getCards({
+      profileId: user.profileId
+    })
+      .then((result) => {
+        if (result.data.code !== 1) {
+          setLoading(false)
+          throw result.data.message
+        }
+        else {
+          console.log(result.data)
+          setCards(result.data.card)
+          setLoading(false)
+          // setProfileId(result.data.customer_code)
+          // navigate({routeName: "confirmOrder"})
+          // setLoading(false)
+        }
+      })
+      .catch((err) => {
+        setLoading(false)
+        console.log("Error: " + err)
+      })
+
+    return () => { setTask("newBillingAddress") }
+  }, [user])
 
   return (
     <>
+      {loading && <Loader />}
       {!initLoaded ? <InitLoader /> :
         <>
           <ContextArea>
@@ -73,7 +100,7 @@ export default function chooseCard() {
                 <>
                   <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
                     Choose a payment card:
-          </Title>
+                    </Title>
                   <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
                     <Edit theme={theme}
                       onPress={() => {
@@ -83,11 +110,11 @@ export default function chooseCard() {
                           setNewBillingBoxchecked(false)
                         }
                         else setOnAddNew(true)
-                      }}>{"+ Add a New Address"}</Edit>
+                      }}>{"+ Add a New Card"}</Edit>
                   </View>
                 </>}
 
-              {addressBook && addressBook.map((address, index) => {
+              {cards[0] && cards.map((card, index) => {
                 return (
 
                   <Surface style={{
@@ -95,7 +122,8 @@ export default function chooseCard() {
                     marginHorizontal: onEdit || onAddNew ? 0 : 20,
                     marginBottom: onEdit || onAddNew ? 0 : 20,
                     borderWidth: onEdit || onAddNew ? 0 : 1,
-                    borderColor: user.addressType.shipping === address.id ? theme.primary : theme.lightGrey
+                    borderRadius: 25,
+                    borderColor: user.defaultCard === card.id ? theme.primary : theme.lightGrey
                   }}>
 
                     {onEdit || onAddNew ?
@@ -103,7 +131,7 @@ export default function chooseCard() {
                         {onEdit && address === editAddress &&
                           <AddressForm
                             index={index}
-                            onEdit 
+                            onEdit
                             setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
@@ -111,7 +139,7 @@ export default function chooseCard() {
                         {onAddNew && index === 0 &&
                           <AddressForm
                             index={index}
-                            onEdit 
+                            onEdit
                             setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
@@ -120,15 +148,12 @@ export default function chooseCard() {
                       :
 
                       <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 15 }}>{address.firstName} {address.lastName}</Text>
-                        <Text>{address.address1}</Text>
-                        {address.address2 ? <Text>{address.address2}</Text> : null}
-                        <Text>{address.city}, {address.province} {address.postalCode}</Text>
-                        <Text>{address.country}</Text>
-                        <Text>{address.phoneNumber}</Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 15 }}>{card.name}</Text>
+                        <Text>{card.number}</Text>
+                        <Text>Expiry Date: {card.expiry_month + "/" + card.expiry_year}</Text>
                         <Text> </Text>
 
-                        {user.addressType.shipping === address.id ?
+                        {user.defaultCard === card.id ?
                           <Button mode="outlined"
                             color={theme.primary}
                             dark uppercase={false}
@@ -162,13 +187,13 @@ export default function chooseCard() {
 
                           <Text>{"     |     "}</Text>
 
-                          {user.addressType.shipping === address.id ?
+                          {user.defaultCard === card.id ?
 
                             <Edit theme={theme} style={{ color: theme.lightGrey }}>
                               Delete</Edit>
                             :
                             <TouchableOpacity onPress={() => {
-                              deleteAddress(address.id, index)
+                              deleteAddress(card.id, index)
                             }}>
                               <Edit theme={theme} disabled
                               >

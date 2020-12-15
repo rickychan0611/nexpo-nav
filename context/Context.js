@@ -55,6 +55,7 @@ const ContextProvider = ({ children }) => {
   const [task, setTask] = useState("")
   const [newBillingBoxchecked, setNewBillingBoxchecked] = useState(false)
   const [profileId, setProfileId] = useState(false)
+  const [cards, setCards] = useState([])
   const [newCard, setNewCard] = useState({
     firstName: "John",
     lastName: "Deo",
@@ -196,7 +197,8 @@ const ContextProvider = ({ children }) => {
           newCard, setNewCard,
           task, setTask,
           newBillingBoxchecked, setNewBillingBoxchecked,
-          profileId, setProfileId
+          profileId, setProfileId,
+          cards, setCards
        }
       }
     >

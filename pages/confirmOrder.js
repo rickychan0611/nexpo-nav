@@ -83,8 +83,8 @@ export default function confirmOrder() {
             }}>
             <IconButton icon="circle" size={14} color={theme.lightGrey} />
             <IconButton icon="circle" size={14} color={theme.lightGrey} />
-            <IconButton icon="circle" size={14} color={theme.green} />
             <IconButton icon="circle" size={14} color={theme.lightGrey} />
+            <IconButton icon="circle" size={14} color={theme.green} />
           </View>
           <Divider />
 
