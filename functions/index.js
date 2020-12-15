@@ -60,13 +60,7 @@ exports.cardToken = functions.https.onCall(async (info) => {
   else {
     return await admin.firestore().collection('users').doc(info.billing.email_address)
       .update({
-        defaultProfile: profile.customer_code,
-        profileIds: {
-          [profile.customer_code]: {
-            customer_code: profile.customer_code,
-            createAt: new Date(),
-          }
-        }
+        profileId: profile.customer_code
       })
       .then((res) => {
         console.log('res')

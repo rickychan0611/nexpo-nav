@@ -10,7 +10,7 @@ import { db, firebase } from "../../firebaseApp";
 import Loader from "../Loader";
 import moment from "moment";
 
-export default function ComfirmOrderBar() {
+export default function ConfirmOrderBar() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
 

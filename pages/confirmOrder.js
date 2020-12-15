@@ -15,7 +15,7 @@ import CartCheckoutBar from "../components/CartCheckoutBar";
 import CartItems from "../components/CartItems";
 import AddressForm from "../components/AddressForm";
 import { forEach } from "react-native-elevation";
-import ComfirmOrderBar from "../components/ComfirmOrderBar";
+import ConfirmOrderBar from "../components/ConfirmOrderBar";
 
 export default function confirmOrder() {
   const { navigate, goBack } = useRouting();
@@ -245,7 +245,7 @@ export default function confirmOrder() {
         </ScrollView>
       </ContextArea>
 
-      <ComfirmOrderBar />
+      <ConfirmOrderBar />
 
       <BottomBar style={{
         shadowColor: "#000",

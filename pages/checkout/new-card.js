@@ -18,7 +18,7 @@ import InitLoader from "../../components/InitLoader";
 import CreditCardForm from "../../components/CreditCardForm";
 import newAddress from "./new-address";
 
-export default function creditCard() {
+export default function newCard() {
   const { navigate, goBack } = useRouting();
   const { theme } = useContext(ThemeContext);
   const {

@@ -19,7 +19,8 @@ export default function paymentMethod() {
   const { theme } = useContext(ThemeContext);
   const {
     initLoaded,
-    paymentMethod, setPaymentMethod
+    paymentMethod, setPaymentMethod,
+    user
   } = useContext(Context);
 
 
@@ -29,7 +30,10 @@ export default function paymentMethod() {
       navigate({ routeName: "confirmOrder" })
     }
     else if (paymentMethod === "credit") {
-      navigate({ routeName: "checkout/credit-card" })
+      if (user.profileId) {
+        navigate({ routeName: "checkout/choose-card" })
+      }
+      else navigate({ routeName: "checkout/new-card" })
     }
   }
 
