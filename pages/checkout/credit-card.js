@@ -31,7 +31,8 @@ export default function creditCard() {
     onAddNew, setOnAddNew,
     initLoaded,
     newBillingBoxchecked, setNewBillingBoxchecked,
-    task, setTask
+    task, setTask,
+    profileId, setProfileId
   } = useContext(Context);
 
   const empty = {
@@ -138,6 +139,8 @@ export default function creditCard() {
     validate.then(() => {
       setErr(empty)
       setLoading(true)
+      console.log("newCard!!!!!!!")
+      console.log(newCard)
       if (!newBillingBoxchecked && newCard) {
         const id = moment().unix()
         const keyName = `addressBook.${id}`
@@ -170,24 +173,38 @@ export default function creditCard() {
       const getCardToken = functions.httpsCallable('cardToken')
       getCardToken({
         card: {
-          "number": "4030000010001234",
-          "expiry_month": "02",
-          "expiry_year": "20",
-          "cvv": "123"
+          "name": newCard.firstName + " " + newCard.lastName,
+          "number": newCard.cardNumber,
+          "expiry_month": newCard.expMonth,
+          "expiry_year": newCard.expYear,
+          "cvd": newCard.CVV
         },
-        user
+        billing: {
+          'name': newCard.firstName + " " + newCard.lastName,
+          'address_line1': newCard.address1,
+          'address_line2': newCard.address2,
+          'city': newCard.city,
+          'province': newCard.province,
+          'country': "CA",
+          'postal_code': newCard.postalCode,
+          'phone_number': shippingAddress && shippingAddress.phoneNumber,
+          'email_address': user.email
+        }
       })
         .then((result) => {
-          if (result.data.profileToken.code !== 1){
-            throw result.data.profileToken.message
+          if (result.data.code !== 1) {
+            throw result.data.message
           }
-          else console.log(result.data.profileToken.customer_code)
-
-          setLoading(false)
+          else {
+            console.log(result.data.customer_code)
+            setProfileId(result.data.customer_code)
+            navigate({routeName: "confirmOrder"})
+            setLoading(false)
+          }
         })
         .catch((err) => {
           setLoading(false)
-          console.log(err)
+          console.log("Error: " + err)
         })
     })
     setLoading(false)

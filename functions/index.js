@@ -4,80 +4,76 @@ admin.initializeApp();
 
 const encode = require('nodejs-base64-encode');
 const fetch = require('node-fetch');
+const { user } = require('firebase-functions/lib/providers/auth');
 
 //API URL: https://us-central1-tintin-store.cloudfunctions.net/
 //LOCAL: http://localhost:5001/tintin-store/us-central1/
 
-// Take the text parameter passed to this HTTP endpoint and insert it into 
-// Cloud Firestore under the path /messages/:documentId/original
-// exports.addMessage = functions.https.onRequest(async (req, res) => {
-//   // Grab the text parameter.
-//   const original = req.query.text;
-//   // Push the new message into Cloud Firestore using the Firebase Admin SDK.
-//   const writeResult = await admin.firestore().collection('messages').add({ original: original });
-//   // Send back a message that we've successfully written the message
-//   res.json({ result: `Message with ID: ${writeResult.id} added.` });
-// });
+exports.cardToken = functions.https.onCall(async (info) => {
+  // encode profileCode
+  let passcode = functions.config().tintin.id + ":" + functions.config().tintin.profile_code
+  let base64data = encode.encode(passcode, 'base64')
+  console.log("base64data:: ")
+  console.log(base64data)
 
-exports.cardToken = functions.https.onCall(async (data) => {
-  try {
-    // encode profileCode
-    let passcode = functions.config().tintin.id + ":" + functions.config().tintin.profile_code
-    let base64data = encode.encode(passcode, 'base64')
-    console.log("base64data:: ")
-    console.log(base64data)
-
-    const token = await fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+  const token = await fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(info.card)
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log("!!!!!!!!!!!!!" + data.token)
+      return data.token
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log("!!!!!!!!!!!!!" +data.token)
-        return data.token
-      })
-      .catch((error) => {
-        console.error(error);
-        // throw new HttpsError("unauthenticated", "Get token Error:"+ err);
-      });
 
+  const profile = await fetch("https://api.na.bambora.com/v1/profiles", {
+    method: 'POST',
+    headers: {
+      'Authorization': "Passcode " + base64data,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(
+      {
+        "token": {
+          "name": "John Doe",
+          "code": token
+        },
+        'card': info.card,
+        'billing': info.billing
+      }
+    )
+  })
+    .then(response => response.json())
+    .then(data => {
+      return data
+    })
+  console.log("profile!!!")
+  console.log(profile)
 
-    const profileToken = await fetch("https://api.na.bambora.com/v1/profiles", {
-      method: 'POST',
-      headers: {
-        'Authorization': "Passcode " + base64data,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          "token": {
-            "name": "John Doe",
-            "code": token
+  if (profile.code !== 1) {
+    return profile
+  }
+  else {
+    return await admin.firestore().collection('users').doc(info.billing.email_address)
+      .update({
+        defaultProfile: profile.customer_code,
+        profileIds: {
+          [profile.customer_code]: {
+            customer_code: profile.customer_code,
+            createAt: new Date(),
           }
         }
-      )
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        return data
       })
-      .catch((error) => {
-        console.error("profile error" + error);
-        // throw new HttpsError("unauthenticated", "Save Profile Error:"+ err);
-      });
-
-      return {
-        profileToken
-      }
-
-    } catch(err) {
-      console.log(err)
-    }
+      .then((res) => {
+        console.log('res')
+        console.log(res)
+        return profile
+      })
+  }
 })
 
 exports.cardPayment = functions.https.onCall(async (cardData) => {

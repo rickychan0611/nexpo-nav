@@ -54,10 +54,11 @@ const ContextProvider = ({ children }) => {
   const [billingAddress, setBillingAddress] = useState()
   const [task, setTask] = useState("")
   const [newBillingBoxchecked, setNewBillingBoxchecked] = useState(false)
+  const [profileId, setProfileId] = useState(false)
   const [newCard, setNewCard] = useState({
-    firstName: "Ka Kit",
-    lastName: "Chan",
-    cardNumber: "4012888888881881",
+    firstName: "John",
+    lastName: "Deo",
+    cardNumber: "4030000010001234",
     CVV: "123",
     expMonth: "11",
     expYear: "21",
@@ -65,7 +66,7 @@ const ContextProvider = ({ children }) => {
     address2: "",
     city: "",
     province: "",
-    country: "",
+    country: "Canada",
     postalCode: "",
     
     // firstName: "",
@@ -194,7 +195,8 @@ const ContextProvider = ({ children }) => {
           billingAddress, setBillingAddress,
           newCard, setNewCard,
           task, setTask,
-          newBillingBoxchecked, setNewBillingBoxchecked
+          newBillingBoxchecked, setNewBillingBoxchecked,
+          profileId, setProfileId
        }
       }
     >

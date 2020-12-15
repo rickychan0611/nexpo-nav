@@ -96,6 +96,7 @@ export default function shipping() {
                     <Text>{shippingAddress.address1}</Text>
                     {shippingAddress.address2 ? <Text>{shippingAddress.address2}</Text> : null}
                     <Text>{shippingAddress.city}, {shippingAddress.province} {shippingAddress.postalCode}</Text>
+                    <Text>{shippingAddress.country}</Text>
                     <Text>{shippingAddress.phoneNumber}</Text>
                     <Text style={{ marginTop: 20, paddingBottom: 20, color: theme.primary }}
                       onPress={() => {

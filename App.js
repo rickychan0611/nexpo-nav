@@ -20,6 +20,7 @@ import order_details from "./pages/admin/order-details";
 import shipping from "./pages/checkout/shipping";
 import creditCard from "./pages/checkout/credit-card";
 import review from "./pages/checkout/review";
+import creditReview from "./pages/checkout/credit-review";
 import addressBook from "./pages/checkout/address-book";
 import paymentMethod from "./pages/checkout/payment-method";
 import newAddress from "./pages/checkout/new-address";
@@ -75,8 +76,9 @@ function App() {
           <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="checkout/credit-card" component={creditCard} options={options("Shop")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
-          <Stack.Screen name="checkout/payment-method" component={paymentMethod} options={options("Choose a Payment")} />
-          <Stack.Screen name="checkout/review" component={review} options={options("Choose a Payment")} />
+          <Stack.Screen name="checkout/payment-method" component={paymentMethod} options={options("paymentMethod")} />
+          <Stack.Screen name="checkout/review" component={review} options={options("review")} />
+          <Stack.Screen name="checkout/credit-review" component={creditReview} options={options("creditReview")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
