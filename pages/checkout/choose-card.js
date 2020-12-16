@@ -12,6 +12,7 @@ import BottomBar from "../../components/BottomBar";
 import AddressForm from "../../components/AddressForm";
 import InitLoader from "../../components/InitLoader";
 import Loader from "../../components/Loader";
+import ShippingNextBtn from "../../components/ShippingNextBtn";
 
 export default function chooseCard() {
   const { navigate, getParam, goBack } = useRouting();
@@ -26,58 +27,70 @@ export default function chooseCard() {
     user, addressBook,
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
-    editAddress, setEditAddress,
     initLoaded,
-    task, setTask,
-    setNewBillingBoxchecked,
     cards, setCards,
+    isAddNewCard, setIsAddNewCard,
+    setProfileId,
     selectedCard, setSelectedCard
   } = useContext(Context);
 
   //update addressType so that it is selected
-  const updateShippingAddress = (addressId) => {
-    const key = `addressType.shipping`
-    console.log("key:" + key)
+  const setDefaultCard = (profile) => {
     db.collection("users").doc(user.email).update({
-      [key]: addressId
+      defaultProfileId: profile.customer_code
     })
+      .then(() => {
+        console.log("card")
+        console.log(card)
+        setSelectedCard(profile)
+      })
+      .catch(err => console.log(err))
   }
 
-  const deleteAddress = (addressID, index) => {
-    const key = `addressBook.${addressID}`
-    db.collection("users").doc(user.email).update({
-      [key]: firebase.firestore.FieldValue.delete()
+  const deleteCard = (customer_code, index) => {
+    setLoading(true)
+    const deleteQuery = functions.httpsCallable('deleteProfile')
+    deleteQuery({
+      profileId: customer_code,
+      email: user.email,
+      index
     })
+      .then(() => {
+        user.profiles.splice(index, 1)
+        setLoading(false)
+      })
+  }
+
+  const onSubmit = () => {
+    navigate({ routeName: "confirmOrder" })
   }
 
   useEffect(() => {
-    setLoading(true)
-    user && functions.useFunctionsEmulator('http://localhost:5001')
+    functions.useFunctionsEmulator('http://localhost:5001')
     console.log(user)
     const getCards = functions.httpsCallable('getCards')
-    getCards({
-      profileId: user.profileId
+    user && user.profiles && getCards({
+      profiles: user.profiles,
+      defaultProfileId: user.defaultProfileId,
+      email: user.email
     })
       .then((result) => {
-        if (result.data.code !== 1) {
-          setLoading(false)
-          throw result.data.message
-        }
-        else {
-          console.log(result.data)
-          setCards(result.data.card)
-          setLoading(false)
-          // setProfileId(result.data.customer_code)
-          // navigate({routeName: "confirmOrder"})
-          // setLoading(false)
-        }
+        console.log(result.data)
+        // setCards(user.profiles.reverse())
+        setCards(user.profiles)
+        setLoading(false)
+
+        user.profiles.map( profile => {
+          if (profile.customer_code === user.defaultProfileId) {
+            setSelectedCard(profile)
+          }
+        })
+        
       })
       .catch((err) => {
         setLoading(false)
         console.log("Error: " + err)
       })
-
-    return () => { setTask("newBillingAddress") }
   }, [user])
 
   return (
@@ -104,115 +117,99 @@ export default function chooseCard() {
                   <View style={{ marginBottom: 20, marginHorizontal: 20 }} >
                     <Edit theme={theme}
                       onPress={() => {
-                        if (task === "changeBillingAddress") {
-                          goBack()
-                          setTask("newBillingAddress")
-                          setNewBillingBoxchecked(false)
-                        }
-                        else setOnAddNew(true)
+                        setIsAddNewCard(true)
+                        navigate({ routeName: "checkout/new-card" })
+                        // if (task === "changeBillingAddress") {
+                        //   goBack()
+                        //   setTask("newBillingAddress")
+                        //   setNewBillingBoxchecked(false)
+                        // }
+                        // else setOnAddNew(true)
                       }}>{"+ Add a New Card"}</Edit>
                   </View>
                 </>}
 
-              {cards[0] && cards.map((card, index) => {
+              {cards && cards[0] ? cards.map((profile, index) => {
                 return (
 
-                  <Surface style={{
-                    elevation: onEdit || onAddNew ? 0 : 4,
-                    marginHorizontal: onEdit || onAddNew ? 0 : 20,
-                    marginBottom: onEdit || onAddNew ? 0 : 20,
-                    borderWidth: onEdit || onAddNew ? 0 : 1,
-                    borderRadius: 25,
-                    borderColor: user.defaultCard === card.id ? theme.primary : theme.lightGrey
-                  }}>
+                  <Surface
+                    key={index}
+                    style={{
+                      elevation: 4,
+                      marginHorizontal: 20,
+                      marginBottom: 20,
+                      borderWidth: 1,
+                      borderRadius: 25,
+                      borderColor: user.defaultProfileId === profile.card.customer_code ? theme.primary : theme.lightGrey
+                    }}>
 
-                    {onEdit || onAddNew ?
-                      <>
-                        {onEdit && address === editAddress &&
-                          <AddressForm
-                            index={index}
-                            onEdit
-                            setOnEdit={setOnEdit}
-                            onAddNew={onAddNew}
-                            setOnAddNew={setOnAddNew} />}
+                    <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
+                      <Text style={{ fontWeight: "bold", fontSize: 15 }}>{profile.card.name.split(',')[0]}</Text>
+                      <Text>{profile.card.number}</Text>
+                      <Text>Expiry Date: {profile.card.expiry_month + "/" + profile.card.expiry_year}</Text>
+                      <Text> </Text>
 
-                        {onAddNew && index === 0 &&
-                          <AddressForm
-                            index={index}
-                            onEdit
-                            setOnEdit={setOnEdit}
-                            onAddNew={onAddNew}
-                            setOnAddNew={setOnAddNew} />}
+                      {user.defaultProfileId === profile.customer_code ?
+                        <Button mode="outlined"
+                          color={theme.primary}
+                          dark uppercase={false}
+                          labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                          style={{ marginBottom: 10 }}
+                        >SELECTED</Button>
+                        :
+                        <Button mode="contained"
+                          color={theme.primary}
+                          dark uppercase={false}
+                          labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                          style={{ marginBottom: 10 }}
+                          onPress={() => {
+                            setDefaultCard(profile)
+                          }}>choose this card</Button>
+                      }
 
-                      </>
-                      :
+                      <View style={{
+                        flexDirection: "row",
+                        flexWrap: "nowrap",
+                        justifyContent: "center",
+                      }}>
 
-                      <View style={{ paddingHorizontal: 35, paddingVertical: 15 }}>
-                        <Text style={{ fontWeight: "bold", fontSize: 15 }}>{card.name}</Text>
-                        <Text>{card.number}</Text>
-                        <Text>Expiry Date: {card.expiry_month + "/" + card.expiry_year}</Text>
-                        <Text> </Text>
+                        {user.defaultProfileId === profile.customer_code ?
 
-                        {user.defaultCard === card.id ?
-                          <Button mode="outlined"
-                            color={theme.primary}
-                            dark uppercase={false}
-                            labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                            style={{ marginBottom: 10 }}
-                          >SELECTED</Button>
+                          <Edit theme={theme} style={{ color: theme.lightGrey }}>
+                            Delete</Edit>
                           :
-                          <Button mode="contained"
-                            color={theme.primary}
-                            dark uppercase={false}
-                            labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                            style={{ marginBottom: 10 }}
-                            onPress={() => {
-                              updateShippingAddress(address.id)
-                            }}>Change to this address</Button>
+                          <TouchableOpacity onPress={() => {
+                            deleteCard(profile.customer_code, index)
+                          }}>
+                            <Edit theme={theme} disabled
+                            >
+                              Delete</Edit>
+                          </TouchableOpacity>
                         }
 
-                        <View style={{
-                          flexDirection: "row",
-                          flexWrap: "nowrap",
-                          justifyContent: "center",
-                        }}>
-
-                          <TouchableOpacity onPress={() => {
-                            setOnEdit(true)
-                            setEditAddress(address)
-                          }}>
-                            <Edit theme={theme}
-                            >Edit</Edit>
-                          </TouchableOpacity>
-
-                          <Text>{"     |     "}</Text>
-
-                          {user.defaultCard === card.id ?
-
-                            <Edit theme={theme} style={{ color: theme.lightGrey }}>
-                              Delete</Edit>
-                            :
-                            <TouchableOpacity onPress={() => {
-                              deleteAddress(card.id, index)
-                            }}>
-                              <Edit theme={theme} disabled
-                              >
-                                Delete</Edit>
-                            </TouchableOpacity>
-                          }
-
-                        </View>
                       </View>
-                    }
+                    </View>
                   </Surface>
                 )
-              })}
+              })
+                :
+                <Surface style={{
+                  elevation: 4,
+                  marginHorizontal: 20,
+                  marginBottom: 20,
+                  borderWidth: 1,
+                  borderColor: theme.primary,
+                  padding: 20
+                }}>
+                  <Text>No Card Found</Text>
+                </Surface>
+              }
 
               <View style={{ height: 150 }}></View>
             </ScrollView>
           </ContextArea>
 
-          {/* <ShippingNextBtn onSubmit={onSubmit} /> */}
+          <ShippingNextBtn onSubmit={onSubmit} />
 
           <BottomBar style={{
             shadowColor: "#000",

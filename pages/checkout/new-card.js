@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { Divider, Checkbox, Headline, IconButton } from "react-native-paper";
+import { Divider, Checkbox, Headline, IconButton, Dialog, Portal, Paragraph } from "react-native-paper";
 import { db, functions } from "../../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -32,7 +32,7 @@ export default function newCard() {
     initLoaded,
     newBillingBoxchecked, setNewBillingBoxchecked,
     task, setTask,
-    profileId, setProfileId
+    setSelectedCard
   } = useContext(Context);
 
   const empty = {
@@ -52,6 +52,9 @@ export default function newCard() {
 
   const [err, setErr] = useState(empty);
   const [loading, setLoading] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+  const hideDialog = () => setShowDialog(false)
 
 
   const setShippingAsBilling = () => {
@@ -170,8 +173,8 @@ export default function newCard() {
       //TODO: validate credit card. save profit get a token. 
       //1. get a token
       functions.useFunctionsEmulator('http://localhost:5001')
-      const getCardToken = functions.httpsCallable('cardToken')
-      getCardToken({
+      const addNewProfile = functions.httpsCallable('addNewProfile')
+      addNewProfile({
         card: {
           "name": newCard.firstName + " " + newCard.lastName,
           "number": newCard.cardNumber,
@@ -196,14 +199,23 @@ export default function newCard() {
             throw result.data.message
           }
           else {
-            console.log(result.data.customer_code)
-            setProfileId(result.data.customer_code)
-            navigate({routeName: "confirmOrder"})
+            console.log(result.data)
+
+            user.profiles.map( profile => {
+              if (profile.customer_code === user.defaultProfileId) {
+                setSelectedCard(profile)
+              }
+            })
+
+            setSelectedCard(result.data)
+            navigate({ routeName: "confirmOrder" })
             setLoading(false)
           }
         })
         .catch((err) => {
           setLoading(false)
+          setShowDialog(true)
+          setErrMsg(err)
           console.log("Error: " + err)
         })
     })
@@ -219,6 +231,16 @@ export default function newCard() {
   return (
     <>
       {loading && <Loader />}
+
+      <Portal>
+        <Dialog visible={showDialog} onDismiss={hideDialog}>
+          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{errMsg}</Paragraph>
+          </Dialog.Content>
+        </Dialog>
+      </Portal>
+
       {!initLoaded ? <InitLoader /> :
         <>
           {/* {!billing && !shipping && <Loader />} */}

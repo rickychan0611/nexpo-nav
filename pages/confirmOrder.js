@@ -24,10 +24,10 @@ export default function confirmOrder() {
   const {
     total, user,
     newOrderProductList, setNewOrderProductList,
-    redeemPoint, setRedeemPoint,
     shippingAddress, setShippingAddress,
     deliveryMsg, setSelected,
-    paymentMethod
+    paymentMethod,
+    selectedCard, setSelectedCard,
   } = useContext(Context);
 
   const shippingDefault = {
@@ -41,6 +41,7 @@ export default function confirmOrder() {
   }
 
   useEffect(() => {
+    console.log(selectedCard)
     if (!user || !shippingAddress || !newOrderProductList) {
       setSelected("cart")
       navigate({
@@ -142,7 +143,7 @@ export default function confirmOrder() {
             Shipping Address
               </Title>
 
-              
+
           {shippingAddress &&
             <>
               <TableRow style={{ paddingRight: 40 }}>
@@ -165,7 +166,7 @@ export default function confirmOrder() {
                 : null}
 
 
-              <Title style={{
+              {/* <Title style={{
                 color: "black",
                 fontWeight: "bold",
                 fontSize: 16,
@@ -191,7 +192,7 @@ export default function confirmOrder() {
                   <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
                   <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>{shippingAddress.message}</Text></AddressLeft>
                 </TableRow>
-                : null}
+                : null} */}
 
             </>}
 
@@ -209,7 +210,15 @@ export default function confirmOrder() {
           <TableRow style={{ paddingRight: 40 }}>
             <AddressLeft><Text style={{ color: "grey" }}>
               {paymentMethod === "cash" ?
-                "Pay upon delivery" : "Credit Card"}
+                "Pay upon delivery" :
+                <>
+                  {selectedCard && <>
+                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>{selectedCard.card.name.split(',')[0] + "\n"}</Text>
+                    <Text>{selectedCard.card.number + "\n"}</Text>
+                    <Text>Expiry Date: {selectedCard.card.expiry_month + "/" + selectedCard.card.expiry_year + "\n"}</Text>
+                  </>}
+                </>
+              }
             </Text></AddressLeft>
           </TableRow>
 

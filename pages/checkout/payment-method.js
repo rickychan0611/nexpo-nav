@@ -30,7 +30,7 @@ export default function paymentMethod() {
       navigate({ routeName: "confirmOrder" })
     }
     else if (paymentMethod === "credit") {
-      if (user.profileId) {
+      if (user.defaultProfileId) {
         navigate({ routeName: "checkout/choose-card" })
       }
       else navigate({ routeName: "checkout/new-card" })
