@@ -93,11 +93,12 @@ export default function chooseCard() {
           console.log("Error: " + err)
         })
     }
+    else setLoading(false)
   }, [user])
 
   return (
     <>
-      {!user && loading && <Loader />}
+      {loading && <Loader />}
       {!initLoaded ? <InitLoader /> :
         <>
           <ContextArea>

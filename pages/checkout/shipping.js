@@ -45,7 +45,7 @@ export default function shipping() {
         <>
           {/* {!billing && !shipping && <Loader />} */}
           <ContextArea>
-            <IconButton icon="arrow-left" onPress={() => { goBack() }} />
+            <IconButton icon="arrow-left" onPress={() => { goBack() }}/>
             <ScrollView>
               <View
                 style={{

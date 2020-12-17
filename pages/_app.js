@@ -6,8 +6,12 @@ import AccountProvider from '../context/AccountContext';
 import ProductsProvider from '../context/ProductsContext';
 import AdminProvider from '../context/AdminContext';
 import WebContainer from "../components/WebContainer";
-import { Provider as PaperProvider } from 'react-native-paper';
-import BottomBar from "../components/BottomBar";
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
+const theme = {
+  ...DefaultTheme,
+  dark: false
+};
 
 export default function myApp({ Component, pageProps }) {
   return (
@@ -20,7 +24,7 @@ export default function myApp({ Component, pageProps }) {
         <AccountProvider>
           <ProductsProvider>
             <ThemeProvider>
-              <PaperProvider>
+              <PaperProvider theme={theme}>
                 <AdminProvider >
                   <WebContainer>
                     <Component {...pageProps} />

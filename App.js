@@ -7,7 +7,7 @@ import AdminProvider from './context/AdminContext';
 import { SafeAreaView, Platform } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
-import { Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import home from "./pages";
 import store from "./pages/store";
@@ -55,6 +55,11 @@ const options = (name) => {
     ...transition,
   }
 }
+
+const theme = {
+  ...DefaultTheme,
+  dark: false
+};
 
 function App() {
 
@@ -109,7 +114,7 @@ export default () => {
       <AccountProvider>
         <ProductsProvider>
           <ThemeProvider>
-            <PaperProvider>
+            <PaperProvider theme={theme}>
               <AdminProvider >
                 <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
                   {/* <TopBar /> */}
