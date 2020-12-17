@@ -6,19 +6,41 @@ import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { db, firebase } from "../../firebaseApp";
+import { db, firebase, functions } from "../../firebaseApp";
 import Loader from "../Loader";
 import moment from "moment";
 
 export default function ConfirmOrderBar() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
+  const [paymentData, setPaymentData] = useState({});
 
   const { setSelected, total, user,
     shippingAddress, newOrderProductList,
-    setNewOrderId, newOrderId } = useContext(Context);
+    setNewOrderId, newOrderId,
+    paymentMethod } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
+
+  const creditCardPayment = async (orderId) => {
+    console.log("run???")
+    functions.useFunctionsEmulator('http://localhost:5001')
+    const cardPayment = functions.httpsCallable('cardPayment')
+    cardPayment({
+      amount: (+total * 1.15).toFixed(2),
+      customer_code: user.defaultProfileId,
+      email: user.email,
+      orderId
+    })
+      .then((result) => {
+        console.log(result)
+        setPaymentData(result)
+        return
+      })
+      .catch((err) => {
+        console.log("Error: " + err)
+      })
+  }
 
   const onOrderSubmit = async () => {
     try {
@@ -32,82 +54,41 @@ export default function ConfirmOrderBar() {
       const snapshot = await orderIdRef.get()
       const orderId = await snapshot.data().orderId
 
-      console.log(orderId)
+      if (paymentMethod == "credit") {
+        await creditCardPayment(orderId)
+      }
 
-      const orderRef = db.collection("orders").doc(now + "A" + orderId)
-      setNewOrderId(now + "A" + orderId)
-      await orderRef.set({
-        orderId: now + "A" + orderId,
-        index: orderId + "",
-        orderItems: newOrderProductList,
-        shippingAddress,
-        userId: user.email,
-        createAt: timestamp,
-        subTotal: total,
-        gst: (+total * 0.05).toFixed(2),
-        totalAmt: (+total * 1.15).toFixed(2),
-        discount: 0,
-        shippingFee: 8,
-        status: "In Progress",
-        paymentStatus: "Not paid"
-      })
-        .then(() => {
-          setLoading(false)
-          setSelected("orderSuccess")
-          navigate({
-            routeName: "orderSuccess",
+      if (paymentData.approved === "1") {
+        const orderRef = db.collection("orders").doc(now + "A" + orderId)
+        setNewOrderId(now + "A" + orderId)
+        await orderRef.set({
+          orderId: now + "A" + orderId,
+          index: orderId + "",
+          orderItems: newOrderProductList,
+          shippingAddress,
+          userId: user.email,
+          createAt: timestamp,
+          subTotal: total,
+          gst: (+total * 0.05).toFixed(2),
+          totalAmt: (+total * 1.15).toFixed(2),
+          discount: 0,
+          shippingFee: 8,
+          status: "In Progress",
+          paymentStatus: "Not paid"
+        })
+          .then(() => {
+            setLoading(false)
+            setSelected("orderSuccess")
+            // navigate({
+            //   routeName: "orderSuccess",
+            // })
           })
-        })
-        .catch(error => {
-          setLoading(false)
-          console.log(error)
-        })
+          .catch(error => {
+            setLoading(false)
+            console.log(error)
+          })
+      }
 
-      //shipping address exist / update. 
-      // if (shippingAddress.uid) {
-      //   setLoading(true)
-      //   const shippingAddressRef = db.collection("addressBook").doc(shippingAddress.uid)
-      //   shippingAddressRef.update({
-      //     ...shippingAddress,
-      //     createAt: timestamp,
-      //     userId: user.email
-      //   })
-      //     .then(() => {
-      //       setLoading(false)
-      //       setSelected("orderSuccess")
-      //       navigate({
-      //         routeName: "orderSuccess",
-      //       })
-      //     })
-      //     .catch(error => {
-      //       setLoading(false)
-      //       console.log(error)
-      //     })
-
-      // }
-
-      //create new shipping address. 
-      // else if (!addressBook.uid) {
-      //   setLoading(true)
-      //   const shippingAddressRef = db.collection("addressBook").doc()
-      //   shippingAddressRef.add({
-      //     ...shippingAddress,
-      //     uid: shippingAddressRef.id,
-      //     createAt: timestamp,
-      //     userId: user.email
-      //   })
-      //     .then(() => {
-      //       setLoading(false)
-      //       setSelected("orderSuccess")
-      //       navigate({
-      //         routeName: "orderSuccess",
-      //       })
-      //     })
-      //     .catch(error => {
-      //       setLoading(false)
-      //       console.log(error)
-      //     })
-      // }
     }
     catch (err) { console.log(err) }
   }
