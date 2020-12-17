@@ -172,7 +172,7 @@ export default function newCard() {
 
       //TODO: validate credit card. save profit get a token. 
       //1. get a token
-      functions.useFunctionsEmulator('http://localhost:5001')
+      // functions.useFunctionsEmulator('http://localhost:5001')
       const addNewProfile = functions.httpsCallable('addNewProfile')
       addNewProfile({
         card: {

@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Platform } from "react-native";
 import { useRouting } from "expo-next-react-navigation";
 import useQty from '../../hooks/useQty';
-import { IconButton } from "react-native-paper";
+import { IconButton, Portal, Dialog, Paragraph, Button } from "react-native-paper";
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -11,9 +11,9 @@ import Loader from "../Loader";
 import moment from "moment";
 
 export default function ConfirmOrderBar() {
-  const { navigate } = useRouting();
+  const { navigate, goBack } = useRouting();
   const [loading, setLoading] = useState(false);
-  const [paymentData, setPaymentData] = useState({});
+
 
   const { setSelected, total, user,
     shippingAddress, newOrderProductList,
@@ -22,25 +22,10 @@ export default function ConfirmOrderBar() {
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
-  const creditCardPayment = async (orderId) => {
-    console.log("run???")
-    functions.useFunctionsEmulator('http://localhost:5001')
-    const cardPayment = functions.httpsCallable('cardPayment')
-    cardPayment({
-      amount: (+total * 1.15).toFixed(2),
-      customer_code: user.defaultProfileId,
-      email: user.email,
-      orderId
-    })
-      .then((result) => {
-        console.log(result)
-        setPaymentData(result)
-        return
-      })
-      .catch((err) => {
-        console.log("Error: " + err)
-      })
-  }
+  //dailog
+  const [showDialog, setShowDialog] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+  const hideDialog = () => setShowDialog(false)
 
   const onOrderSubmit = async () => {
     try {
@@ -53,17 +38,82 @@ export default function ConfirmOrderBar() {
       await orderIdRef.update({ orderId: increment })
       const snapshot = await orderIdRef.get()
       const orderId = await snapshot.data().orderId
+      setNewOrderId(now + "A" + orderId)
 
-      if (paymentMethod == "credit") {
-        await creditCardPayment(orderId)
+      if (paymentMethod === "credit") {
+        console.log("creditCardPayment run")
+
+
+        // functions.useFunctionsEmulator('http://localhost:5001')
+        const cardPayment = functions.httpsCallable('cardPayment')
+        const paymentData = await cardPayment({
+          amount: (+total * 1.15).toFixed(2),
+          customer_code: user.defaultProfileId,
+          email: user.email,
+          orderId: newOrderId
+        })
+          .then((result) => {
+            console.log(result.data)
+            return result.data
+          })
+          .catch((err) => {
+            console.log("Error: " + err)
+            throw err
+          })
+
+
+        console.log("finish creditCardPayment run")
+        console.log(paymentData)
+        if (paymentData && paymentData.approved === "1") {
+          const orderRef = db.collection("orders").doc(now + "A" + orderId)
+          await orderRef.set({
+            paymentData,
+            orderId: newOrderId,
+            orderItems: newOrderProductList,
+            shippingAddress,
+            userId: user.email,
+            createAt: timestamp,
+            subTotal: total,
+            gst: (+total * 0.05).toFixed(2),
+            totalAmt: (+total * 1.15).toFixed(2),
+            discount: 0,
+            shippingFee: 8,
+            status: "In Progress",
+            paymentStatus: paymentData.message
+          })
+            .then(() => {
+              setLoading(false)
+              setSelected("orderSuccess")
+              navigate({
+                routeName: "orderSuccess",
+              })
+            })
+            .catch(error => {
+              setLoading(false)
+              console.log(error)
+              throw "Oops, something went wrong. Please try again."
+            })
+        }
+
+        else {
+          setLoading(false)
+          throw paymentData.message
+        }
+
       }
 
-      if (paymentData.approved === "1") {
+      else if (paymentMethod === "cash") {
         const orderRef = db.collection("orders").doc(now + "A" + orderId)
         setNewOrderId(now + "A" + orderId)
         await orderRef.set({
-          orderId: now + "A" + orderId,
-          index: orderId + "",
+          paymentData: {
+            payment_method: "COD",
+            message: 'Not Paid. Pay upon delivery',
+            amount: (+total * 1.15).toFixed(2),
+            order_number: now + "A" + orderId,
+            approved: false
+          },
+          orderId: newOrderId,
           orderItems: newOrderProductList,
           shippingAddress,
           userId: user.email,
@@ -74,23 +124,29 @@ export default function ConfirmOrderBar() {
           discount: 0,
           shippingFee: 8,
           status: "In Progress",
-          paymentStatus: "Not paid"
+          paymentStatus: paymentData.message
         })
           .then(() => {
             setLoading(false)
             setSelected("orderSuccess")
-            // navigate({
-            //   routeName: "orderSuccess",
-            // })
+            navigate({
+              routeName: "orderSuccess",
+            })
           })
           .catch(error => {
             setLoading(false)
             console.log(error)
+            throw "Oops, something went wrong. Please try again."
           })
-      }
 
+      }
     }
-    catch (err) { console.log(err) }
+    catch (err) {
+      console.log(err)
+      setErrMsg(err + ". Please check your card and try again.")
+      setLoading(false)
+      setShowDialog(true)
+    }
   }
 
   useEffect(() => {
@@ -100,6 +156,18 @@ export default function ConfirmOrderBar() {
   return (
     <>
       {loading && <Loader />}
+
+      <Portal>
+        <Dialog visible={showDialog} onDismiss={hideDialog}>
+          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{errMsg}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => goBack()}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
       <Wrapper onPress={() => {
         if (user) {

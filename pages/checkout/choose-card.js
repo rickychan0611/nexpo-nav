@@ -66,36 +66,38 @@ export default function chooseCard() {
   }
 
   useEffect(() => {
-    functions.useFunctionsEmulator('http://localhost:5001')
-    console.log(user)
-    const getCards = functions.httpsCallable('getCards')
-    user && user.profiles && getCards({
-      profiles: user.profiles,
-      defaultProfileId: user.defaultProfileId,
-      email: user.email
-    })
-      .then((result) => {
-        console.log(result.data)
-        // setCards(user.profiles.reverse())
-        setCards(user.profiles)
-        setLoading(false)
-
-        user.profiles.map( profile => {
-          if (profile.customer_code === user.defaultProfileId) {
-            setSelectedCard(profile)
-          }
+    setLoading(true)
+    console.log(user.profiles)
+    console.log(cards)
+    if (user.profiles !== cards) {
+      // functions.useFunctionsEmulator('http://localhost:5001')
+      console.log(user)
+      const getCards = functions.httpsCallable('getCards')
+      user && user.profiles && getCards({
+        profiles: user.profiles,
+        defaultProfileId: user.defaultProfileId,
+        email: user.email
+      })
+        .then((result) => {
+          console.log(result.data)
+          setCards(user.profiles)
+          cards.map(profile => {
+            if (profile.customer_code === user.defaultProfileId) {
+              setSelectedCard(profile)
+            }
+          })
+          setLoading(false)
         })
-        
-      })
-      .catch((err) => {
-        setLoading(false)
-        console.log("Error: " + err)
-      })
+        .catch((err) => {
+          setLoading(false)
+          console.log("Error: " + err)
+        })
+    }
   }, [user])
 
   return (
     <>
-      {loading && <Loader />}
+      {!user && loading && <Loader />}
       {!initLoaded ? <InitLoader /> :
         <>
           <ContextArea>
@@ -119,12 +121,6 @@ export default function chooseCard() {
                       onPress={() => {
                         setIsAddNewCard(true)
                         navigate({ routeName: "checkout/new-card" })
-                        // if (task === "changeBillingAddress") {
-                        //   goBack()
-                        //   setTask("newBillingAddress")
-                        //   setNewBillingBoxchecked(false)
-                        // }
-                        // else setOnAddNew(true)
                       }}>{"+ Add a New Card"}</Edit>
                   </View>
                 </>}

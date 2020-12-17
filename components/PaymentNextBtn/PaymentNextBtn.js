@@ -1,18 +1,11 @@
 import React, { useContext } from "react";
 import { Platform } from "react-native";
-import { useRouting } from "expo-next-react-navigation";
-import useQty from '../../hooks/useQty';
-import AwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { IconButton } from "react-native-paper";
 import styled from 'styled-components/native';
-import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
 
 export default function PaymentNextBtn({ onSubmit }) {
-  const { navigate } = useRouting();
-  const { setSelected, total, user, newOrderProductList } = useContext(Context);
   const { theme } = useContext(ThemeContext);
-  const qty = useQty();
 
   return (
     <>
@@ -35,16 +28,6 @@ const Total = styled.Text`
   font-size: 16px;
   font-weight: bold;
 `;
-const Qty = styled.Text`
-  color: white;
-  border-width: 1px;
-  border-radius: 5px;
-  border-color: white;
-  padding: 4px;
-  text-align: center;
-  font-size: 13px;
-  margin: 0 30px;
-`;
 const Bar = styled.View`
   flex-direction: row;
   flex-wrap: nowrap;
@@ -64,7 +47,6 @@ const Wrapper = styled.TouchableOpacity`
   height: 55px;
   width: 100%;
   max-width: 500px;
-  /* flex: 1; */
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;

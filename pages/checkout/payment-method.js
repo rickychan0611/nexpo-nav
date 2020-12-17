@@ -109,6 +109,7 @@ export default function paymentMethod() {
                         value="credit"
                         status={paymentMethod === 'credit' ? 'checked' : 'unchecked'}
                         color={theme.primary}
+                        onPress={() => setPaymentMethod('credit')}
                       />
                     </View>
                     <View style={{
@@ -146,6 +147,7 @@ export default function paymentMethod() {
                       value="cash"
                       status={paymentMethod === 'cash' ? 'checked' : 'unchecked'}
                       color={theme.primary}
+                      onPress={() => setPaymentMethod('cash')}
                     />
                     <View style={{
                       justifyContent: "center",

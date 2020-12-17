@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { db, auth } from "../firebaseApp";
+import { db, auth, functions } from "../firebaseApp";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const Context = createContext();
@@ -87,6 +87,9 @@ const ContextProvider = ({ children }) => {
   })
 
   useEffect(() => {
+
+    // functions.useFunctionsEmulator('http://localhost:5001')
+
     auth.onAuthStateChanged((user) => {
       console.log(initLoaded)
       
