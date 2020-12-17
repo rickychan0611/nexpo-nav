@@ -17,7 +17,6 @@ export default function ConfirmOrderBar() {
 
   const { setSelected, total, user,
     shippingAddress, newOrderProductList,
-    setNewOrderId, newOrderId,
     paymentMethod } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
@@ -38,7 +37,6 @@ export default function ConfirmOrderBar() {
       await orderIdRef.update({ orderId: increment })
       const snapshot = await orderIdRef.get()
       const orderId = await snapshot.data().orderId
-      setNewOrderId(now + "A" + orderId)
 
       if (paymentMethod === "credit") {
         console.log("creditCardPayment run")
@@ -50,7 +48,7 @@ export default function ConfirmOrderBar() {
           amount: (+total * 1.15).toFixed(2),
           customer_code: user.defaultProfileId,
           email: user.email,
-          orderId: newOrderId
+          orderId: now + "A" + orderId
         })
           .then((result) => {
             console.log(result.data)
@@ -68,7 +66,7 @@ export default function ConfirmOrderBar() {
           const orderRef = db.collection("orders").doc(now + "A" + orderId)
           await orderRef.set({
             paymentData,
-            orderId: newOrderId,
+            orderId: now + "A" + orderId,
             orderItems: newOrderProductList,
             shippingAddress,
             userId: user.email,
@@ -104,7 +102,6 @@ export default function ConfirmOrderBar() {
 
       else if (paymentMethod === "cash") {
         const orderRef = db.collection("orders").doc(now + "A" + orderId)
-        setNewOrderId(now + "A" + orderId)
         await orderRef.set({
           paymentData: {
             payment_method: "COD",
@@ -113,7 +110,7 @@ export default function ConfirmOrderBar() {
             order_number: now + "A" + orderId,
             approved: false
           },
-          orderId: newOrderId,
+          orderId: now + "A" + orderId,
           orderItems: newOrderProductList,
           shippingAddress,
           userId: user.email,
