@@ -208,7 +208,7 @@ export default function newCard() {
             })
 
             setSelectedCard(result.data)
-            navigate({ routeName: "confirmOrder" })
+            navigate({ routeName: "checkout/choose-card" })
             setLoading(false)
           }
         })

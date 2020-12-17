@@ -53,7 +53,8 @@ export default function confirmOrder() {
   return (
     <>
       <ContextArea>
-        <IconButton icon="arrow-left" onPress={() => { goBack() }} />
+        <IconButton icon="arrow-left" 
+        onPress={() => { navigate({routeName: "checkout/choose-card"}) }} />
         <ScrollView>
           <View
             style={{

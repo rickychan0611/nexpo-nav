@@ -58,6 +58,7 @@ const ContextProvider = ({ children }) => {
   const [cards, setCards] = useState()
   const [selectedCard, setSelectedCard] = useState("")
   const [isAddNewCard, setIsAddNewCard] = useState(false)
+  const [loadingCards, setLoadingCards] = useState(false)
   const [newCard, setNewCard] = useState({
     firstName: "John",
     lastName: "Deo",
@@ -71,19 +72,6 @@ const ContextProvider = ({ children }) => {
     province: "",
     country: "Canada",
     postalCode: "",
-    
-    // firstName: "",
-    // lastName: "",
-    // cardNumber: "",
-    // CVV: "",
-    // expMonth: "",
-    // expYear: "",
-    // address1: "",
-    // address2: "",
-    // city: "",
-    // province: "",
-    // country: "",
-    // postalCode: "",
   })
 
   useEffect(() => {
@@ -92,7 +80,7 @@ const ContextProvider = ({ children }) => {
 
     auth.onAuthStateChanged((user) => {
       console.log(initLoaded)
-      
+
       if (user) {
         console.log("logged in", user.email);
         db.collection("users").doc(user.email).onSnapshot((doc) => {
@@ -105,11 +93,11 @@ const ContextProvider = ({ children }) => {
             console.log(Object.keys(addressBook).length)
 
             let sortedKey = Object.keys(addressBook) && Object.keys(addressBook)[0] &&
-              Object.keys(addressBook).sort((a , b) => b -a)
+              Object.keys(addressBook).sort((a, b) => b - a)
 
-              sortedKey && sortedKey.map((key) => {
-                tempArr.push(addressBook[key])
-              })
+            sortedKey && sortedKey.map((key) => {
+              tempArr.push(addressBook[key])
+            })
             setAddressBook(tempArr)
           }
         })
@@ -123,6 +111,45 @@ const ContextProvider = ({ children }) => {
       }
     })
   }, [])
+
+  //load card profile when app initiate
+  const checkCards = () => {
+    setLoadingCards(true)
+    console.log(user.profiles)
+    console.log("card loading...")
+    if (user && user.profiles !== cards) {
+      const getCards = functions.httpsCallable('getCards')
+      user && user.profiles && getCards({
+        profiles: user.profiles,
+        defaultProfileId: user.defaultProfileId,
+        email: user.email
+      })
+        .then((result) => {
+          console.log(result.data)
+          setCards(user.profiles)
+          console.log("card loaded")
+          cards.map(profile => {
+            if (profile.customer_code === user.defaultProfileId) {
+              setSelectedCard(profile)
+            }
+          })
+          setLoadingCards(false)
+        })
+        .catch((err) => {
+          console.log("Error: card cannot be loaded - " + err)
+          setLoadingCards(false)
+        })
+    }
+    else {
+      setLoadingCards(false)
+      console.log("card exsit and loaded")
+    }
+  }
+
+  useEffect(() => {
+    checkCards()
+  }, [user])
+
 
   //save newOrderProductList to AsyncStorage when it is updated
   const storeData = async () => {
@@ -205,8 +232,10 @@ const ContextProvider = ({ children }) => {
           profileId, setProfileId,
           cards, setCards,
           selectedCard, setSelectedCard,
-          isAddNewCard, setIsAddNewCard
-       }
+          isAddNewCard, setIsAddNewCard,
+          checkCards,
+          loadingCards, setLoadingCards
+        }
       }
     >
       {children}

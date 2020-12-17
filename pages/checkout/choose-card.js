@@ -7,7 +7,7 @@ import { Divider, Button, Headline, IconButton, Surface } from "react-native-pap
 import { firebase, db, functions } from "../../firebaseApp";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
-
+import moment from "moment";
 import BottomBar from "../../components/BottomBar";
 import AddressForm from "../../components/AddressForm";
 import InitLoader from "../../components/InitLoader";
@@ -31,7 +31,9 @@ export default function chooseCard() {
     cards, setCards,
     isAddNewCard, setIsAddNewCard,
     setProfileId,
-    selectedCard, setSelectedCard
+    selectedCard, setSelectedCard,
+    checkCards,
+    loadingCards, setLoadingCards
   } = useContext(Context);
 
   //update addressType so that it is selected
@@ -47,7 +49,7 @@ export default function chooseCard() {
       .catch(err => console.log(err))
   }
 
-  const deleteCard = (customer_code, index) => {
+  const deleteCard = (customer_code, index, lastOne) => {
     setLoading(true)
     const deleteQuery = functions.httpsCallable('deleteProfile')
     deleteQuery({
@@ -57,7 +59,17 @@ export default function chooseCard() {
     })
       .then(() => {
         user.profiles.splice(index, 1)
-        setLoading(false)
+        db.collection("users").doc(user.email).update({
+          profiles: user.profiles
+        })
+        // cards.splice(index, 1)
+        if (lastOne) {
+          db.collection("users").doc(user.email).update({
+            defaultProfileId: ""
+          })
+            .then(() => setLoading(false))
+        }
+        else setLoading(false)
       })
   }
 
@@ -65,40 +77,20 @@ export default function chooseCard() {
     navigate({ routeName: "confirmOrder" })
   }
 
-  useEffect(() => {
-    setLoading(true)
-    console.log(user.profiles)
-    console.log(cards)
-    if (user.profiles !== cards) {
-      // functions.useFunctionsEmulator('http://localhost:5001')
-      console.log(user)
-      const getCards = functions.httpsCallable('getCards')
-      user && user.profiles && getCards({
-        profiles: user.profiles,
-        defaultProfileId: user.defaultProfileId,
-        email: user.email
-      })
-        .then((result) => {
-          console.log(result.data)
-          setCards(user.profiles)
-          cards.map(profile => {
-            if (profile.customer_code === user.defaultProfileId) {
-              setSelectedCard(profile)
-            }
-          })
-          setLoading(false)
-        })
-        .catch((err) => {
-          setLoading(false)
-          console.log("Error: " + err)
-        })
-    }
-    else setLoading(false)
-  }, [user])
+  const sortedCards = (cards) => {
+    let sort = cards.sort((a, b) => {
+      return moment(b.modified_date).diff(moment(a.modified_date))
+    })
+    return sort
+  }
+
+  useEffect(()=>{
+    checkCards()
+  },[])
 
   return (
     <>
-      {loading && <Loader />}
+      {loadingCards && <Loader />}
       {!initLoaded ? <InitLoader /> :
         <>
           <ContextArea>
@@ -109,7 +101,7 @@ export default function chooseCard() {
                   setOnAddNew(false)
                 }
                 :
-                () => goBack()
+                () => navigate({routeName:"checkout/payment-method"})
             } />
             <ScrollView>
               {onEdit || onAddNew ? null :
@@ -126,9 +118,8 @@ export default function chooseCard() {
                   </View>
                 </>}
 
-              {cards && cards[0] ? cards.map((profile, index) => {
+              {cards && cards[0] ? sortedCards(cards).map((profile, index) => {
                 return (
-
                   <Surface
                     key={index}
                     style={{
@@ -171,9 +162,15 @@ export default function chooseCard() {
                       }}>
 
                         {user.defaultProfileId === profile.customer_code ?
+                          <TouchableOpacity onPress={() => {
+                            cards.length === 1 && deleteCard(profile.customer_code, index, true)
+                          }}>
+                            <Edit theme={theme} style={{ 
+                              color: cards.length !== 1 ? theme.lightGrey : theme.red 
+                              }}>
+                              Delete</Edit>
+                          </TouchableOpacity>
 
-                          <Edit theme={theme} style={{ color: theme.lightGrey }}>
-                            Delete</Edit>
                           :
                           <TouchableOpacity onPress={() => {
                             deleteCard(profile.customer_code, index)
