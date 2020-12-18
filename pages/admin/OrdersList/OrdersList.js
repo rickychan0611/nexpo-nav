@@ -1,7 +1,7 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { Dimensions, View, Text, TouchableOpacity, Platform, Picker } from "react-native";
-import { Headline, Surface, Divider, Button, Menu, Provider, IconButton } from 'react-native-paper';
+import { Headline, Surface, Divider, Button, Menu, Provider, IconButton, Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import { Context } from "../../../context/Context";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -33,6 +33,26 @@ export default function OrdersList() {
   const openMenu = (orderId) => setVisible(orderId);
   const closeMenu = () => setVisible(false);
 
+  //dailog
+  const [refundOrder, setRefundOrder] = useState();
+  const [showDialog, setShowDialog] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+  const hideDialog = () => setShowDialog(false)
+  const showRefundDialog = (order) => {
+    setRefundOrder(order)
+    showDialog(true)
+    updateStatus(order.orderId, "Refund")
+  }
+
+  const refundPayment = (order) => {
+    console.log("refund")
+    //model are you sure to refun? or enter refund amount
+    // const refundPayment = functions.httpsCallable('refundPayment')
+    // refundPayment({
+
+    // })
+  }
+
   const updateStatus = (orderId, status) => {
     setLoading(true)
     console.log("update sent")
@@ -49,13 +69,6 @@ export default function OrdersList() {
       })
   }
 
-  const refundPayment = (order) => {
-    //model are you sure to refun? or enter refund amount
-    // const refundPayment = functions.httpsCallable('refundPayment')
-    // refundPayment({
-
-    // })
-  }
 
   useEffect(() => {
     listenOrders()
@@ -64,6 +77,20 @@ export default function OrdersList() {
   return (
     <>
       {loading && <Loader />}
+
+      <Portal>
+        <Dialog visible={showDialog} onDismiss={hideDialog}>
+          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{errMsg}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => hideDialog()}>Ok</Button>
+            <Button onPress={() => refundPayment()
+            }>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
 
       <Container ScreenHeight={ScreenHeight} theme={theme}>
 
@@ -138,9 +165,7 @@ export default function OrdersList() {
                         <Menu.Item onPress={() => updateStatus(order.orderId, "Completed")} title="Completed" />
                         <Divider />
                         <Menu.Item onPress={() => {
-                          
-                          refundPayment(order)
-                          updateStatus(order.orderId, "Refund")
+                          showRefundDialog(order)
 
                         }
                         } title="Refund" />
