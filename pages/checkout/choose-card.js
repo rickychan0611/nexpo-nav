@@ -20,7 +20,6 @@ export default function chooseCard() {
   const userId = getParam('userId')
   const addressType = getParam('type')
 
-  const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
 
   const {
@@ -50,7 +49,7 @@ export default function chooseCard() {
   }
 
   const deleteCard = (customer_code, index, lastOne) => {
-    setLoading(true)
+    setLoadingCards(true)
     const deleteQuery = functions.httpsCallable('deleteProfile')
     deleteQuery({
       profileId: customer_code,
@@ -67,9 +66,9 @@ export default function chooseCard() {
           db.collection("users").doc(user.email).update({
             defaultProfileId: ""
           })
-            .then(() => setLoading(false))
+            .then(() => setLoadingCards(false))
         }
-        else setLoading(false)
+        else setLoadingCards(false)
       })
   }
 

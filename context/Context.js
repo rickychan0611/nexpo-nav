@@ -76,7 +76,6 @@ const ContextProvider = ({ children }) => {
 
   useEffect(() => {
 
-    // functions.useFunctionsEmulator('http://localhost:5001')
 
     auth.onAuthStateChanged((user) => {
       console.log(initLoaded)

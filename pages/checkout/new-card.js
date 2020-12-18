@@ -236,7 +236,7 @@ export default function newCard() {
         <Dialog visible={showDialog} onDismiss={hideDialog}>
           <Dialog.Title>Error</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{errMsg}</Paragraph>
+            {/* <Paragraph>{errMsg}</Paragraph> */}
           </Dialog.Content>
         </Dialog>
       </Portal>

@@ -22,3 +22,6 @@ export const db = firebase.firestore();
 export const auth = firebase.auth()
 export const storage = firebase.storage()
 export const functions = firebase.functions()
+
+functions.useFunctionsEmulator('http://localhost:5001')
+

@@ -38,19 +38,24 @@ export default function OrdersList() {
   const [showDialog, setShowDialog] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const hideDialog = () => setShowDialog(false)
+
   const showRefundDialog = (order) => {
+    setShowDialog(true)
+    closeMenu()
     setRefundOrder(order)
-    showDialog(true)
-    updateStatus(order.orderId, "Refund")
   }
 
-  const refundPayment = (order) => {
-    console.log("refund")
+  const refundPayment = () => {
+    console.log("refund order:!!!!")
+    console.log(refundOrder)
     //model are you sure to refun? or enter refund amount
-    // const refundPayment = functions.httpsCallable('refundPayment')
-    // refundPayment({
+    const refundPayment = functions.httpsCallable('refundPayment')
+    refundPayment({
+      order: refundOrder
+    })
+    updateStatus(refundOrder.orderId, "Cancelled")
+    hideDialog(false)
 
-    // })
   }
 
   const updateStatus = (orderId, status) => {
@@ -80,14 +85,13 @@ export default function OrdersList() {
 
       <Portal>
         <Dialog visible={showDialog} onDismiss={hideDialog}>
-          <Dialog.Title>Error</Dialog.Title>
+          <Dialog.Title>Refund</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>{errMsg}</Paragraph>
+            <Paragraph>Are you sure to cancel the order and refund ${refundOrder.totalAmt}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => hideDialog()}>Ok</Button>
-            <Button onPress={() => refundPayment()
-            }>Ok</Button>
+            <Button onPress={() => hideDialog()}>Cancel</Button>
+            <Button onPress={() => refundPayment()}>Yes</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -166,9 +170,8 @@ export default function OrdersList() {
                         <Divider />
                         <Menu.Item onPress={() => {
                           showRefundDialog(order)
-
                         }
-                        } title="Refund" />
+                        } title="Cancel & Refund" />
 
                       </Menu>
                     </View>
