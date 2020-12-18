@@ -49,6 +49,14 @@ export default function OrdersList() {
       })
   }
 
+  const refundPayment = (order) => {
+    //model are you sure to refun? or enter refund amount
+    // const refundPayment = functions.httpsCallable('refundPayment')
+    // refundPayment({
+
+    // })
+  }
+
   useEffect(() => {
     listenOrders()
   }, [])
@@ -66,7 +74,7 @@ export default function OrdersList() {
             <TouchableOpacity
               onPress={() => {
                 setSelectedOrder(order)
-                navigate({routeName: "admin/order-details"})
+                navigate({ routeName: "admin/order-details" })
               }}>
               <Surface style={{
                 padding: 20,
@@ -82,15 +90,14 @@ export default function OrdersList() {
               >
                 <View key={order.orderId} style={{ width: "100%" }}>
 
-                {Platform.OS === "web" ? <PrinterWeb order={order}/> : <PrinterMobile order={order}/>}
-                
+                  {Platform.OS === "web" ? <PrinterWeb order={order} /> : <PrinterMobile order={order} />}
+
                   <View style={{
                     width: "100%",
                     flexDirection: "row",
                     flexWrap: "nowrap",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: 10
                   }}>
 
                     <Date style={{ flex: 1, position: 'absolute', top: -20 }}>
@@ -130,12 +137,32 @@ export default function OrdersList() {
                         <Divider />
                         <Menu.Item onPress={() => updateStatus(order.orderId, "Completed")} title="Completed" />
                         <Divider />
-                        <Menu.Item onPress={() => updateStatus(order.orderId, "Cancelled")} title="Cancelled" />
+                        <Menu.Item onPress={() => {
+                          
+                          refundPayment(order)
+                          updateStatus(order.orderId, "Refund")
+
+                        }
+                        } title="Refund" />
 
                       </Menu>
                     </View>
-
                   </View>
+
+
+                  <View style={{
+                    // flex: 1,
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    marginBottom: 10
+                  }}>
+                    <Text>
+                      Payment: {order.paymentStatus === "Approved" ? "Credit Card - PAID" : "Pay upon delivery"}
+                    </Text>
+                  </View>
+
                   {order.orderItems.map((item, index) => {
                     // console.log(item)
                     return (
@@ -156,6 +183,8 @@ export default function OrdersList() {
                             <Text style={{ textAlign: "right" }}>${(+item.item.final_price).toFixed(2)}</Text>
                           </Price>
                         </ItemsContainer>
+                        <Divider />
+
                       </>
                     )
                   })}
@@ -164,7 +193,7 @@ export default function OrdersList() {
             </TouchableOpacity>
           )
         })}
-        <View style={{ marginBottom: 150}}></View>
+        <View style={{ marginBottom: 150 }}></View>
       </Container>
     </>
   );

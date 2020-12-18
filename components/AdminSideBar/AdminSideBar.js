@@ -2,27 +2,21 @@ import React, { useContext } from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
+import { useRouting } from "expo-next-react-navigation";
 
 export default function AdminSideBar({ data }) {
+  const { navigate } = useRouting();
 
   const { setSelectedCat } = useContext(Context);
 
   return (
     <Container>
-      <TouchableOpacity>
+      {/* <TouchableOpacity>
         <Name onPress={() => {
         }}>
           Dashboard
           </Name>
-      </TouchableOpacity>
-
-      <TouchableOpacity>
-
-        <Name onPress={() => {
-        }}>
-          Add a product
-          </Name>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity>
         <Name onPress={() => {
@@ -32,6 +26,21 @@ export default function AdminSideBar({ data }) {
       </TouchableOpacity>
 
       <TouchableOpacity>
+        <Name onPress={() => {
+        }}>
+          Add a product
+          </Name>
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Name onPress={() => {
+          navigate({routeName:"home"})
+        }}>
+          Quit
+          </Name>
+      </TouchableOpacity>
+
+      {/* <TouchableOpacity>
         <Name onPress={() => {
         }}>
           Stats
@@ -50,7 +59,7 @@ export default function AdminSideBar({ data }) {
         }}>
           Settings
           </Name>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </Container>
   )
 };

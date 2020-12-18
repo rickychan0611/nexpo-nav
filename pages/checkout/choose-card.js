@@ -6,7 +6,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { Divider, Button, Headline, IconButton, Surface } from "react-native-paper";
 import { firebase, db, functions } from "../../firebaseApp";
 import { TouchableOpacity, Platform, ScrollView, Text, View } from "react-native";
-import { Link, useRouting } from "expo-next-react-navigation";
+import { useRouting } from "expo-next-react-navigation";
 import moment from "moment";
 import BottomBar from "../../components/BottomBar";
 import AddressForm from "../../components/AddressForm";

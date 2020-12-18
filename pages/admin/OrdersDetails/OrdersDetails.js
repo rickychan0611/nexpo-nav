@@ -82,7 +82,6 @@ export default function order() {
                   flexWrap: "nowrap",
                   justifyContent: "space-between",
                   paddingRight: 20,
-                  marginBottom: 25
                 }}>
 
                   <View style={{
@@ -103,6 +102,8 @@ export default function order() {
                     </Text>
                   </View>
 
+                  
+
                   {selectedOrder.status === "In Progress" ?
                     <CancelButton onPress={showCancelDialog}>
                       <Text style={{
@@ -120,6 +121,38 @@ export default function order() {
                   }
 
                 </View>
+
+
+                <View style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  justifyContent: "space-between",
+                  paddingRight: 20,
+                  marginBottom: 25
+                }}>
+
+                  <View style={{
+                    paddingLeft: 25,
+                    flex: 2,
+                    flexDirection: "row",
+                    flexWrap: "nowrap",
+                  }}>
+                    {/* LOGO */}
+                    {/* <StatusContainer>
+                      <Status status={selectedOrder.status} theme={theme}
+                        style={{ margin: 0 }} />
+                    </StatusContainer> */}
+                    <Text style={{
+                      fontSize: 16,
+                      paddingTop: 7
+                    }}>
+                     Payment: {selectedOrder.paymentStatus === "Approved" ? "Credit Card - PAID" : "Pay upon delivery"}
+                    </Text>
+                  </View>
+                  </View>
+
+
                 <Divider />
                 <Divider />
 
