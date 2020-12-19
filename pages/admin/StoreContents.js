@@ -17,12 +17,14 @@ import ViewCartBar from "../../components/ViewCartBar";
 // const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
-export default function storeListings({ ssrData }) {
+export default function StoreContents({ ssrData }) {
+   // Edit Mode
+
   const { navigate } = useRouting();
 
   const {
     setSelectedItem, selectedCat, selected,
-    newOrderProductList, setSelected
+    newOrderProductList, setSelected, setProduct
   } = useContext(Context);
 
   const {
@@ -52,7 +54,7 @@ export default function storeListings({ ssrData }) {
         flexWrap: "nowrap",
         backgroundColor: "#fcfa92"
       }}>
-        <Text> --- Edit Mode ---</Text>
+        <Text> --- Edit Mode! ---</Text>
       </View>
         {productData && <>
           {/* <SearchBar
@@ -77,10 +79,11 @@ export default function storeListings({ ssrData }) {
                   <TouchableOpacity key={item.uid}
                     onPress={() => {
                       setSelectedItem(item)
+                      setProduct(item)
                       navigate({
-                        routeName: "product",
-                        params: { id: item.uid },
-                        web: { as: `/product?id=${item.uid}` },
+                        routeName: "admin/edit-product",
+                        params: { id: item.uid, path: "edit-product" },
+                        web: { as: `/admin/edit-product?id=${item.uid}` },
                       })
                     }}>
                     <ProductCard item={item} />

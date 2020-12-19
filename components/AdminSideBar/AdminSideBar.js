@@ -7,8 +7,8 @@ import { useRouting } from "expo-next-react-navigation";
 export default function AdminSideBar({ data }) {
   const { navigate } = useRouting();
 
-  const { setSelectedCat, setOpenWebAdminMenu } = useContext(Context);
-
+  const { productInitValue, setOpenWebAdminMenu, setProduct } = useContext(Context);
+  
   return (
     <Container>
       <TouchableOpacity>
@@ -21,7 +21,7 @@ export default function AdminSideBar({ data }) {
 
       <TouchableOpacity>
         <Name onPress={() => {
-          navigate({ routeName: "admin/orders"})
+          navigate({ routeName: "admin/orders" })
           setOpenWebAdminMenu(false)
         }}>
           Orders
@@ -39,6 +39,8 @@ export default function AdminSideBar({ data }) {
 
       <TouchableOpacity>
         <Name onPress={() => {
+          navigate({ routeName: "admin/create-product", params: {path: "create-product"} })
+          setProduct(productInitValue)
           setOpenWebAdminMenu(false)
         }}>
           Add a product

@@ -17,6 +17,8 @@ import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import orders from "./pages/admin/orders";
+import editProduct from "./pages/admin/edit-product";
+import createProduct from "./pages/admin/create-product";
 import storeListings from "./pages/admin/store-listings";
 import order_details from "./pages/admin/order-details";
 import shipping from "./pages/checkout/shipping";
@@ -90,6 +92,8 @@ function App() {
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
+          <Stack.Screen name="admin/edit-product" component={editProduct} options={options("editProduct")} />
+          <Stack.Screen name="admin/create-product" component={createProduct} options={options("createProduct")} />
           <Stack.Screen name="admin/orders" component={orders} options={options("orders")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />

@@ -52,7 +52,7 @@ export default function ProductContent({item}) {
               <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
               <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
             </PricesWrapper>
-
+{/* 
             <QtyWrapper>
               
               <Icon
@@ -73,7 +73,7 @@ export default function ProductContent({item}) {
                 onPress={() => { handleMinus(item, ctx) }}
               />
               </>: null }
-            </QtyWrapper>
+            </QtyWrapper> */}
 
         </PriceQtyWrapper>
         </View>

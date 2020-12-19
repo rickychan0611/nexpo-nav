@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { db } from "../../firebaseApp";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Context } from "../../context/Context";
@@ -10,14 +10,23 @@ import { Icon } from 'react-native-elements'
 import { Title } from 'react-native-paper';
 
 import SaveProductButton from '../../components/SaveProductButton';
+import EditProductButton from '../../components/EditProductButton';
+
+import { Link, useRouting } from "expo-next-react-navigation";
 
 export default function AdminTopBar() {
   const { theme } = useContext(ThemeContext);
+  const { navigate, getParam } = useRouting();
 
   const {
-    setOpenWebAdminMenu
+    setOpenWebAdminMenu, selected
   } = useContext(Context);
 
+  useEffect(()=>{
+    console.log("selected!!!!!!!!!!!!!")
+    console.log(selected)
+  },[])
+  
   return (
     <>
       <Container theme={theme} style={{
@@ -34,7 +43,9 @@ export default function AdminTopBar() {
 
           <IconWrapper>
             <TouchableOpacity
-              onPress={() => { setOpenWebAdminMenu(true) }}>
+              onPress={() => { setOpenWebAdminMenu(true) 
+                console.log(selected)
+              }}>
               <Icon
                 name='bars'
                 type='font-awesome'
@@ -48,23 +59,8 @@ export default function AdminTopBar() {
         </View>
 
         {/* save button */}
-        <SaveProductButton />
-        {/* <IconWrapper>
-          <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
-            onPress={() => {
-              onCreateProductSubmit(ctx)
-              if (error) {
-                alert("Some fields contain errors. Please check and try again." )
-              }
-            }}>
-            <Text style={{ fontSize: 20, color: "white" }}>Save </Text>
-            <Icon
-              name='save'
-              type='font-awesome'
-              color={theme.TopBarTitleColor}
-            />
-          </TouchableOpacity>
-        </IconWrapper> */}
+        {getParam("path") === "create-product" && <SaveProductButton />}
+        {getParam("path") === "edit-product" && <EditProductButton />}
 
       </Container>
     </>

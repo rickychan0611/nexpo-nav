@@ -187,6 +187,7 @@ export default function CreateProduct() {
 
   useEffect(() => {
       listenCategories()
+      setImages()
   }, [])
 
   return (
@@ -354,12 +355,11 @@ export default function CreateProduct() {
   );
 }
 
-const Container = styled.View`
+const Container = styled.ScrollView`
   width: 100%;
   margin-bottom: 20px;
   padding: 10px 6px 10px 6px;
 `;
-
 const InputView = styled.View`
   margin-bottom: ${Platform.OS === "web" ? "15px" : 0};
 `;

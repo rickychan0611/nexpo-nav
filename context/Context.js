@@ -233,7 +233,8 @@ const ContextProvider = ({ children }) => {
           selectedCard, setSelectedCard,
           isAddNewCard, setIsAddNewCard,
           checkCards,
-          loadingCards, setLoadingCards
+          loadingCards, setLoadingCards,
+          productInitValue
         }
       }
     >

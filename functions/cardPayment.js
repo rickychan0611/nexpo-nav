@@ -1,23 +1,20 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
-const encode = require('nodejs-base64-encode');
+const base64 = require('nodejs-base64-encode');
 const fetch = require('node-fetch');
 const { user } = require('firebase-functions/lib/providers/auth');
 
 exports.cardPayment = functions.https.onCall(async (data) => {
     console.log("cardPayment run")
     let passcode = functions.config().tintin.id + ":" + functions.config().tintin.payment_key
-    let base64data = encode.encode(passcode, 'base64')
-  
-    console.log(base64data)
-  
+
+    let base64data = base64.encode(passcode, 'base64')
     const payment = await fetch("https://api.na.bambora.com/v1/payments", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Passcode ' + base64data
-        'Authorization': 'Passcode Mzc2MjkzMzYxOmYzNjYxNzUyMjQ2MjQzNDQ4QjZEMzI5QjJiRGRCMTND'
+        'Authorization': 'Passcode ' + base64data
       },
       body: JSON.stringify(
         {

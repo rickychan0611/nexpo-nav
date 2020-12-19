@@ -17,8 +17,8 @@ exports.refundPayment = functions.https.onCall(async (data) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Passcode ' + base64data
-        'Authorization': 'Passcode Mzc2MjkzMzYxOmYzNjYxNzUyMjQ2MjQzNDQ4QjZEMzI5QjJiRGRCMTND'
+        'Authorization': 'Passcode ' + base64data
+        // 'Authorization': 'Passcode Mzc2MjkzMzYxOmYzNjYxNzUyMjQ2MjQzNDQ4QjZEMzI5QjJiRGRCMTND'
       },
       body: JSON.stringify(
         {

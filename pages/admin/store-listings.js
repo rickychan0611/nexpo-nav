@@ -8,7 +8,8 @@ import AdminWebWrapper from "../../components/AdminWebWrapper";
 import AdminMobileWrapper from "../../components/AdminMobileWrapper";
 
 export default function storeListings() {
-
+  // Edit Mode
+  
   //This is WEB layout, website has fixed side bar
   if (Platform.OS === "web") {
     return (
