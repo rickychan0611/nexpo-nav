@@ -7,19 +7,22 @@ import { useRouting } from "expo-next-react-navigation";
 export default function AdminSideBar({ data }) {
   const { navigate } = useRouting();
 
-  const { setSelectedCat } = useContext(Context);
+  const { setSelectedCat, setOpenWebAdminMenu } = useContext(Context);
 
   return (
     <Container>
-      {/* <TouchableOpacity>
+      <TouchableOpacity>
         <Name onPress={() => {
+          setOpenWebAdminMenu(false)
         }}>
           Dashboard
           </Name>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       <TouchableOpacity>
         <Name onPress={() => {
+          navigate({ routeName: "admin/orders"})
+          setOpenWebAdminMenu(false)
         }}>
           Orders
           </Name>
@@ -27,6 +30,16 @@ export default function AdminSideBar({ data }) {
 
       <TouchableOpacity>
         <Name onPress={() => {
+          navigate({ routeName: "admin/store-listings" })
+          setOpenWebAdminMenu(false)
+        }}>
+          Listings
+          </Name>
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Name onPress={() => {
+          setOpenWebAdminMenu(false)
         }}>
           Add a product
           </Name>
@@ -34,7 +47,8 @@ export default function AdminSideBar({ data }) {
 
       <TouchableOpacity>
         <Name onPress={() => {
-          navigate({routeName:"home"})
+          navigate({ routeName: "home" })
+          setOpenWebAdminMenu(false)
         }}>
           Quit
           </Name>

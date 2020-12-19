@@ -52,51 +52,6 @@ export default function Cart() {
     navigate({
       routeName: "checkout/shipping",
     })
-
-    // setErr(shippingDefault)
-    // let validate = new Promise((resolve, reject) => {
-
-    //   if (!shippingAddress.firstName) {
-    //     setErr(prev => ({ ...prev, firstName: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.lastName) {
-    //     setErr(prev => ({ ...prev, lastName: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.address1) {
-    //     setErr(prev => ({ ...prev, address1: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.city) {
-    //     setErr(prev => ({ ...prev, city: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.province) {
-    //     setErr(prev => ({ ...prev, province: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.country) {
-    //     setErr(prev => ({ ...prev, country: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.postalCode) {
-    //     setErr(prev => ({ ...prev, postalCode: "Required" }))
-    //     reject()
-    //   }
-    //   if (!shippingAddress.phoneNumber) {
-    //     setErr(prev => ({ ...prev, phoneNumber: "Required" }))
-    //     reject()
-    //   }
-    //   else resolve()
-    // })
-
-    // validate.then(() => {
-    //   setSelected("confirmOrder")
-    //   navigate({
-    //     routeName: "confirmOrder",
-    //   })   
-    // })
   }
 
   useEffect(() => {

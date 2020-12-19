@@ -16,6 +16,8 @@ import cart from "./pages/cart";
 import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+import orders from "./pages/admin/orders";
+import storeListings from "./pages/admin/store-listings";
 import order_details from "./pages/admin/order-details";
 import shipping from "./pages/checkout/shipping";
 import newCard from "./pages/checkout/new-card";
@@ -78,6 +80,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="admin/store-listings" component={storeListings} options={options("storeListings")} />
           <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="checkout/new-card" component={newCard} options={options("New Card")} />
           <Stack.Screen name="checkout/choose-card" component={chooseCard} options={options("Choose Card")} />
@@ -87,6 +90,7 @@ function App() {
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
+          <Stack.Screen name="admin/orders" component={orders} options={options("orders")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
           <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />

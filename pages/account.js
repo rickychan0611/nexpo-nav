@@ -88,7 +88,7 @@ export default function account() {
                   style={{ backgroundColor: "white" }}
                   icon="shield-account"
                   label="Admin Panel"
-                  onPress={()=>navigate({routeName: "admin/panel"})
+                  onPress={()=>navigate({routeName: "admin/store-listings"})
                 }
                 />
                 <Divider />

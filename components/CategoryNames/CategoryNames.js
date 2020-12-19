@@ -3,17 +3,19 @@ import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 import { ProductsContext } from "../../context/ProductsContext";
 import { ThemeContext } from "../../context/ThemeContext";
+import { View, Text, TouchableOpacity } from "react-native";
 
 export default function CategoryNames() {
 
   const { setSelectedCat, selectedCat } = useContext(Context);
-  const { categories } = useContext(ProductsContext);
+  const { categories, listenCategories } = useContext(ProductsContext);
   const { theme } = useContext(ThemeContext)
 
   useEffect(() => {
     if (!selectedCat) {
-      setSelectedCat(categories[0].uid)
+      setSelectedCat(categories[0].uid)      
     }
+    listenCategories()
   }, [])
 
   return (
