@@ -57,7 +57,6 @@ export default function Store({ ssrData }) {
 
             <CategoryScrollView up={newOrderProductList.length > 0}>
               <CategoryNames />
-              <View style={{ height: 150 }}></View>
             </CategoryScrollView>
 
             <ProductContainer>
@@ -134,7 +133,6 @@ const CategoryScrollView = styled.ScrollView`
       height: 100%;
       background-color: white;
       border-right-color: #e8e6e6;
-      border-right-width: 4px;
 `;
 
 const CategoryContainer = styled.View`
