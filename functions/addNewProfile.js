@@ -12,6 +12,8 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
   // encode profileCode
   let passcode = functions.config().tintin.id + ":" + functions.config().tintin.profile_code
   let base64data = encode.encode(passcode, 'base64')
+  console.log("create profile info::::!!!!!!!!!!!")
+  console.log(info)
 
   const token = await fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
     method: 'POST',
@@ -36,11 +38,12 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
     body: JSON.stringify(
       {
         "token": {
-          "name": "John Doe",
+          "name": info.card.name,
           "code": token
         },
         'card': info.card,
-        'billing': info.billing
+        'billing': info.billing,
+        'validate ': true
       }
     )
   })

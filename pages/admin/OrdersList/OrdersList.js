@@ -10,7 +10,7 @@ import styled from "styled-components/native";
 import moment from "moment";
 import { useRouting } from "expo-next-react-navigation";
 
-import { db } from "../../../firebaseApp";
+import { db, functions } from "../../../firebaseApp";
 import Loader from "../../../components/Loader";
 import PrinterWeb from "../../../components/Printer/PrinterWeb";
 import PrinterMobile from "../../../components/Printer/PrinterMobile";
@@ -35,12 +35,16 @@ export default function OrdersList() {
 
   //dailog
   const [refundOrder, setRefundOrder] = useState();
-  const [showDialog, setShowDialog] = useState(false);
-  const [errMsg, setErrMsg] = useState('');
-  const hideDialog = () => setShowDialog(false)
+
+  const [showConfirmRefundDialog, setShowConfirmRefundDialog] = useState(false);
+  const hideConfirmRefundDialog = () => setShowConfirmRefundDialog(false)
+
+  const [showRefundSuccessDialog, setShowRefundSuccessDialog] = useState(false);
+  const hideRefundSuccessDialog = () => setShowRefundSuccessDialog(false)
 
   const showRefundDialog = (order) => {
-    setShowDialog(true)
+    //1.show box, 2.close menu, 3.set order state 4.refund function if OK
+    setShowConfirmRefundDialog(true)
     closeMenu()
     setRefundOrder(order)
   }
@@ -53,25 +57,29 @@ export default function OrdersList() {
     refundPayment({
       order: refundOrder
     })
-    updateStatus(refundOrder.orderId, "Cancelled")
-    hideDialog(false)
+      .then(async (data) => {
+        console.log("retrun data")
+        console.log(data)
+        // await updateStatus(refundOrder.orderId, "Cancelled")
+        // showRefundSuccessDialog(true)
+      })
 
   }
 
-  const updateStatus = (orderId, status) => {
+  const updateStatus = async (orderId, status) => {
     setLoading(true)
     console.log("update sent")
-    db.collection("orders").doc(orderId).update({ status: status, "statusUpdatedAt": moment().format() })
-      .then(() => {
-        console.log("updated")
-        setLoading(false)
-        closeMenu()
-      })
-      .catch((err) => {
-        setLoading(false)
-        closeMenu()
-        console.log(err)
-      })
+    await db.collection("orders").doc(orderId).update({ status: status, "statusUpdatedAt": moment().format() })
+    .then(()=>{
+      return
+    })
+    // setLoading(false)
+    // closeMenu()
+    // update.catch((err) => {
+    //   setLoading(false)
+    //   closeMenu()
+    //   console.log(err)
+    // })
   }
 
 
@@ -83,18 +91,38 @@ export default function OrdersList() {
     <>
       {loading && <Loader />}
 
+      {/* Confirm Refund */}
       <Portal>
-        <Dialog visible={showDialog} onDismiss={hideDialog}>
+        <Dialog visible={showConfirmRefundDialog} onDismiss={hideConfirmRefundDialog}>
           <Dialog.Title>Refund</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>Are you sure to cancel the order and refund ${refundOrder.totalAmt}</Paragraph>
+            <Paragraph>
+              Are you sure to cancel the order and refund ${refundOrder && refundOrder.totalAmt}
+            </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => hideDialog()}>Cancel</Button>
+            <Button onPress={() => hideConfirmRefundDialog()}>Cancel</Button>
             <Button onPress={() => refundPayment()}>Yes</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
+
+      {/* Refund Success */}
+      <Portal>
+        <Dialog visible={showRefundSuccessDialog} onDismiss={hideRefundSuccessDialog}>
+          <Dialog.Title>Refund</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>
+              Refund Successful
+              </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => hideRefundSuccessDialog()}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
+
 
       <Container ScreenHeight={ScreenHeight} theme={theme}>
 

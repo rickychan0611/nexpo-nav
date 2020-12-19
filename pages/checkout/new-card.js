@@ -174,13 +174,14 @@ export default function newCard() {
       //1. get a token
       // functions.useFunctionsEmulator('http://localhost:5001')
       const addNewProfile = functions.httpsCallable('addNewProfile')
+      console.log(newCard)
       addNewProfile({
         card: {
           "name": newCard.firstName + " " + newCard.lastName,
           "number": newCard.cardNumber,
           "expiry_month": newCard.expMonth,
           "expiry_year": newCard.expYear,
-          "cvd": newCard.CVV
+          "cvd": "123"
         },
         billing: {
           'name': newCard.firstName + " " + newCard.lastName,

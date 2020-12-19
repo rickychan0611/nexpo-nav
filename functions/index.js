@@ -6,8 +6,10 @@ const addNewProfile = require('./addNewProfile');
 const cardPayment = require('./cardPayment');
 const getCards = require('./getCards');
 const deleteProfile = require('./deleteProfile');
+const refundPayment = require('./refundPayment');
 
 exports.addNewProfile = addNewProfile.addNewProfile;
 exports.cardPayment = cardPayment.cardPayment;
 exports.getCards = getCards.getCards;
 exports.deleteProfile = deleteProfile.deleteProfile;
+exports.refundPayment = refundPayment.refundPayment;

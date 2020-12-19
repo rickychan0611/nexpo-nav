@@ -153,7 +153,7 @@ export default function CreditCardForm({
               mode="outlined"
               dense
               value={newCard.CVV}
-              onChangeText={value => { handleChanage("newCard", value) }}
+              onChangeText={value => { handleChanage("CVV", value) }}
               error={err.CVV}
               returnKeyLabel="next"
               keyboardType="phone-pad"

@@ -23,8 +23,6 @@ exports.getCards = functions.https.onCall(async (data) => {
       })
         .then(response => response.json())
         .then(data => {
-          console.log("CHECK!!!!!!!!!!!!!!!")
-          console.log(data)
           if (data.code === 1) {
             return profile
           }
@@ -36,13 +34,8 @@ exports.getCards = functions.https.onCall(async (data) => {
   const filteredProfiles = profiles.filter(function (el) {
     return el !== undefined;
   });
-  console.log("filteredProfiles")
-  console.log(filteredProfiles)
 
   let checkDefaultId = filteredProfiles[0] && filteredProfiles.map((profile, index) => {
-    console.log("XXXXXXXXXXXXXXXXXXXXXxe!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    console.log(profile.customer_code)
-    console.log(data.defaultProfileId)
     if (profile.customer_code === data.defaultProfileId) {
       return index
     }
