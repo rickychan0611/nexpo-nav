@@ -56,29 +56,25 @@ export default function EditProductButton() {
 
       const timestamp = new Date()
       db.collection("products").doc(product.uid)
-      .update({
-        ...product,
-        createAt: timestamp,
-        images: images && images
-      })
+        .update({
+          ...product,
+          createAt: timestamp,
+          images: images && images
+        })
         .then(() => {
+          let promises = []
           //Update productID in categories collection
           selectedCategory && selectedCategory[0] &&
             selectedCategory.forEach((category) => {
-              db.collection("categories").doc(category).update({
+              let promise = db.collection("categories").doc(category).update({
                 productId: firebase.firestore.FieldValue.arrayUnion(product.uid)
               })
                 .then(() => {
-                  //////reset everything after sumbitting to server
-                  // setProduct(productInitValue)
-                  // setSelectedCategory([])
-                  // navigate({
-                  //   routeName: "/"
-                  // })
-                  goBack()
                 })
                 .catch((err) => console.log(category, " NOT added. Err: ", err))
+              promises.push(promise)
             })
+            Promise.all(promises).then(()=>goBack())
         })
         .catch(error => console.log(error))
     })
