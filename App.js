@@ -82,6 +82,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="admin/orders" component={orders} options={options("orders")} />
           <Stack.Screen name="admin/store-listings" component={storeListings} options={options("storeListings")} />
           <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="checkout/new-card" component={newCard} options={options("New Card")} />
@@ -94,7 +95,6 @@ function App() {
           <Stack.Screen name="admin/order-details" component={order_details} options={options("Orders Details")} />
           <Stack.Screen name="admin/edit-product" component={editProduct} options={options("editProduct")} />
           <Stack.Screen name="admin/create-product" component={createProduct} options={options("createProduct")} />
-          <Stack.Screen name="admin/orders" component={orders} options={options("orders")} />
           <Stack.Screen name="order" component={order} options={options("order")} />
           <Stack.Screen name="orderSuccess" component={orderSuccess} options={options("orderSuccess")} />
           <Stack.Screen name="confirmOrder" component={confirmOrder} options={options("confirmOrder")} />
@@ -122,14 +122,14 @@ export default () => {
       <AccountProvider>
         <ProductsProvider>
           <ThemeProvider>
-            <PaperProvider theme={theme}>
-              <AdminProvider >
-                <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-                  {/* <TopBar /> */}
-                  <App />
-                </SafeAreaView>
-              </AdminProvider >
-            </PaperProvider>
+              <PaperProvider theme={theme}>
+                <AdminProvider >
+                  <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+                    {/* <TopBar /> */}
+                    <App />
+                  </SafeAreaView>
+                </AdminProvider >
+              </PaperProvider>
           </ThemeProvider>
         </ProductsProvider>
       </AccountProvider>

@@ -24,13 +24,13 @@ export default function myApp({ Component, pageProps }) {
         <AccountProvider>
           <ProductsProvider>
             <ThemeProvider>
-              <PaperProvider theme={theme}>
-                <AdminProvider >
-                  <WebContainer>
-                    <Component {...pageProps} />
-                  </WebContainer>
-                </AdminProvider >
-              </PaperProvider>
+                <PaperProvider theme={theme}>
+                  <AdminProvider >
+                    <WebContainer>
+                      <Component {...pageProps} />
+                    </WebContainer>
+                  </AdminProvider >
+                </PaperProvider>
             </ThemeProvider>
           </ProductsProvider>
         </AccountProvider>
