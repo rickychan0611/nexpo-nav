@@ -11,12 +11,10 @@ import * as firebase from 'firebase/app';
 export default function EditProductButton() {
   const { theme } = useContext(ThemeContext);
   const { setError, product, selectedCategory, images } = useContext(Context);
-  const { navigate } = useRouting();
+  const { navigate, getParam, goBack } = useRouting();
 
   const onEditProductSubmit = () => {
 
-    const productRef = db.collection("products").doc("product.uid")
-    const timestamp = new Date()
 
     setError({})
 
@@ -53,7 +51,12 @@ export default function EditProductButton() {
 
     validate.then(() => {
       //Creat a new product on the server
-      productRef.update({
+      console.log("update@@@@@@@@@@@@@@@@@@@@@@2")
+      console.log(product)
+
+      const timestamp = new Date()
+      db.collection("products").doc(product.uid)
+      .update({
         ...product,
         createAt: timestamp,
         images: images && images
@@ -63,7 +66,7 @@ export default function EditProductButton() {
           selectedCategory && selectedCategory[0] &&
             selectedCategory.forEach((category) => {
               db.collection("categories").doc(category).update({
-                productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
+                productId: firebase.firestore.FieldValue.arrayUnion(product.uid)
               })
                 .then(() => {
                   //////reset everything after sumbitting to server
@@ -72,6 +75,7 @@ export default function EditProductButton() {
                   // navigate({
                   //   routeName: "/"
                   // })
+                  goBack()
                 })
                 .catch((err) => console.log(category, " NOT added. Err: ", err))
             })
