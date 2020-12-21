@@ -39,6 +39,7 @@ export default function DatePickerMobile() {
       <Button 
       icon="calendar" 
       mode="contained" 
+      color="white"
       onPress={showDatepicker}>{moment(orderDate).format("YYYY-MMM-DD")}
       </Button>
       </View>

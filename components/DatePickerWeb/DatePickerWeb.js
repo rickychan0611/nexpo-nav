@@ -12,15 +12,13 @@ export default function DatePickerWeb() {
 
   return (
     <View>
-      <Text>
-        Date:
-      </Text>
-      <DatePicker selected={orderDate} onChange={date => {
+      <div>Date: <DatePicker selected={orderDate} 
+      onChange={date => {
         setOrderDate(date)
         console.log(date)
       }
 
-      } />
+      } /></div>
     </View>
   )
 };

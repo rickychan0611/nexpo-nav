@@ -1,7 +1,7 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { Dimensions, View, Text, TouchableOpacity, Platform, Picker } from "react-native";
-import { Headline, Surface, Divider, Button, Menu, Provider, IconButton, Dialog, Portal, Paragraph } from 'react-native-paper';
+import { Headline, Surface, Divider, Button, Menu, IconButton, Dialog, Portal, Paragraph } from 'react-native-paper';
 
 import { Context } from "../../../context/Context";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -84,7 +84,8 @@ export default function OrdersList() {
       return <DatePickerWeb />
     }
     else {
-    return <DatePickerMobile />}
+      return <DatePickerMobile />
+    }
   }
 
   useEffect(() => {
@@ -136,7 +137,7 @@ export default function OrdersList() {
         </Row>
 
 
-        {orders[0] && orders.map((order, index) => {
+        {orders[0] ? orders.map((order, index) => {
           return (
             <TouchableOpacity
               onPress={() => {
@@ -257,7 +258,18 @@ export default function OrdersList() {
               </Surface>
             </TouchableOpacity>
           )
-        })}
+        }) :
+          <Surface style={{
+            padding: 8,
+            height: 80,
+            width: "100%",
+            alignItems: 'center',
+            justifyContent: 'center',
+            elevation: 4
+          }}>
+            <Text style={{fontSize: 18}}>No Order 😓</Text>
+          </Surface>
+        }
         <View style={{ marginBottom: 150 }}></View>
       </Container>
     </>
@@ -283,7 +295,6 @@ const ItemsContainer = styled.View`
   max-width: 440px;
   padding: 10px 0px 10px 0px;
 `;
-
 const Qty = styled.View`
   flex: 1;
   justify-content: center;
