@@ -14,7 +14,7 @@ import { db, functions } from "../../../firebaseApp";
 import Loader from "../../../components/Loader";
 import PrinterWeb from "../../../components/Printer/PrinterWeb";
 import PrinterMobile from "../../../components/Printer/PrinterMobile";
-import PrintAllWeb from "../../../components/Printer/PrintAllWeb";
+import PrintAllWeb from "../../../components/Printer/PrintAllWeb.web.js";
 import PrintAllMobile from "../../../components/Printer/PrintAllMobile";
 import DatePickerMobile from "../../../components/DatePickerMobile";
 import DatePickerWeb from "../../../components/DatePickerWeb";

@@ -4,7 +4,7 @@ import { useReactToPrint } from "react-to-print";
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 import { Button } from 'react-native-paper';
-import InvoiceToPrintALL from './InvoiceToPrintALL';
+import InvoiceToPrintALL from './InvoiceToPrintALL.web.js';
 import { ViewBase } from "react-native";
 
 export default function PrintAllWeb({ allOrders }) {

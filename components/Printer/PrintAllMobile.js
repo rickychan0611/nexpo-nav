@@ -2,18 +2,17 @@ import React, { useRef, useContext, useEffect, useState } from "react";
 import * as Print from "expo-print";
 // import * as MediaLibrary from "expo-media-library";
 // import * as Sharing from "expo-sharing";
-import invoiceHTML from "./invoiceHTML";
+import invoiceHTMLAll from "./invoiceHTMLAll";
 
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
-import { IconButton } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 
 export default function PrintAllMobile({allOrders}) {
 
-  const printHTML = async (order) => {
-    console.log(order)
+  const printHTML = async (allOrders) => {
     try {
-      await Print.printAsync({ html: invoiceHTML(order) });
+      await Print.printAsync({ html: invoiceHTMLAll(allOrders) });
     } catch (error) {
       console.error(error);
     }
@@ -23,12 +22,13 @@ export default function PrintAllMobile({allOrders}) {
 
   return (
     <>
-      <IconButton icon="printer-wireless" color="grey"
-        style={{ position: 'absolute', right: -10, top: -35 }}
+    <Button color="#e0e0e0" icon="printer" mode="contained"
         onPress={
-          () => printHTML(order)
+          () => printHTML(allOrders)
         }
-      />
+        style={{ marginBottom: 15 }}>
+        Print All
+          </Button>
     </>
   )
 };
