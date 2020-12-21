@@ -1,38 +1,55 @@
 textarea:focus, input:focus{
     outline: none;
 }
-@media all {
-    .page-break {
-      display: none;
-    }
-  }
-   
+
   @media print {
-    html, body {
+    html, body, table {
       height: initial !important;
       overflow: initial !important;
       -webkit-print-color-adjust: exact;
+      float: none;
     }
   }
    
-  @media print {
+  /* @media print {
     .page-break {
       margin-top: 1rem;
       display: block;
-      page-break-before: auto;
+      page-break-after: always;
+    }
+  } */
+   
+  @media print {
+    footer {
+      margin-bottom: 3rem;
+      display: block;
+      page-break-after: always;
+      position: relative;
+      float: none;
+    }
+    header {
+      display: block;
+      page-break-before: always;
+      position: relative;
+      float: none;
+    }
+    .bottomLine {
+      page-break-inside: avoid !important;
     }
   }
-   
+
   @page {
     size: auto;
-    margin: 20mm;
+    margin: 10mm;
+    float: none;
+
   }
 
   .table {
       width: 100%;
       text-align: center;
       border: 1px solid black;
-
+      float: none;
   }
 
   .row {
@@ -44,16 +61,20 @@ textarea:focus, input:focus{
       flex-wrap: nowrap;
       justify-content: center;
       align-items: center;
-      height: 100%;
+      /* height: 100%; */
+      float: none;
   }
 
   .cell {
     margin: 10px;
+    float: none;
+
   }
 
   .pad {
     padding: 10px;
     font-size: 16px;
+    float: none;
   }
 
  .bottomLine {

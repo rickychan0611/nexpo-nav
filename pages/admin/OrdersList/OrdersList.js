@@ -14,6 +14,8 @@ import { db, functions } from "../../../firebaseApp";
 import Loader from "../../../components/Loader";
 import PrinterWeb from "../../../components/Printer/PrinterWeb";
 import PrinterMobile from "../../../components/Printer/PrinterMobile";
+import PrintAllWeb from "../../../components/Printer/PrintAllWeb";
+import PrintAllMobile from "../../../components/Printer/PrintAllMobile";
 import DatePickerMobile from "../../../components/DatePickerMobile";
 import DatePickerWeb from "../../../components/DatePickerWeb";
 
@@ -133,8 +135,9 @@ export default function OrdersList() {
         <Row>
           <Headline style={{ color: theme.titleColor, marginTop: 20, marginBottom: 20 }}>Orders</Headline>
           <DatePicker />
-
         </Row>
+
+        {Platform.OS === "web" ? <PrintAllWeb allOrders={orders} /> : <PrintAllMobile allOrders={orders} />}
 
 
         {orders[0] ? orders.map((order, index) => {
@@ -267,7 +270,7 @@ export default function OrdersList() {
             justifyContent: 'center',
             elevation: 4
           }}>
-            <Text style={{fontSize: 18}}>No Order 😓</Text>
+            <Text style={{ fontSize: 18 }}>No Order 😓</Text>
           </Surface>
         }
         <View style={{ marginBottom: 150 }}></View>

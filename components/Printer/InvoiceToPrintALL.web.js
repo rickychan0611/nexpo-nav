@@ -5,24 +5,29 @@ class InvoiceToPrint extends React.Component {
   render() {
     return (
       <>
+        <header>Item: {this.props.index+1} - Order {this.props.order.orderId} {"start----->"}</header>
+
         <div className="table">
 
-          <div className="row" style={{ borderBottom: 0, margin: 15 }}>
-            天天漁港(超市)送貨到家 <br /><br />
+
+          {!this.props.isAll && <>
+            <div className="row" style={{ borderBottom: 0, margin: 15 }}>
+              天天漁港(超市)送貨到家 <br /><br />
             Tin Tin Food Wholesale	<br />
             Unit 102 - 8828 Healther Street. Vancouver, BC, V6P 3S8
-        </div>
-
-          <div className="row">
-            <div className="cell" style={{ flex: 1 }}>
-              Tel: 604-558-1661
             </div>
-            <div className="cell" style={{ flex: 1 }}>
-              GST#: 8083866650
-            </div>
-          </div>
 
-          <div className="row">
+            <div className="row">
+              <div className="cell" style={{ flex: 1 }}>
+                Tel: 604-558-1661
+            </div>
+              <div className="cell" style={{ flex: 1 }}>
+                GST#: 8083866650
+            </div>
+            </div>
+          </>}
+
+          <div className="row grey">
             <div className="cell" style={{ flex: 1 }}>
               訂單信息
             </div>
@@ -41,12 +46,12 @@ class InvoiceToPrint extends React.Component {
               <div className="cell">
                 {this.props.order.status}
 
-             </div>
+              </div>
             </div>
 
             <div className="rightLine" style={{ flex: 1 }}>
               <div className="cell">
-              未付款  {this.props.order.paymentStatus}
+                未付款  {this.props.order.paymentStatus}
               </div>
             </div>
 
@@ -70,7 +75,7 @@ class InvoiceToPrint extends React.Component {
             <div className="rightLine" style={{ flex: 1 }}>
               <div className="cell center">
                 實付: ${this.props.order.totalAmt}
-                </div>
+              </div>
             </div>
 
           </div>
@@ -94,7 +99,6 @@ class InvoiceToPrint extends React.Component {
                   </tr>
                 )
               })}
-              
               <tr className="bottomLine">
                 <td colspan="4" className="pad">備注：</td>
               </tr>
@@ -103,16 +107,18 @@ class InvoiceToPrint extends React.Component {
             用戶名：{this.props.order.shippingAddress.firstName} {this.props.order.shippingAddress.lastName}<br />
             聯系電話：{this.props.order.shippingAddress.phoneNumber}<br />
             運費：{this.props.order.shippingFee}<br />
-            地址：<br/>
-            {this.props.order.shippingAddress.address1} <br/>
-            {this.props.order.shippingAddress.address2 && <> {this.props.order.shippingAddress.address2} <br/> </>}
-            {this.props.order.shippingAddress.city}, {this.props.order.shippingAddress.province} <br/>
+            地址：
+            {this.props.order.shippingAddress.address1},&nbsp;
+            {this.props.order.shippingAddress.address2 && <>{this.props.order.shippingAddress.address2},&nbsp;</>}
+                  {this.props.order.shippingAddress.city},&nbsp;{this.props.order.shippingAddress.province},&nbsp;
             {this.props.order.shippingAddress.postalCode}
-            </td>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
+        <footer className="page-break">{"<----- end "}Item: {this.props.index+1} - Order {this.props.order.orderId}</footer>
+
       </>
     );
   };
