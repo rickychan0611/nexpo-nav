@@ -14,8 +14,11 @@ import { db, functions } from "../../../firebaseApp";
 import Loader from "../../../components/Loader";
 import PrinterWeb from "../../../components/Printer/PrinterWeb";
 import PrinterMobile from "../../../components/Printer/PrinterMobile";
+import DatePickerMobile from "../../../components/DatePickerMobile";
+import DatePickerWeb from "../../../components/DatePickerWeb";
 
 export default function OrdersList() {
+
   const { navigate } = useRouting();
 
   let ScreenHeight = Dimensions.get("window").height;
@@ -23,7 +26,8 @@ export default function OrdersList() {
   const {
     listenOrders, unsubscribe,
     orders, setOrders,
-    selectedOrder, setSelectedOrder
+    selectedOrder, setSelectedOrder,
+    orderDate, setOrderDate
   } = useContext(AdminContext);
 
   const [status, setStatus] = useState("In Progress")
@@ -70,18 +74,18 @@ export default function OrdersList() {
     setLoading(true)
     console.log("update sent")
     await db.collection("orders").doc(orderId).update({ status: status, "statusUpdatedAt": moment().format() })
-    .then(()=>{
-      return
-    })
-    // setLoading(false)
-    // closeMenu()
-    // update.catch((err) => {
-    //   setLoading(false)
-    //   closeMenu()
-    //   console.log(err)
-    // })
+      .then(() => {
+        return
+      })
   }
 
+  const DatePicker = () => {
+    if (Platform.OS === "web") {
+      return <DatePickerWeb />
+    }
+    else {
+    return <DatePickerMobile />}
+  }
 
   useEffect(() => {
     listenOrders()
@@ -122,18 +126,23 @@ export default function OrdersList() {
         </Dialog>
       </Portal>
 
-
-
       <Container ScreenHeight={ScreenHeight} theme={theme}>
 
-        <Headline style={{ color: theme.titleColor, marginTop: 20, marginBottom: 20 }}>Orders</Headline>
 
-        {orders.map((order) => {
+        <Row>
+          <Headline style={{ color: theme.titleColor, marginTop: 20, marginBottom: 20 }}>Orders</Headline>
+          <DatePicker />
+
+        </Row>
+
+
+        {orders[0] && orders.map((order, index) => {
           return (
             <TouchableOpacity
               onPress={() => {
                 setSelectedOrder(order)
                 navigate({ routeName: "admin/order-details" })
+                key = { index }
               }}>
               <Surface style={{
                 padding: 20,
@@ -289,4 +298,11 @@ const Price = styled.View`
   flex: 6;
   justify-content: center;
   align-items: flex-end;
+`;
+const Row = styled.View`
+ flex-direction: row;
+ flex-wrap: nowrap;
+ justify-content: space-between;
+ align-items: center;
+ z-index: 1000;
 `;

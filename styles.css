@@ -74,3 +74,7 @@ textarea:focus, input:focus{
   .grey {
       background-color: rgb(238, 238, 238);
   }
+
+  .react-datepicker {
+    left: -80px;
+}

@@ -7,6 +7,7 @@ import ProductsProvider from '../context/ProductsContext';
 import AdminProvider from '../context/AdminContext';
 import WebContainer from "../components/WebContainer";
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import "react-datepicker/dist/react-datepicker.css";
 
 const theme = {
   ...DefaultTheme,

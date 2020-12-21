@@ -59,6 +59,7 @@ const ContextProvider = ({ children }) => {
   const [selectedCard, setSelectedCard] = useState("")
   const [isAddNewCard, setIsAddNewCard] = useState(false)
   const [loadingCards, setLoadingCards] = useState(false)
+
   const [newCard, setNewCard] = useState({
     firstName: "John",
     lastName: "Deo",
@@ -234,7 +235,7 @@ const ContextProvider = ({ children }) => {
           isAddNewCard, setIsAddNewCard,
           checkCards,
           loadingCards, setLoadingCards,
-          productInitValue
+          productInitValue,
         }
       }
     >
