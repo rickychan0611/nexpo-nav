@@ -59,6 +59,8 @@ const ContextProvider = ({ children }) => {
   const [selectedCard, setSelectedCard] = useState("")
   const [isAddNewCard, setIsAddNewCard] = useState(false)
   const [loadingCards, setLoadingCards] = useState(false)
+  const [QRcodeUrl, setQRcodeUrl] = useState("");
+
 
   const [newCard, setNewCard] = useState({
     firstName: "John",
@@ -236,6 +238,7 @@ const ContextProvider = ({ children }) => {
           checkCards,
           loadingCards, setLoadingCards,
           productInitValue,
+          QRcodeUrl, setQRcodeUrl
         }
       }
     >

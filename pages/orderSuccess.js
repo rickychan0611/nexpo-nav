@@ -75,7 +75,7 @@ export default function orderSuccess() {
           }}>
             {`Your Order ID: ${"\n" + newOrderId}`}
           </Headline>
-
+          <Text>You have earned {total*100} points</Text>
           {/* <TableRow >
             <Left><Text style={{ color: "grey" }}>Date:</Text></Left>
             <Right><Text style={{ color: "grey" }}>{moment().format("DD/MM/YYYY")}</Text></Right>

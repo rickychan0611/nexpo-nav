@@ -17,7 +17,7 @@ export default function ConfirmOrderBar() {
 
   const { setSelected, total, user,
     shippingAddress, newOrderProductList,
-    paymentMethod } = useContext(Context);
+    paymentMethod, setNewOrderId } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
@@ -37,7 +37,7 @@ export default function ConfirmOrderBar() {
       await orderIdRef.update({ orderId: increment })
       const snapshot = await orderIdRef.get()
       const orderId = await snapshot.data().orderId
-
+      setNewOrderId(now + "A" + orderId)
       if (paymentMethod === "credit") {
         console.log("creditCardPayment run")
 
@@ -80,11 +80,16 @@ export default function ConfirmOrderBar() {
             paymentStatus: paymentData.message
           })
             .then(() => {
-              setLoading(false)
-              setSelected("orderSuccess")
-              navigate({
-                routeName: "orderSuccess",
+              db.collection("users").doc(user.email).update({
+                points: user.points + (total * 100)
               })
+                .then(() => {
+                  setLoading(false)
+                  setSelected("orderSuccess")
+                  navigate({
+                    routeName: "orderSuccess",
+                  })
+                })
             })
             .catch(error => {
               setLoading(false)
@@ -103,7 +108,7 @@ export default function ConfirmOrderBar() {
       else if (paymentMethod === "cash") {
         const orderRef = db.collection("orders").doc(now + "A" + orderId)
         await orderRef.set({
-          paymentData: {
+          "paymentData": {
             payment_method: "COD",
             message: 'Not Paid. Pay upon delivery',
             amount: (+total * 1.15).toFixed(2),
@@ -121,14 +126,19 @@ export default function ConfirmOrderBar() {
           discount: 0,
           shippingFee: 8,
           status: "In Progress",
-          paymentStatus: paymentData.message
+          paymentStatus: 'Not Paid. Pay upon delivery'
         })
           .then(() => {
-            setLoading(false)
-            setSelected("orderSuccess")
-            navigate({
-              routeName: "orderSuccess",
+            db.collection("users").doc(user.email).update({
+              points: user.points + (total * 100)
             })
+              .then(() => {
+                setLoading(false)
+                setSelected("orderSuccess")
+                navigate({
+                  routeName: "orderSuccess",
+                })
+              })
           })
           .catch(error => {
             setLoading(false)

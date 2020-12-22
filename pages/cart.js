@@ -108,7 +108,7 @@ export default function Cart() {
           }
 
           <View style={{ padding: 25 }}>
-            <Text>Your points: 10000</Text>
+            <Text>Your points: {user.points}</Text>
             <TextInput
               label="Redeem your point"
               placeholder='Enter the number of points that you want to redeem'

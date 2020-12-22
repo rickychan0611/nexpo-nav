@@ -148,7 +148,7 @@ ${allOrders.map((order, index) => {
 
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; margin-top: -18px;">
+          <table style="width: 100%; border-collapse: collapse; ">
             <tbody>
               <tr class="bottomLine grey pad">
                 <td class="rightLine pad" style="width: 60%, font-size: 16px;">名稱</td>

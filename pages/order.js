@@ -19,7 +19,7 @@ export default function order() {
   const [loading, setLoading] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
 
-  const { selectedOrder, setSelectedOrder, setSelected } = useContext(Context);
+  const { selectedOrder, setSelectedOrder, setSelected, user } = useContext(Context);
   const { theme } = useContext(ThemeContext);
 
   const [cancelDialog, setCancelDialog] = useState(false);
@@ -33,7 +33,8 @@ export default function order() {
   const onCancel = async () => {
     setCancelLoading(true)
     const orderRef = db.collection("orders").doc(selectedOrder.orderId)
-    orderRef.update({ status: "Order Cancelled" })
+    await orderRef.update({ status: "Order Cancelled" })
+    db.collection("users").doc(user.email).update({points: user.points - (selectedOrder.totalAmt * 100)})
     setSelectedOrder(prev => ({ ...prev, status: "Order Cancelled" }))
     showCancelledDialog()
     hideCancelDialog()

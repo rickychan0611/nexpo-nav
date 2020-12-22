@@ -119,6 +119,27 @@ export default function BottomBar() {
             <Name selected={selected === "account" ? 'black' : '#ababab'}>Account</Name>
           </Button>
 
+          <Button onPress={() => {
+            setSelected("qrcode")
+            if (user) {
+              navigate({
+                routeName: "qrcode",
+              })
+            }
+            else {
+              navigate({
+                routeName: "login",
+              })
+            }
+          }}>
+            <Icon
+              name='barcode'
+              type='font-awesome-5'
+              color={selected === "qrcode" ? 'black' : '#ababab'}
+            />
+            <Name selected={selected === "qrcode" ? 'black' : '#ababab'}>My QRcode</Name>
+          </Button>
+
         </ContentArea>
       </Wrapper >
     </>

@@ -62,19 +62,32 @@ export default function account() {
             <Text
               style={{
                 color: "white",
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: "bold",
                 marginBottom: 20
               }}>
-              {user && user.firstName + " " + user.lastName}
+              Hi, {user && user.firstName + " " + user.lastName}
             </Text>
             <Text
               style={{
                 color: "white",
-                fontSize: 22,
+                fontSize: 12,
+                // fontWeight: "bold",
+              }}>You have
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 50,
                 fontWeight: "bold",
-              }}>
-              0 pts
+              }}>{user.points}
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 12,
+                margin: 0
+              }}> points
             </Text>
           </View>
 
