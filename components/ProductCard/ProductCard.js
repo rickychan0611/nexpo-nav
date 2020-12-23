@@ -81,15 +81,16 @@ export default function ProductCard({ key, item }) {
                       flexDirection: "row", 
                       flexWrap: "nowrap",
                       alignItems: "center",
-                      paddingLeft: 5,
+                      // paddingLeft: 5,
                       }}>
                       <Switch
                         value={item.activated}
                         onValueChange={onToggleSwitch}
                       />
-                      <Text>{item.activated ? "Active" : "Hidden"}</Text>
+                      {/* <Text>{item.activated ? "Active" : "Hidden"}</Text> */}
                     </View>
                   </TouchableOpacity>
+                  <Text>Stock: {item.qty}</Text>
                   <IconButton icon="delete" color={theme.red}
                     onPress={() => {
                       {/* delete button */ }
@@ -152,10 +153,10 @@ const ContentContainer = styled.View`
 `;
 
 const ImageWrapper = styled.View`
-      flex: 2;
+      flex: 3;
       padding: 5px 0 5px 0 ;
-      width: 100px;
-      height: 100px;
+      /* width: 100px; */
+      height: 150px;
 `;
 const Image = styled.Image`
       flex: 1;

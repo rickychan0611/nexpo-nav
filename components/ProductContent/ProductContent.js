@@ -9,12 +9,12 @@ import { handleMinus, handlePlus } from "../../hooks/onPlusMinusQty";
 
 export default function ProductContent({ item }) {
   const ctx = useContext(Context);
-  
+
   const {
-    newOrderProductList, 
-    setNewOrderProductList, 
-    counter, 
-    setCounter, 
+    newOrderProductList,
+    setNewOrderProductList,
+    counter,
+    setCounter,
     selected } = useContext(Context);
 
   let idArray = [];
@@ -57,35 +57,46 @@ export default function ProductContent({ item }) {
       <PriceQtyWrapper>
 
         <PricesWrapper>
-          <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}>
+            <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
+            <Text style={{
+              color: "#999999",
+              fontSize: 12
+            }}> / {item.unit} </Text>
+          </View>
           <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
         </PricesWrapper>
 
-        { selected === "store" &&
-          <QtyWrapper>
-            <Icon
-              name='plus-circle'
-              type='font-awesome-5'
-              color='red'
-              size={20}
-              onPress={() => { handlePlus(item, ctx) }}
-            />
-            {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
-              <>
-                <Qty>{newOrderProductList[index].quantity}</Qty>
-                <Icon
-                  name='minus-circle'
-                  type='font-awesome-5'
-                  color='grey'
-                  size={20}
-                  onPress={() => { handleMinus(item, ctx) }}
-                />
-              </> : null}
-          </QtyWrapper>
-        }
-
       </PriceQtyWrapper>
-    </View>
+      {
+        selected === "store" &&
+        <QtyWrapper>
+          <Icon
+            name='plus-circle'
+            type='font-awesome-5'
+            color='red'
+            size={20}
+            onPress={() => { handlePlus(item, ctx) }}
+          />
+          {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
+            <>
+              <Qty>{newOrderProductList[index].quantity}</Qty>
+              <Icon
+                name='minus-circle'
+                type='font-awesome-5'
+                color='grey'
+                size={20}
+                onPress={() => { handleMinus(item, ctx) }}
+              />
+            </> : null}
+        </QtyWrapper>
+      }
+
+      
+    </View >
   )
 };
 
@@ -97,7 +108,7 @@ const PriceQtyWrapper = styled.View`
   width: 100%;
 `;
 const QtyWrapper = styled.View`
-  flex: 3;
+  /* flex: 3; */
   width: 100%;
   flex-direction: row-reverse;
   flex-wrap: nowrap;
