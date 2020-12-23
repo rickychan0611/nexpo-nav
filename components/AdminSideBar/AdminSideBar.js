@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
@@ -7,8 +7,12 @@ import { useRouting } from "expo-next-react-navigation";
 export default function AdminSideBar({ data }) {
   const { navigate } = useRouting();
 
-  const { productInitValue, setOpenWebAdminMenu, setProduct } = useContext(Context);
+  const { productInitValue, setOpenWebAdminMenu, setProduct, setSelected } = useContext(Context);
   
+  useEffect(()=>{
+    setSelected("create-product")
+  },[])
+
   return (
     <Container>
       <TouchableOpacity>

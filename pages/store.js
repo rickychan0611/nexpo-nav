@@ -38,6 +38,10 @@ export default function Store({ ssrData }) {
       queryProduct()
     }
   }, [selected])
+  
+  useEffect(() => {
+    setSelected("store")
+  }, [])
 
   return (
     <>
@@ -149,7 +153,7 @@ const CategoryContainer = styled.View`
       height: ${Platform.OS === 'web' ? `calc(100vh - 160px)` : `100%`}; */
 `;
 const ProductContainer = styled.ScrollView`
-      flex: 5;
+      flex: 6;
       background-color: white;
       /* background-color: #e8e6e6; */
       height: 100%;

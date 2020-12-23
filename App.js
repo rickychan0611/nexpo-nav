@@ -83,6 +83,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="qrcode" component={qrcode} options={options("QRcode")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
           <Stack.Screen name="admin/orders" component={orders} options={options("orders")} />
@@ -90,7 +91,6 @@ function App() {
           <Stack.Screen name="checkout/shipping" component={shipping} options={options("Checkout - Shipping")} />
           <Stack.Screen name="checkout/new-card" component={newCard} options={options("New Card")} />
           <Stack.Screen name="checkout/choose-card" component={chooseCard} options={options("Choose Card")} />
-          <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="checkout/payment-method" component={paymentMethod} options={options("paymentMethod")} />
           <Stack.Screen name="checkout/review" component={review} options={options("review")} />
           <Stack.Screen name="admin/panel" component={panel} options={options("Orders")} />

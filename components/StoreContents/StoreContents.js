@@ -76,9 +76,6 @@ export default function StoreContents({ ssrData }) {
             <ProductContainer>
               {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
                 return (
-                  <View style={{
-                    opacity: item.activated ? 1 : 0.4
-                  }}>
                     <TouchableOpacity key={item.uid}
                       onPress={() => {
                         setSelectedItem(item)
@@ -91,7 +88,6 @@ export default function StoreContents({ ssrData }) {
                       }}>
                       <ProductCard item={item} />
                     </TouchableOpacity>
-                  </View>
                 )
               })}
               <View style={{ height: 150 }}></View>

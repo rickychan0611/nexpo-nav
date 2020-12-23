@@ -8,8 +8,14 @@ import { Context } from "../../context/Context";
 import { handleMinus, handlePlus } from "../../hooks/onPlusMinusQty";
 
 export default function ProductContent({ item }) {
-  const { newOrderProductList, setNewOrderProductList, counter, setCounter } = useContext(Context);
   const ctx = useContext(Context);
+  
+  const {
+    newOrderProductList, 
+    setNewOrderProductList, 
+    counter, 
+    setCounter, 
+    selected } = useContext(Context);
 
   let idArray = [];
   let index;
@@ -42,6 +48,11 @@ export default function ProductContent({ item }) {
   return (
     <View>
       <Name>{item.chineseName + "\n" + item.englishName}</Name>
+      <Text style={{
+        color: "#999999",
+        marginBottom: 5,
+        fontSize: 12
+      }}>{item.ch_description + "\n" + item.en_description}</Text>
 
       <PriceQtyWrapper>
 
@@ -49,6 +60,29 @@ export default function ProductContent({ item }) {
           <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
           <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
         </PricesWrapper>
+
+        { selected === "store" &&
+          <QtyWrapper>
+            <Icon
+              name='plus-circle'
+              type='font-awesome-5'
+              color='red'
+              size={20}
+              onPress={() => { handlePlus(item, ctx) }}
+            />
+            {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
+              <>
+                <Qty>{newOrderProductList[index].quantity}</Qty>
+                <Icon
+                  name='minus-circle'
+                  type='font-awesome-5'
+                  color='grey'
+                  size={20}
+                  onPress={() => { handleMinus(item, ctx) }}
+                />
+              </> : null}
+          </QtyWrapper>
+        }
 
       </PriceQtyWrapper>
     </View>
@@ -77,7 +111,7 @@ const PricesWrapper = styled.View`
   justify-content: flex-end;
 `;
 const Name = styled.Text`
-  font-size: 15px;
+  font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;
 `;

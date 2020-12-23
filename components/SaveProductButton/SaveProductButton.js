@@ -11,7 +11,7 @@ import * as firebase from 'firebase/app';
 export default function SaveProductButton() {
   const { theme } = useContext(ThemeContext);
   const { setError, product, selectedCategory, images } = useContext(Context);
-  const { navigate } = useRouting();
+  const { navigate, goBack } = useRouting();
 
   const onCreateProductSubmit = () => {
 
@@ -68,11 +68,9 @@ export default function SaveProductButton() {
               })
                 .then(() => {
                   //////reset everything after sumbitting to server
-                  // setProduct(productInitValue)
-                  // setSelectedCategory([])
-                  // navigate({
-                  //   routeName: "/"
-                  // })
+                  setProduct(productInitValue)
+                  setSelectedCategory([])
+                  goBack()
                 })
                 .catch((err) => console.log(category, " NOT added. Err: ", err))
             })

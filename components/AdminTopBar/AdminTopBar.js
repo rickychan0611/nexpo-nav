@@ -59,7 +59,7 @@ export default function AdminTopBar() {
         </View>
 
         {/* save button */}
-        {getParam("path") === "create-product" && <SaveProductButton />}
+        {(getParam("path") === "create-product" || selected === "edit-create") && <SaveProductButton />}
         {(getParam("path") === "edit-product" || selected === "edit-product") && <EditProductButton />}
 
       </Container>
