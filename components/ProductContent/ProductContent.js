@@ -5,9 +5,9 @@ import { Icon } from 'react-native-elements'
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 
-import {handleMinus, handlePlus} from  "../../hooks/onPlusMinusQty";
+import { handleMinus, handlePlus } from "../../hooks/onPlusMinusQty";
 
-export default function ProductContent({item}) {
+export default function ProductContent({ item }) {
   const { newOrderProductList, setNewOrderProductList, counter, setCounter } = useContext(Context);
   const ctx = useContext(Context);
 
@@ -40,43 +40,18 @@ export default function ProductContent({item}) {
   }, [newOrderProductList])
 
   return (
-        <View>
-        <Name>{item.chineseName + " / " + item.englishName}</Name>
-        {/* <Description>{item.ch_description}</Description>
-        <Description>{item.en_description}</Description> */}
-        {/* <Description>Stock: {item.qty}</Description> */}
+    <View>
+      <Name>{item.chineseName + " / " + item.englishName}</Name>
 
-        <PriceQtyWrapper>
+      <PriceQtyWrapper>
 
-            <PricesWrapper>
-              <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
-              <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
-            </PricesWrapper>
-{/* 
-            <QtyWrapper>
-              
-              <Icon
-                name='plus-circle'
-                type='font-awesome-5'
-                color='red'
-                size={20}
-                onPress={() => { handlePlus(item, ctx) }}
-              />
-              {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
-              <>
-              <Qty>{newOrderProductList[index].quantity}</Qty>
-              <Icon
-                name='minus-circle'
-                type='font-awesome-5'
-                color='grey'
-                size={20}
-                onPress={() => { handleMinus(item, ctx) }}
-              />
-              </>: null }
-            </QtyWrapper> */}
+        <PricesWrapper>
+          <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
+          <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
+        </PricesWrapper>
 
-        </PriceQtyWrapper>
-        </View>
+      </PriceQtyWrapper>
+    </View>
   )
 };
 
@@ -103,7 +78,6 @@ const PricesWrapper = styled.View`
 `;
 const Name = styled.Text`
   font-size: 15px;
-  margin-top: 6px;
   margin-bottom: 5px;
   font-weight: bold;
 `;
@@ -147,7 +121,7 @@ const Container = styled.View`
 //       width: 100%;
 //       min-height: 100px;
 //       padding: 0 10px 5px 10px;
-      
+
 // `;
 const Image = styled.Image`
       flex: 2;

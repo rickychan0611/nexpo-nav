@@ -37,9 +37,9 @@ export default function Store({ ssrData }) {
       listenCategories()
       queryProduct()
     }
-  }, [selected ])
+  }, [selected])
 
-   return (
+  return (
     <>
       <CartBarWrapper up={newOrderProductList.length > 0}>
         {productData && <>
@@ -61,19 +61,21 @@ export default function Store({ ssrData }) {
 
             <ProductContainer>
               {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
-                return (
-                  <TouchableOpacity key={item.uid}
-                    onPress={() => {
-                      setSelectedItem(item)
-                      navigate({
-                        routeName: "product",
-                        params: { id: item.uid },
-                        web: { as: `/product?id=${item.uid}` },
-                      })
-                    }}>
-                    <ProductCard item={item} />
-                  </TouchableOpacity>
-                )
+                if (item.activated) {
+                  return (
+                    <TouchableOpacity key={item.uid}
+                      onPress={() => {
+                        setSelectedItem(item)
+                        navigate({
+                          routeName: "product",
+                          params: { id: item.uid },
+                          web: { as: `/product?id=${item.uid}` },
+                        })
+                      }}>
+                      <ProductCard item={item} />
+                    </TouchableOpacity>
+                  )
+                }
               })}
               <View style={{ height: 150 }}></View>
             </ProductContainer>

@@ -18,7 +18,7 @@ import ViewCartBar from "../../components/ViewCartBar";
 // const API_URL = `http://localhost:1337/categories`
 
 export default function StoreContents({ ssrData }) {
-   // Edit Mode
+  // Edit Mode
 
   const { navigate } = useRouting();
 
@@ -39,23 +39,23 @@ export default function StoreContents({ ssrData }) {
       listenCategories()
       queryProduct()
     }
-  }, [selected ])
+  }, [selected])
 
-   return (
+  return (
     <>
       <CartBarWrapper up={newOrderProductList.length > 0}>
-      <View style={{
-        // flex:1,
-        height: 30,
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        flexDirection: "row", 
-        flexWrap: "nowrap",
-        backgroundColor: "#fcfa92"
-      }}>
-        <Text> --- Edit Mode! ---</Text>
-      </View>
+        <View style={{
+          // flex:1,
+          height: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          flexDirection: "row",
+          flexWrap: "nowrap",
+          backgroundColor: "#fcfa92"
+        }}>
+          <Text> --- Edit Mode ---</Text>
+        </View>
         {productData && <>
           {/* <SearchBar
             placeholder="Search"
@@ -76,18 +76,22 @@ export default function StoreContents({ ssrData }) {
             <ProductContainer>
               {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
                 return (
-                  <TouchableOpacity key={item.uid}
-                    onPress={() => {
-                      setSelectedItem(item)
-                      setProduct(item)
-                      navigate({
-                        routeName: "admin/edit-product",
-                        params: { id: item.uid, path: "edit-product" },
-                        web: { as: `/admin/edit-product?id=${item.uid}` },
-                      })
-                    }}>
-                    <ProductCard item={item} />
-                  </TouchableOpacity>
+                  <View style={{
+                    opacity: item.activated ? 1 : 0.4
+                  }}>
+                    <TouchableOpacity key={item.uid}
+                      onPress={() => {
+                        setSelectedItem(item)
+                        setProduct(item)
+                        navigate({
+                          routeName: "admin/edit-product",
+                          params: { id: item.uid, path: "edit-product" },
+                          web: { as: `/admin/edit-product?id=${item.uid}` },
+                        })
+                      }}>
+                      <ProductCard item={item} />
+                    </TouchableOpacity>
+                  </View>
                 )
               })}
               <View style={{ height: 150 }}></View>
@@ -96,33 +100,10 @@ export default function StoreContents({ ssrData }) {
         </>
         }
       </CartBarWrapper>
-      {/* {newOrderProductList.length > 0 ?
-        <ViewCartBar />
-        : null} */}
 
-      <BottomBar style={{
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 0,
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 5,
-        elevation: 10,
-      }} />
     </>
   );
 }
-
-// export async function getServerSideProps() {
-
-//   const res = await fetch(API_URL)
-//   const data = await res.json()
-//   return { props: { ssrData: data } }
-
-//   // return { props: { ssrData: dataJson } }
-
-// }
 
 const CartBarWrapper = styled.View`
       flex: 1;
