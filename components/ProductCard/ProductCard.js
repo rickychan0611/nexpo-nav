@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Platform } from "react-native";
 import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 import { Switch, IconButton, Button, Portal, Dialog, Paragraph } from 'react-native-paper';
 import { db } from "../../firebaseApp";
@@ -25,6 +25,12 @@ const onDelete = () => {
   .then(()=>{setLoading(false)})
 }
 
+const onToggleSwitch = () => {
+  console.log("swtich")
+  if (Platform.OS !== "web") {
+    db.collection("products").doc(item.uid).update({ activated: !item.activated })
+  }
+}
   return (
     <>
     <Portal>
@@ -52,7 +58,7 @@ const onDelete = () => {
               },
               shadowOpacity: 0.15,
               shadowRadius: 10,
-              elevation: 10,
+              elevation: item.activated ? 10 : 0,
               zIndex: 1000
             }}>
             <ImageWrapper>
@@ -85,6 +91,7 @@ const onDelete = () => {
                 }}>
                   <Switch
                     value={item.activated}
+                    onValueChange={onToggleSwitch}
                   />
                 </TouchableOpacity>
                 {/* delete button */}
@@ -125,7 +132,7 @@ const Image = styled.Image`
       flex: 1;
       /* width: 100px;
       height: 100px; */
-      background-color: white;
+      /* background-color: white; */
       resize-mode: contain;
 `;
 
@@ -135,7 +142,7 @@ const RightSideContentWrapper = styled.View`
       /* flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: space-between; */
-      background-color: white;
+      /* background-color: white; */
       width: 100%;
       min-height: 100px;
       padding: 10px 10px 5px 10px;
