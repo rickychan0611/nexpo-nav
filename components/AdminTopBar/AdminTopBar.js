@@ -24,7 +24,7 @@ export default function AdminTopBar() {
 
   useEffect(()=>{
     console.log("selected!!!!!!!!!!!!!")
-    console.log(selected)
+    console.log(navigate )
   },[])
   
   return (
@@ -60,7 +60,7 @@ export default function AdminTopBar() {
 
         {/* save button */}
         {getParam("path") === "create-product" && <SaveProductButton />}
-        {getParam("path") === "edit-product" && <EditProductButton />}
+        {(getParam("path") === "edit-product" || selected === "edit-product") && <EditProductButton />}
 
       </Container>
     </>

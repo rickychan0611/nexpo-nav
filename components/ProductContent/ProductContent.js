@@ -41,7 +41,7 @@ export default function ProductContent({ item }) {
 
   return (
     <View>
-      <Name>{item.chineseName + " / " + item.englishName}</Name>
+      <Name>{item.chineseName + "\n" + item.englishName}</Name>
 
       <PriceQtyWrapper>
 

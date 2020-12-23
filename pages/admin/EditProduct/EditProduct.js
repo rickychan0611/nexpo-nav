@@ -187,16 +187,36 @@ export default function EditProduct() {
 
 
   useEffect(() => {
-    setUploading(true)
-    console.log("EDIT PRODUCT@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    console.log(product.images)
-    setSelectedCategory(product.category)
-    setImages(product.images)
-    listenCategories()
-    setTimeout(()=>{
-      setUploading(false)
-    },200)
-  }, [])
+
+    //for web, when page refresh, query product by id
+    if (!product.uid && getParam("id")) {
+      db.collection("products").doc(getParam("id")).get()
+        .then((doc) => {
+          console.log(doc.data())
+          setProduct(prev => ({ ...prev, ...doc.data() }))
+          setUploading(true)
+          setSelectedCategory(doc.data().category)
+          setImages(doc.data().images)
+          listenCategories()
+          setSelected("edit-product")
+          setTimeout(() => {
+            setUploading(false)
+          }, 200)
+        })
+        .catch(err => console.log(err))
+    }
+
+    //set images and category on mount
+    else {
+      setUploading(true)
+      setSelectedCategory(product.category)
+      setImages(product.images)
+      listenCategories()
+      setTimeout(() => {
+        setUploading(false)
+      }, 200)
+    }
+  }, [getParam("id")])
 
   return (
     <>
@@ -204,10 +224,10 @@ export default function EditProduct() {
         <Headline style={{ color: theme.titleColor }}>Edit product</Headline>
         <ImageSwiper images={images} uploading={uploading} />
 
-        <AddImageContainer>
-          {images && images[0] && images.map((image, index) => {
+        {images && images[0] && <AddImageContainer>
+          {images.map((image, index) => {
             return (
-              <View key={image.url}>
+              <View key={index}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: "red", width: 20, height: 20, top: 0, left: -10, zIndex: 1000,
@@ -229,14 +249,16 @@ export default function EditProduct() {
           </TouchableOpacity>
 
         </AddImageContainer>
+        }
+
         {uploading && <ProgressBar progress={progress} color={Colors.red800} />}
 
-        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
+        {/* <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
         <Row>
           <Subheading>Activate</Subheading >
           <Switch value={product.activated} onValueChange={() => onCreateProductInputChange("activated", !product.activated, ctx)} />
-        </Row>
+        </Row> */}
 
         <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
@@ -277,13 +299,13 @@ export default function EditProduct() {
             />
           </View>
 
-          {categories && categories.map((category) => {
+          {categories && categories.map((category, index) => {
 
             const uid = category.chineseName + category.englishName
             return (
               <>
                 {category.id !== "Others" &&
-                  <View key={uid}>
+                  <View key={index}>
                     <Checkbox.Item
                       label={category.chineseName + " / " + category.englishName}
                       labelStyle={{ color: theme.darkGrey }}
@@ -367,6 +389,7 @@ const Container = styled.ScrollView`
   width: 100%;
   margin-bottom: 20px;
   padding: 10px 6px 10px 6px;
+  background-color: white;
 `;
 
 const InputView = styled.View`
