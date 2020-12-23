@@ -3,7 +3,7 @@ import React, { useRef, useContext, useEffect, useState } from "react";
 import moment from 'moment';
 
 
-const invoiceHTML = (order) => {
+const InvoiceHTML = (order) => {
     return `
     <!DOCTYPE html>
     <html>
@@ -200,4 +200,4 @@ const invoiceHTML = (order) => {
      `
     }
 
-export default invoiceHTML;
+export default InvoiceHTML;

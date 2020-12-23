@@ -2,8 +2,8 @@
 import React from "react";
 
 import { Platform } from "react-native";
-import StoreContents from "./StoreContents";
 
+import StoreContents from "../../components/StoreContents";
 import AdminWebWrapper from "../../components/AdminWebWrapper";
 import AdminMobileWrapper from "../../components/AdminMobileWrapper";
 

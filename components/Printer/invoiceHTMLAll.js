@@ -3,7 +3,7 @@ import React, { useRef, useContext, useEffect, useState } from "react";
 import moment from 'moment';
 
 
-const invoiceHTML = (allOrders) => {
+const InvoiceHTML = (allOrders) => {
   return `
     <!DOCTYPE html>
     <html>
@@ -194,4 +194,4 @@ ${allOrders.map((order, index) => {
      `
 }
 
-export default invoiceHTML;
+export default InvoiceHTML;

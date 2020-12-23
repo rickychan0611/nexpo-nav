@@ -2,7 +2,7 @@ import React, { useRef, useContext, useEffect, useState } from "react";
 import * as Print from "expo-print";
 // import * as MediaLibrary from "expo-media-library";
 // import * as Sharing from "expo-sharing";
-import invoiceHTML from "./invoiceHTML";
+import InvoiceHTML from "./invoiceHTML";
 
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
@@ -13,7 +13,7 @@ export default function PrinterMobile({order}) {
   const printHTML = async (order) => {
     console.log(order)
     try {
-      await Print.printAsync({ html: invoiceHTML(order) });
+      await Print.printAsync({ html: InvoiceHTML(order) });
     } catch (error) {
       console.error(error);
     }

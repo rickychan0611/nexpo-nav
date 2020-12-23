@@ -5,7 +5,7 @@ class InvoiceToPrint extends React.Component {
   render() {
     return (
       <>
-        <header>Item: {this.props.index+1} - Order {this.props.order.orderId} {"start----->"}</header>
+        <header>Item: {this.props.index + 1} - Order {this.props.order.orderId} {"start----->"}</header>
 
         <div className="table">
 
@@ -104,20 +104,20 @@ class InvoiceToPrint extends React.Component {
               </tr>
               <tr className="bottomLine">
                 <td colspan="4" className="pad">配送信息：{this.props.order.shippingAddress.message}<br />
-            用戶名：{this.props.order.shippingAddress.firstName} {this.props.order.shippingAddress.lastName}<br />
-            聯系電話：{this.props.order.shippingAddress.phoneNumber}<br />
-            運費：{this.props.order.shippingFee}<br />
-            地址：
-            {this.props.order.shippingAddress.address1},&nbsp;
-            {this.props.order.shippingAddress.address2 && <>{this.props.order.shippingAddress.address2},&nbsp;</>}
+                 用戶名：{this.props.order.shippingAddress.firstName} {this.props.order.shippingAddress.lastName}<br />
+                 聯系電話：{this.props.order.shippingAddress.phoneNumber}<br />
+                  運費：{this.props.order.shippingFee}<br />
+                 地址：
+                   {this.props.order.shippingAddress.address1},&nbsp;
+                  {this.props.order.shippingAddress.address2 && <>{this.props.order.shippingAddress.address2},&nbsp;</>}
                   {this.props.order.shippingAddress.city},&nbsp;{this.props.order.shippingAddress.province},&nbsp;
-            {this.props.order.shippingAddress.postalCode}
+                   {this.props.order.shippingAddress.postalCode}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <footer className="page-break">{"<----- end "}Item: {this.props.index+1} - Order {this.props.order.orderId}</footer>
+        <footer className="page-break">{"<----- end "}Item: {this.props.index + 1} - Order {this.props.order.orderId}</footer>
 
       </>
     );
