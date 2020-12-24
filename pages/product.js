@@ -1,20 +1,21 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { ScrollView, Text, TouchableOpacity, Platform } from "react-native";
+import { ScrollView, Text, View, Platform } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import { Icon } from 'react-native-elements'
 import ViewCartBar from "../components/ViewCartBar";
-import {handleMinus, handlePlus} from  "../hooks/onPlusMinusQty";
-import {db} from "../firebaseApp";
+import { handleMinus, handlePlus } from "../hooks/onPlusMinusQty";
+import { db } from "../firebaseApp";
 
 import BottomBar from "../components/BottomBar";
 import ImageSwiper from "../components/ImageSwiper";
 import Divider from "../components/Divider";
+import { IconButton } from "react-native-paper";
 
 export default function Product() {
-  const { getParam } = useRouting()
+  const { getParam, goBack } = useRouting()
   const id = getParam('id')
 
   const [counter, setCounter] = useState(0);
@@ -48,9 +49,9 @@ export default function Product() {
   useEffect(() => {
     if (!selectedItem && id) {
       db.collection("products").doc(id).get()
-      .then((doc)=>{
-        setSelectedItem(doc.data())
-      })
+        .then((doc) => {
+          setSelectedItem(doc.data())
+        })
     }
   }, [id])
 
@@ -63,61 +64,61 @@ export default function Product() {
   return (
     <>
       <CartBarWrapper>
-        {Platform.OS === 'web' &&
-          <IconContainer >
-            <Link
-              routeName="store"
-              Web={{ scroll: false }}
-            >
-              <Icon
+        {selectedItem &&
+          <ContextArea>
+            <IconButton
+              onPress={() => {
+                goBack()
+              }}
+              icon="arrow-left">
+              {/* <Icon
                 name='arrow-alt-circle-left'
                 type='font-awesome-5'
                 color='grey'
                 size={30}
-              />
-            </Link>
-          </IconContainer>
-        }
-        {selectedItem &&
-          <ContextArea>
+              /> */}
+            </IconButton>
+
             <ImageSwiper images={selectedItem.images} />
-            <Divider tall="3px" />
+            {/* <Divider tall="2px" /> */}
             <Content>
               <Name>{selectedItem.chineseName + " " + selectedItem.englishName}</Name>
 
               <ScrollView style={{ width: "100%", marginBottom: 10 }}>
                 <Description>{selectedItem.ch_description + "\n" + selectedItem.en_description}</Description>
               </ScrollView>
-              
-              <PriceQtyWrapper>
-                <PricesWrapper>
-                  <RegPrice>${(+selectedItem.original_price).toFixed(2)}</RegPrice>
-                  <DisPrice>${(+selectedItem.final_price).toFixed(2)}</DisPrice>
-                </PricesWrapper>
 
-                <QtyWrapper>
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}>
+                <RegPrice>${(+selectedItem.original_price).toFixed(2)}</RegPrice>
+                <Text style={{
+                  color: "#999999",
+                  fontSize: 14
+                }}>/ {selectedItem.unit} </Text>
+              </View>
+              <DisPrice>${(+selectedItem.final_price).toFixed(2)}</DisPrice>
 
+              <QtyWrapper>
+                <Icon
+                  name='plus-circle'
+                  type='font-awesome-5'
+                  color='red'
+                  size={20}
+                  onPress={() => { handlePlus(selectedItem, ctx) }}
+                />
+                <>
+                  <Qty>{newOrderProductList[index] && newOrderProductList[index].quantity > 0 ? newOrderProductList[index].quantity : 0}</Qty>
                   <Icon
-                    name='plus-circle'
+                    name='minus-circle'
                     type='font-awesome-5'
-                    color='red'
+                    color='grey'
                     size={20}
-                    onPress={() => { handlePlus(selectedItem, ctx) }}
+                    onPress={() => { handleMinus(selectedItem, ctx) }}
                   />
-                  {newOrderProductList[index] && newOrderProductList[index].quantity > 0 ?
-                    <>
-                      <Qty>{newOrderProductList[index].quantity}</Qty>
-                      <Icon
-                        name='minus-circle'
-                        type='font-awesome-5'
-                        color='grey'
-                        size={20}
-                        onPress={() => { handleMinus(selectedItem, ctx) }}
-                      />
-                    </> : null}
-                </QtyWrapper>
-
-              </PriceQtyWrapper>
+                </>
+              </QtyWrapper>
             </Content>
 
           </ContextArea>
@@ -157,6 +158,10 @@ const IconContainer = styled.View`
     top: 20px;
     left: 20px;
     z-index: 1000;
+    background-color: white;
+    border-radius: 100;
+    width : 30px;
+    height: 30px
 `;
 const Content = styled.View`
     flex: 2;
@@ -165,6 +170,7 @@ const Content = styled.View`
     align-items: flex-start;
     background-color: white;
     width: 100%;
+    padding-right: 20px;
 `;
 const Name = styled.Text`
     font-Size: 20px;
@@ -188,12 +194,12 @@ const PriceQtyWrapper = styled.View`
 
 `;
 const QtyWrapper = styled.View`
-  flex: 2;
+  /* flex: 2; */
   width: 100%;
   flex-direction: row-reverse;
   flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: flex-end;
+  /* justify-content: space-between; */
+  align-items: center;
 `;
 const PricesWrapper = styled.View`
   flex: 5;
@@ -204,14 +210,16 @@ const PricesWrapper = styled.View`
 const Qty = styled.Text`
   color: black;
   font-size: 20px;
+  margin: 0 20px 0 20px;
   /* margin-bottom: ${Platform.OS === 'web' ? "2px" : "0px"}; */
 `;
 const RegPrice = styled.Text`
 font-size: 20px;
 text-decoration: line-through;
-margin: 0 10px 0 0;
+margin: 0 10px 0 20px;
 `;
 const DisPrice = styled.Text`
 font-size: 20px;
 color: red;
+margin-left: 20px;
 `;
