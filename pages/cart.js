@@ -8,6 +8,7 @@ import { db } from "../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import emptyCart from "../public/emptyCart.jpg"
+import validator from 'validator';
 
 import BottomBar from "../components/BottomBar";
 import ProductCard from "../components/ProductCard";
@@ -54,6 +55,11 @@ export default function Cart() {
     })
   }
 
+  const handleChanage = (value) => {
+    console.log(value)
+    setRedeemPoint(value)
+  }
+
   useEffect(() => {
     setNewOrderProductList(prev => prev)
   }, [newOrderProductList])
@@ -72,6 +78,22 @@ export default function Cart() {
         })
     }
   }, [user])
+
+  const shippingFee = (total) => {
+    
+    if (+total > 60) {
+      return "FREE"
+    }
+    else return "$8.00"
+  }
+
+  const totalAmt = (total) => {
+    let shipping = 8
+    if (+total > 60) {
+      shipping = 0
+    }
+    return (+total * 1.15 - (+redeemPoint / 1000) + shipping).toFixed(2)
+  }
 
   return (
     <>
@@ -108,15 +130,19 @@ export default function Cart() {
           }
 
           <View style={{ padding: 25 }}>
-            <Text>Your points: {user.points}</Text>
+            <Text>Your points: {user.points} (eg. 1,000 points = $1 value)</Text>
             <TextInput
               label="Redeem your point"
-              placeholder='Enter the number of points that you want to redeem'
+              placeholder='Enter the number of points'
               theme={{ colors: { primary: "grey" } }}
               mode="outlined"
               dense
               value={redeemPoint}
-              onChangeText={value => { handleChanage(value) }}
+              onChangeText={value => {
+                if ((!value || validator.isInt(value)) && +value <= user.points && +value >= 0) {
+                  handleChanage(value)
+                }
+              }}
             // error={catErrMsg.englishName}
             />
           </View>
@@ -128,7 +154,11 @@ export default function Cart() {
           </TotalContainer>
           <TotalContainer style={{ paddingRight: 30 }}>
             <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
+            <Price ><Text style={{ color: "grey" }}>-${(+redeemPoint / 1000).toFixed(2)}</Text></Price>
+          </TotalContainer>
+          <TotalContainer style={{ paddingRight: 30 }}>
+            <Content ><Text style={{ color: "grey" }}>Shipping: (Free over $60) </Text></Content>
+            <Price ><Text style={{ color: "grey" }}>{shippingFee(total)}</Text></Price>
           </TotalContainer>
           <TotalContainer style={{ paddingRight: 30 }}>
             <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
@@ -136,7 +166,9 @@ export default function Cart() {
           </TotalContainer>
           <TotalContainer style={{ paddingBottom: 20, paddingRight: 30 }}>
             <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>${(+total * 1.15).toFixed(2)}</Text></Price>
+            <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>
+              ${totalAmt(total)}
+            </Text></Price>
           </TotalContainer>
 
           <Divider />

@@ -41,6 +41,7 @@ export default function AddressForm({
   const { navigate, goBack } = useRouting();
 
   const [err, setErr] = useState(empty);
+  
   const handleChanage = (name, value) => {
     setNewAddress(prev => {
       return { ...prev, [name]: value }

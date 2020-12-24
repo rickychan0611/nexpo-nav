@@ -16,7 +16,7 @@ export default function ProductCard({ key, item }) {
   //dailog
   const [showDialog, setShowDialog] = useState(false);
   const [delItem, setDelItem] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const hideDialog = () => setShowDialog(false)
 
   const onDelete = () => {
@@ -62,42 +62,41 @@ export default function ProductCard({ key, item }) {
               zIndex: 1000
             }}>
 
-            {selected !== "store" && <ContentContainer
-              style={{
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
 
-              <TouchableOpacity
-
-                style={{ flex: 1}}
-                onPress={() => {
-                  db.collection("products").doc(item.uid).update({ activated: !item.activated })
-                }}>
-                <View style={{justifyContent: "flex-start", alignItems: "flex-start" }}>
-                  <Switch
-                    value={item.activated}
-                    onValueChange={onToggleSwitch}
-                  />
-                </View>
-              </TouchableOpacity>
-
-              <View style={{ flex: 1, alignItems: "center" }}>
-                <Text>Stock: {item.qty}</Text>
-              </View>
-
-              <View style={{ flex: 1, justifyContent: "flex-end", alignItems: "flex-end" }}>
-                <IconButton icon="delete" color={theme.red}
+            {selected !== "store" &&
+              <ContentContainer
+                style={{
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}
+              >
+                <TouchableOpacity
+                  style={{ flex: 1 }}
                   onPress={() => {
-                    {/* delete button */ }
-                    setShowDialog(true)
-                    setDelItem(item.uid)
-                  }} />
-              </View>
+                    db.collection("products").doc(item.uid).update({ activated: !item.activated })
+                  }}>
+                  <View style={{ alignItems: "flex-start" }}>
+                    <Switch
+                      value={item.activated}
+                      onValueChange={onToggleSwitch}
+                    />
+                  </View>
+                </TouchableOpacity>
 
+                <View style={{ flex: 1, alignItems: "center" }}>
+                  <Text>Stock: {item.qty}</Text>
+                </View>
 
-            </ContentContainer>}
+                <View style={{ flex: 1, alignItems: "flex-end" }}>
+                  <IconButton icon="delete" color={theme.red}
+                    onPress={() => {
+                      {/* delete button */ }
+                      setShowDialog(true)
+                      setDelItem(item.uid)
+                    }} />
+                </View>
+              </ContentContainer>}
+
 
             <ContentContainer
               style={{
@@ -144,7 +143,6 @@ const ContentContainer = styled.View`
       align-items: flex-start;
       justify-content: flex-start;
       width: 100%;
-      max-width: 500px;
 `;
 
 const ImageWrapper = styled.View`
