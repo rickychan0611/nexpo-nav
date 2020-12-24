@@ -32,9 +32,9 @@ export default function Home() {
          source={banner1} />
         <ContextArea>
         </ContextArea>
-        {newOrderProductList.length > 0 ?
+        {/* {newOrderProductList.length > 0 ?
           <CartCheckoutBar />
-          : null}
+          : null} */}
       </CartBarWrapper>
       <BottomBar />
     </>

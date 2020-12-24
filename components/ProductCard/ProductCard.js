@@ -62,52 +62,49 @@ export default function ProductCard({ key, item }) {
               zIndex: 1000
             }}>
 
+            {selected !== "store" && <ContentContainer
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
+            >
 
-            <View>
-              {selected !== "store" &&
-                // {/* admin control */}
-                <View style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%"
+              <TouchableOpacity
+
+                style={{ flex: 1}}
+                onPress={() => {
+                  db.collection("products").doc(item.uid).update({ activated: !item.activated })
                 }}>
-
-                  <TouchableOpacity onPress={() => {
-                    // {/* activate switch  */}
-                    db.collection("products").doc(item.uid).update({ activated: !item.activated })
-                  }}>
-                    <View style={{
-                      flexDirection: "row", 
-                      flexWrap: "nowrap",
-                      alignItems: "center",
-                      // paddingLeft: 5,
-                      }}>
-                      <Switch
-                        value={item.activated}
-                        onValueChange={onToggleSwitch}
-                      />
-                      {/* <Text>{item.activated ? "Active" : "Hidden"}</Text> */}
-                    </View>
-                  </TouchableOpacity>
-                  <Text>Stock: {item.qty}</Text>
-                  <IconButton icon="delete" color={theme.red}
-                    onPress={() => {
-                      {/* delete button */ }
-                      setShowDialog(true)
-                      setDelItem(item.uid)
-                    }} />
+                <View style={{justifyContent: "flex-start", alignItems: "flex-start" }}>
+                  <Switch
+                    value={item.activated}
+                    onValueChange={onToggleSwitch}
+                  />
                 </View>
-              }
-            </View>
+              </TouchableOpacity>
+
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text>Stock: {item.qty}</Text>
+              </View>
+
+              <View style={{ flex: 1, justifyContent: "flex-end", alignItems: "flex-end" }}>
+                <IconButton icon="delete" color={theme.red}
+                  onPress={() => {
+                    {/* delete button */ }
+                    setShowDialog(true)
+                    setDelItem(item.uid)
+                  }} />
+              </View>
 
 
-            <ContentContainer 
-            style={{
-              opacity: item.activated ? 1 : 0.4,
-              borderTopWidth : 1,
-              borderTopColor: "#e3e3e3"
-            }}>
+            </ContentContainer>}
+
+            <ContentContainer
+              style={{
+                opacity: item.activated ? 1 : 0.4,
+                borderTopWidth: 1,
+                borderTopColor: "#e3e3e3"
+              }}>
               <ImageWrapper>
                 {item.images && item.images[0] ?
                   <Image source={{
@@ -122,8 +119,6 @@ export default function ProductCard({ key, item }) {
                 <ProductContent item={item} />
               </RightSideContentWrapper>
             </ContentContainer>
-
-
           </Container>
         </>
       }

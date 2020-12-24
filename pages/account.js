@@ -71,7 +71,7 @@ export default function account() {
             <Text
               style={{
                 color: "white",
-                fontSize: 12,
+                fontSize: 14,
                 // fontWeight: "bold",
               }}>You have
             </Text>
@@ -85,7 +85,7 @@ export default function account() {
             <Text
               style={{
                 color: "white",
-                fontSize: 12,
+                fontSize: 14,
                 margin: 0
               }}> points
             </Text>
