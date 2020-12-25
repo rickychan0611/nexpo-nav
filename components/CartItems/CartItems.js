@@ -52,12 +52,12 @@ const ItemsContainer = styled.View`
 `;
 
 const Qty = styled.View`
-  flex: 1;
+  flex: 2;
   justify-content: center;
   align-items: flex-start;
 `;
 const Content = styled.View`
-  flex: 8;
+  flex: 18;
   justify-content: center;
   align-items: flex-start;
 `;

@@ -14,10 +14,10 @@ export function handlePlus(selectedItem, ctx) {
     index = idArray.indexOf(selectedItem.uid)
   }
 
-  // setCounter(prev => prev + 1);
-  setTotal(prev => prev + +selectedItem.final_price)
-
-  if (+selectedItem.qty > 0) {
+  
+  if (+selectedItem.qty >= 0) {
+    //#1. add final_price to total
+    setTotal(prev => prev + +selectedItem.final_price)
     setNewOrderProductList(
       //update state object in nested array
       produce(
@@ -36,7 +36,10 @@ export function handlePlus(selectedItem, ctx) {
                   prev[index] = { item: selectedItem, productId: selectedItem.uid, quantity: newOrderProductList[index].quantity + 1, price: selectedItem.final_price };
                   return prev
                 }
-                else alert("Sorry, not enough stock.")
+                else {
+                  //deduct final_price from total if not enough qty. see #1
+                  setTotal(prev => prev - +selectedItem.final_price)
+                  alert("Sorry, not enough stock.")}
               }
             }
           }

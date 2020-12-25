@@ -19,8 +19,7 @@ export default function AddressForm({
   tasker
 }) {
 
-  const { user, addressBook, editAddress, setEditAddress,
-    initLoading, setInitLoading } = useContext(Context);
+  const { user, editAddress } = useContext(Context);
 
   const empty = {
     address1: "",
@@ -41,7 +40,7 @@ export default function AddressForm({
   const { navigate, goBack } = useRouting();
 
   const [err, setErr] = useState(empty);
-  
+
   const handleChanage = (name, value) => {
     setNewAddress(prev => {
       return { ...prev, [name]: value }

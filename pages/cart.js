@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../context/Context";
 import { ThemeContext } from "../context/ThemeContext";
-import { Divider, TextInput, Headline } from "react-native-paper";
+import { Divider, TextInput, Headline, HelperText } from "react-native-paper";
 import { db } from "../firebaseApp";
 import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
@@ -21,6 +21,7 @@ import Loader from "../components/Loader";
 export default function Cart() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
+  const [pointErr, setPointErr] = useState("false");
   const { theme } = useContext(ThemeContext);
 
   const {
@@ -80,7 +81,6 @@ export default function Cart() {
   }, [user])
 
   const shippingFee = (total) => {
-    
     if (+total > 60) {
       return "FREE"
     }
@@ -112,7 +112,73 @@ export default function Cart() {
           <Divider />
 
           {newOrderProductList[0] ?
-            <CartItems />
+            <>
+              <CartItems />
+              <View style={{ padding: 25 }}>
+                <Text>Your points: {user.points} (eg. 1,000 points = $1 value)</Text>
+                <TextInput
+                  label="Redeem your point"
+                  placeholder='Enter the number of points'
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={redeemPoint}
+                  onChangeText={value => {
+                    if (value.slice(value.length - 1) === ".") {
+                      return
+                    }
+                    if ((!value || validator.isInt(value))) {
+                      setPointErr("")
+                      handleChanage(value)
+                    }
+                    else {
+                      setPointErr("You can enter number only.")
+                    }
+                    if (+value <= user.points && +value >= 0) {
+                      setPointErr("")
+                      handleChanage(value)
+                    }
+                    else {
+                      setPointErr('Value has to be smaller or equal to "' + user.points + '"')
+                      setTimeout(()=>{
+                        handleChanage("")
+                      },700)
+                    }
+                  }}
+                  keyboardType="phone-pad"
+                  returnKeyLabel="done"
+                  textContentType="oneTimeCode"
+                  error={pointErr}
+                />
+                <HelperText type="error" visible={pointErr}>
+                  {pointErr}
+                </HelperText>
+              </View>
+              <Divider />
+              <TotalContainer style={{ paddingTop: 20, paddingRight: 30 }}>
+                <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
+                <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
+              </TotalContainer>
+              <TotalContainer style={{ paddingRight: 30 }}>
+                <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
+                <Price ><Text style={{ color: "grey" }}>-${(+redeemPoint / 1000).toFixed(2)}</Text></Price>
+              </TotalContainer>
+              <TotalContainer style={{ paddingRight: 30 }}>
+                <Content ><Text style={{ color: "grey" }}>Shipping: (Free over $60) </Text></Content>
+                <Price ><Text style={{ color: "grey" }}>{shippingFee(total)}</Text></Price>
+              </TotalContainer>
+              <TotalContainer style={{ paddingRight: 30 }}>
+                <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
+                <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
+              </TotalContainer>
+              <TotalContainer style={{ paddingBottom: 20, paddingRight: 30 }}>
+                <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
+                <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>
+                  ${totalAmt(total)}
+                </Text></Price>
+              </TotalContainer>
+              <Divider />
+            </>
             :
             <>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -129,49 +195,7 @@ export default function Cart() {
             </>
           }
 
-          <View style={{ padding: 25 }}>
-            <Text>Your points: {user.points} (eg. 1,000 points = $1 value)</Text>
-            <TextInput
-              label="Redeem your point"
-              placeholder='Enter the number of points'
-              theme={{ colors: { primary: "grey" } }}
-              mode="outlined"
-              dense
-              value={redeemPoint}
-              onChangeText={value => {
-                if ((!value || validator.isInt(value)) && +value <= user.points && +value >= 0) {
-                  handleChanage(value)
-                }
-              }}
-            // error={catErrMsg.englishName}
-            />
-          </View>
-          <Divider />
 
-          <TotalContainer style={{ paddingTop: 20, paddingRight: 30 }}>
-            <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 30 }}>
-            <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>-${(+redeemPoint / 1000).toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 30 }}>
-            <Content ><Text style={{ color: "grey" }}>Shipping: (Free over $60) </Text></Content>
-            <Price ><Text style={{ color: "grey" }}>{shippingFee(total)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingRight: 30 }}>
-            <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-            <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
-          </TotalContainer>
-          <TotalContainer style={{ paddingBottom: 20, paddingRight: 30 }}>
-            <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-            <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>
-              ${totalAmt(total)}
-            </Text></Price>
-          </TotalContainer>
-
-          <Divider />
 
           {/* <AddressForm err={err} setErr={setErr} /> */}
 
@@ -180,7 +204,7 @@ export default function Cart() {
         </ScrollView>
       </ContextArea>
 
-      <CartCheckoutBar onSubmit={onSubmit} />
+      {newOrderProductList[0] && <CartCheckoutBar onSubmit={onSubmit} />}
 
       <BottomBar style={{
         shadowColor: "#000",
