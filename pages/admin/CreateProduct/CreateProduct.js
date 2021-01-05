@@ -186,8 +186,8 @@ export default function CreateProduct() {
 
 
   useEffect(() => {
-      listenCategories()
-      setImages()
+    listenCategories()
+    setImages()
   }, [])
 
   return (
@@ -274,7 +274,7 @@ export default function CreateProduct() {
             const uid = category.chineseName + category.englishName
             return (
               <>
-                {category.id !== "Others" &&
+                {category.uid !== "Others" &&
                   <View key={uid}>
                     <Checkbox.Item
                       label={category.chineseName + " / " + category.englishName}

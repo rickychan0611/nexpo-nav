@@ -8,10 +8,10 @@ export default function AdminSideBar({ data }) {
   const { navigate } = useRouting();
 
   const { productInitValue, setOpenWebAdminMenu, setProduct, setSelected } = useContext(Context);
-  
-  useEffect(()=>{
+
+  useEffect(() => {
     setSelected("create-product")
-  },[])
+  }, [])
 
   return (
     <Container>
@@ -43,11 +43,21 @@ export default function AdminSideBar({ data }) {
 
       <TouchableOpacity>
         <Name onPress={() => {
-          navigate({ routeName: "admin/create-product", params: {path: "create-product"} })
+          navigate({ routeName: "admin/create-product", params: { path: "create-product" } })
           setProduct(productInitValue)
           setOpenWebAdminMenu(false)
         }}>
           Add a product
+          </Name>
+      </TouchableOpacity>
+
+      <TouchableOpacity>
+        <Name onPress={() => {
+          navigate({ routeName: "admin/edit-category" })
+          setProduct(productInitValue)
+          setOpenWebAdminMenu(false)
+        }}>
+          Edit Category
           </Name>
       </TouchableOpacity>
 

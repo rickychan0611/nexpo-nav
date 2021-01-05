@@ -22,6 +22,7 @@ import editProduct from "./pages/admin/edit-product";
 import createProduct from "./pages/admin/create-product";
 import storeListings from "./pages/admin/store-listings";
 import order_details from "./pages/admin/order-details";
+import edit_category from "./pages/admin/edit-category";
 import shipping from "./pages/checkout/shipping";
 import newCard from "./pages/checkout/new-card";
 import chooseCard from "./pages/checkout/choose-card";
@@ -83,6 +84,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="admin/edit-category" component={edit_category} options={options("Category")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="qrcode" component={qrcode} options={options("QRcode")} />
           <Stack.Screen name="account" component={account} options={options("account")} />
@@ -124,14 +126,14 @@ export default () => {
       <AccountProvider>
         <ProductsProvider>
           <ThemeProvider>
-              <PaperProvider theme={theme}>
-                <AdminProvider >
-                  <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
-                    {/* <TopBar /> */}
-                    <App />
-                  </SafeAreaView>
-                </AdminProvider >
-              </PaperProvider>
+            <PaperProvider theme={theme}>
+              <AdminProvider >
+                <SafeAreaView style={{ flex: 1, marginTop: 30 }}>
+                  {/* <TopBar /> */}
+                  <App />
+                </SafeAreaView>
+              </AdminProvider >
+            </PaperProvider>
           </ThemeProvider>
         </ProductsProvider>
       </AccountProvider>

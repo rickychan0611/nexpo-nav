@@ -304,7 +304,7 @@ export default function EditProduct() {
             const uid = category.chineseName + category.englishName
             return (
               <>
-                {category.id !== "Others" &&
+                {category.uid !== "Others" &&
                   <View key={index}>
                     <Checkbox.Item
                       label={category.chineseName + " / " + category.englishName}
@@ -393,7 +393,7 @@ const Container = styled.ScrollView`
 `;
 
 const InputView = styled.View`
-  margin-bottom: ${Platform.OS === "web" ? "15px" : 0};
+  margin-bottom: 15px
 `;
 const MyCard = styled(Card)`
   border-radius: 15px;

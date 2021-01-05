@@ -21,7 +21,7 @@ import Loader from "../components/Loader";
 export default function Cart() {
   const { navigate } = useRouting();
   const [loading, setLoading] = useState(false);
-  const [pointErr, setPointErr] = useState("false");
+  const [pointErr, setPointErr] = useState("");
   const { theme } = useContext(ThemeContext);
 
   const {
