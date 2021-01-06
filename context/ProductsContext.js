@@ -27,7 +27,6 @@ const ProductsProvider = ({ children }) => {
             return a.position - b.position
           })
           setCategories(tempArr)
-          console.log(tempArr)
         })
     }
     else console.log("listenCategories not run")
@@ -37,11 +36,12 @@ const ProductsProvider = ({ children }) => {
     console.log("run listenProducts")
     console.log(selectedCat)
 
-    db.collection("products").where("uid", "array-contains", selectedCat)
+    db.collection("products").where("category", "array-contains", selectedCat)
       .onSnapshot((snapshot) => {
         let tempArr = []
         snapshot.forEach((doc) => {
           tempArr.push(doc.data())
+          console.log(tempArr)
         })
         setProductData(prev => ({ ...prev, [selectedCat]: tempArr }))
       })

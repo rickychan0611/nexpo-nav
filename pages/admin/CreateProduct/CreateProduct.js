@@ -271,7 +271,8 @@ export default function CreateProduct() {
 
           {categories && categories.map((category) => {
 
-            const uid = category.chineseName + category.englishName
+            // const uid = category.chineseName + category.englishName
+            const uid = uid
             return (
               <>
                 {category.uid !== "Others" &&
