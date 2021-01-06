@@ -23,6 +23,7 @@ const productInitValue = {
 }
 
 const ContextProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState();
   const [user, setUser] = useState("");
   const [selectedItem, setSelectedItem] = useState();
@@ -238,7 +239,8 @@ const ContextProvider = ({ children }) => {
           checkCards,
           loadingCards, setLoadingCards,
           productInitValue,
-          QRcodeUrl, setQRcodeUrl
+          QRcodeUrl, setQRcodeUrl,
+          loading, setLoading
         }
       }
     >

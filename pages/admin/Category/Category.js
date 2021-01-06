@@ -1,18 +1,12 @@
 
 import React, { useContext, useState, useEffect } from "react";
-import { Context } from "../../../context/Context";
 import { ThemeContext } from "../../../context/ThemeContext";
-import { ProductsContext } from "../../../context/ProductsContext";
-import moment from "moment";
-import { storage } from '../../../firebaseApp';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import arrayMove from 'array-move';
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import {
   Surface, IconButton, Button, TextInput, Portal,
-  Dialog, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption
+  Dialog, Card, Headline, HelperText, Paragraph
 } from 'react-native-paper';
 import { db } from "../../../firebaseApp";
 export const firebase = require("firebase");
@@ -32,6 +26,11 @@ export default function Category() {
   const hideDialog = () => {
     setShowEditDialog(false)
     setIsNew(false)
+  }
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const hideDeleteDialog = () => {
+    setShowDeleteDialog(false)
   }
 
   const onCategoryChange = (name, value) => {
@@ -63,24 +62,20 @@ export default function Category() {
     validate.then(async () => {
       let TempArr = categories
       setLoading(true)
-      console.log(TempArr)
 
       if (isNew) {
         const res = db.collection("categories").doc()
         TempArr.unshift({ ...selectedCategory, uid: res.id, index: categories.length })
-        console.log(TempArr)
-        // await res.set({ ...selectedCategory, uid: res.id })
+
       }
       else if (!isNew) {
         TempArr[selectedCategory.index] = selectedCategory //update the updated element
       }
-      console.log(TempArr)
 
       let reSortedTempArr = arrayMove(TempArr, selectedCategory.index, selectedCategory.position - 1) //arrayMove(array, from, to)
-      console.log(reSortedTempArr)
-      console.log("reSortedCatTempArr", reSortedTempArr)
 
-      for (let i = 0; i < reSortedTempArr.length; i++) {
+
+      for (let i = 0; i < reSortedTempArr.length; i++) { //update position by index
         reSortedTempArr[i].position = i + 1
       }
 
@@ -91,39 +86,67 @@ export default function Category() {
           return await db.collection("categories").doc(category.uid).set(category)
         })
       )
+
       setLoading(false)
       setIsNew(false)
       hideDialog()
     })
   }
 
-  const handleDelete = (categoryWillDelete) => {
+  const handleDelete = async () => {
     // move all product ids in categories db collection
-    console.log(categoryWillDelete)
+    setLoading(true)
+    console.log(selectedCategory)
 
     const othersIndex = categories.findIndex(category => {
       return category.uid === "Others"
     })
-    console.log(othersIndex)
 
     const deleteIndex = categories.findIndex(category => {
-      return category.uid === categoryWillDelete.uid
+      return category.uid === selectedCategory.uid
     })
-    console.log(deleteIndex)
 
-    const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
-    const uniq = [...new Set(combine)];
-    console.log(uniq)
-    db.collection("categories").doc("mogZUvJlGmFETuTEscDU").update({ productId: uniq })
+    if (categories[deleteIndex].productId) {
+      const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
+      const uniq = [...new Set(combine)];
+      db.collection("categories").doc("mogZUvJlGmFETuTEscDU").update({ productId: uniq })
 
-    // update category for all products. Put "Others" in their category array
-    Promise.all(
-      categoryWillDelete.productId[0] && categoryWillDelete.productId.map(async (uid) => {
-        return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
+      // update category for all products. Put "Others" in their category array
+      Promise.all(
+        selectedCategory.productId[0] && selectedCategory.productId.map(async (uid) => {
+          return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
+        })
+      )
+    }
+
+    const deletedCats = categories.filter((item, index) => {
+      return item.uid !== selectedCategory.uid
+    })
+
+    console.log(deletedCats)
+
+    db.collection("categories").doc(selectedCategory.uid).delete()
+      .then(async () => {
+
+        //update position
+        for (let i = 0; i < deletedCats.length; i++) { //update position by index
+          deletedCats[i].position = i + 1
+        }
+
+        await Promise.all( //update database
+          deletedCats.map(async (category, index) => {
+            console.log(category)
+
+            return await db.collection("categories").doc(category.uid).set(category)
+          })
+        )
+
+        setLoading(false)
       })
-    )
-
-    // db.collection("categories").doc(category.uid).delete()
+      .catch((err) => {
+        console.log(err)
+        setLoading(true)
+      })
   }
 
   useEffect(() => {
@@ -142,6 +165,22 @@ export default function Category() {
 
   return (
     <>
+      <Portal>
+        <Dialog visible={showDeleteDialog} onDismiss={hideDeleteDialog}>
+          <Dialog.Title>Are you sure?</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Are you sure you want to delete this category? All products belong to this category will be moved to the "Others" category.</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => hideDeleteDialog()}>Cancel</Button>
+            <Button onPress={() => {
+              handleDelete()
+              hideDeleteDialog()
+            }}>Delete</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
       <Portal>
         <Dialog visible={showEditDialog} onDismiss={hideDialog}>
           <Dialog.Title>{selectedCategory === {} ? "Edit" : "Add a new category"}</Dialog.Title>
@@ -266,7 +305,8 @@ export default function Category() {
                     {category.uid !== "Others" &&
                       <IconButton icon="close"
                         onPress={() => {
-                          handleDelete(category)
+                          setShowDeleteDialog(true)
+                          setSelectedCategory(category)
                         }} />
                     }
                   </View>

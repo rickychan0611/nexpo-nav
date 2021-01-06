@@ -7,11 +7,13 @@ import { Icon } from 'react-native-elements'
 import { Link, useRouting } from "expo-next-react-navigation";
 import { db } from "../../firebaseApp";
 import * as firebase from 'firebase/app';
+import Loader from "../../components/Loader";
 
 export default function SaveProductButton() {
   const { theme } = useContext(ThemeContext);
-  const { setError, product, selectedCategory, images } = useContext(Context);
+  const { setError, product, selectedCategory, images, loading, setLoading } = useContext(Context);
   const { navigate, goBack } = useRouting();
+  const ctx = useContext(Context)
 
   const onCreateProductSubmit = () => {
 
@@ -52,6 +54,12 @@ export default function SaveProductButton() {
     })
 
     validate.then(() => {
+      console.log({
+        ...product,
+        uid: productRef.id,
+        createAt: timestamp,
+        images: images && images
+      })
       //Creat a new product on the server
       productRef.set({
         ...product,
@@ -82,11 +90,12 @@ export default function SaveProductButton() {
 
   return (
     <>
+      {loading && <Loader />}
       {/* save button */}
       <IconWrapper>
         <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
           onPress={() => {
-            onCreateProductSubmit()
+            onCreateProductSubmit(ctx)
           }}>
           <Text style={{ fontSize: 20, color: "white" }}>Save </Text>
           <Icon
