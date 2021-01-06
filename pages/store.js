@@ -38,7 +38,7 @@ export default function Store({ ssrData }) {
       queryProduct()
     }
   }, [selected])
-  
+
   useEffect(() => {
     setSelected("store")
   }, [])

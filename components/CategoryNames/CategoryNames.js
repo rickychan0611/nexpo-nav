@@ -13,7 +13,7 @@ export default function CategoryNames() {
 
   useEffect(() => {
     if (!selectedCat) {
-      setSelectedCat(categories[0].uid)      
+      setSelectedCat(categories[0].uid)
     }
     listenCategories()
   }, [])
@@ -22,8 +22,8 @@ export default function CategoryNames() {
     <>
       <TopSpace />
       {categories && categories.map((category) => {
-        console.log(category.uid)
-        console.log(selectedCat)
+        // console.log(category.uid)
+        // console.log(selectedCat)
         return (
           <NamesContainer
             key={category.uid}

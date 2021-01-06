@@ -14,8 +14,8 @@ import {
   Surface, IconButton, Button, TextInput, Portal,
   Dialog, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption
 } from 'react-native-paper';
-
 import { db } from "../../../firebaseApp";
+export const firebase = require("firebase");
 
 export default function Category() {
 
@@ -95,6 +95,35 @@ export default function Category() {
       setIsNew(false)
       hideDialog()
     })
+  }
+
+  const handleDelete = (categoryWillDelete) => {
+    // move all product ids in categories db collection
+    console.log(categoryWillDelete)
+
+    const othersIndex = categories.findIndex(category => {
+      return category.uid === "Others"
+    })
+    console.log(othersIndex)
+
+    const deleteIndex = categories.findIndex(category => {
+      return category.uid === categoryWillDelete.uid
+    })
+    console.log(deleteIndex)
+
+    const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
+    const uniq = [...new Set(combine)];
+    console.log(uniq)
+    db.collection("categories").doc("mogZUvJlGmFETuTEscDU").update({ productId: uniq })
+
+    // update category for all products. Put "Others" in their category array
+    Promise.all(
+      categoryWillDelete.productId[0] && categoryWillDelete.productId.map(async (uid) => {
+        return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
+      })
+    )
+
+    // db.collection("categories").doc(category.uid).delete()
   }
 
   useEffect(() => {
@@ -237,7 +266,7 @@ export default function Category() {
                     {category.uid !== "Others" &&
                       <IconButton icon="close"
                         onPress={() => {
-                          db.collection("categories").doc(category.uid).delete()
+                          handleDelete(category)
                         }} />
                     }
                   </View>
