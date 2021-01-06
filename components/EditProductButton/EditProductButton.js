@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Context } from "../../context/Context";
 import { View, Text, Platform, TouchableOpacity } from "react-native";
@@ -7,14 +7,15 @@ import { Icon } from 'react-native-elements'
 import { Link, useRouting } from "expo-next-react-navigation";
 import { db } from "../../firebaseApp";
 import * as firebase from 'firebase/app';
+import Loader from "../../components/Loader";
 
 export default function EditProductButton() {
   const { theme } = useContext(ThemeContext);
   const { setError, product, selectedCategory, images } = useContext(Context);
   const { navigate, getParam, goBack } = useRouting();
+  const [loading, setLoading] = useState(false);
 
   const onEditProductSubmit = () => {
-
 
     setError({})
 
@@ -51,8 +52,7 @@ export default function EditProductButton() {
 
     validate.then(() => {
       //Creat a new product on the server
-      console.log("update@@@@@@@@@@@@@@@@@@@@@@2")
-      console.log(product)
+      setLoading(true)
 
       const timestamp = new Date()
       db.collection("products").doc(product.uid)
@@ -74,15 +74,26 @@ export default function EditProductButton() {
                 .catch((err) => console.log(category, " NOT added. Err: ", err))
               promises.push(promise)
             })
-            Promise.all(promises).then(()=>goBack())
+          Promise.all(promises).then(() => {
+            setLoading(false)
+            goBack()
+          }
+          )
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+        })
     })
-      .catch(err => console.log("error:", err))
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
   }
 
   return (
     <>
+      {loading && <Loader />}
       {/* save button */}
       <IconWrapper>
         <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}

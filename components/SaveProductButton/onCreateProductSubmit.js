@@ -1,5 +1,6 @@
 import { db } from "../../firebaseApp";
 import { Link, useRouting } from "expo-next-react-navigation";
+import Loader from "../../components/Loader";
 
 const onCreateProductSubmit = (ctx) => {
   const { setError, product, selectedCategory, productInitValue } = ctx;
@@ -7,6 +8,7 @@ const onCreateProductSubmit = (ctx) => {
   const productRef = db.collection("products").doc()
   const timestamp = new Date()
   const { navigate } = useRouting();
+  const [loading, setLoading] = useState(false);
 
   setError({})
 
@@ -42,6 +44,8 @@ const onCreateProductSubmit = (ctx) => {
   })
 
   validate.then(() => {
+    setLoading(true)
+
     productRef.set({
       ...product,
       uid: productRef.id,
@@ -51,11 +55,15 @@ const onCreateProductSubmit = (ctx) => {
         //reset everything after sumbitting to server
         // setProduct(productInitValue)
         // setSelectedCategory([])
+        setLoading(false)
         navigate({
           routeName: "home"
         })
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
   })
 }
 
