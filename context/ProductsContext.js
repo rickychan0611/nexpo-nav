@@ -23,6 +23,9 @@ const ProductsProvider = ({ children }) => {
           snapshot.forEach((doc) => {
             tempArr.push(doc.data())
           })
+          tempArr.sort((a, b) => {
+            return a.position - b.position
+          })
           setCategories(tempArr)
         })
     }
@@ -57,7 +60,7 @@ const ProductsProvider = ({ children }) => {
       console.log("listenProducts not run")
     }
   }
-  
+
   useEffect(() => {
     queryProduct()
   }, [selectedCat])
