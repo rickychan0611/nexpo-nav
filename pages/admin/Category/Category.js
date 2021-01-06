@@ -15,7 +15,6 @@ import {
   Dialog, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption
 } from 'react-native-paper';
 
-
 import { db } from "../../../firebaseApp";
 
 export default function Category() {
@@ -23,95 +22,79 @@ export default function Category() {
   const { theme } = useContext(ThemeContext);
 
   const [cat, setCat] = useState({});
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState({})
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState("")
+  const [isNew, setIsNew] = useState(false)
 
-  const onAddCatChange = (name, value) => {
-    setCatErrMsg(prev => ({ ...prev, [name]: "" }))
-    setCat(prev => ({ ...prev, [name]: value }))
+  const [showEditDialog, setShowEditDialog] = useState(false)
+  const hideDialog = () => {
+    setShowEditDialog(false)
+    setIsNew(false)
   }
 
-  const onAddCategory = () => {
+  const onCategoryChange = (name, value) => {
+    setSelectedCategory(prev => ({ ...prev, [name]: value }))
+  }
+
+  const onSave = () => {
 
     let validate = new Promise((resolve, reject) => {
-      if (!cat.chineseName) {
-        setCatErrMsg(prev => ({ ...prev, chineseName: "必須填寫" }))
+      if (!selectedCategory.chineseName) {
+        setError(prev => ({ ...prev, chineseName: "必須填寫" }))
         reject()
       }
-      if (!cat.englishName) {
-        setCatErrMsg(prev => ({ ...prev, englishName: "Required. Please enter a name." }))
+      if (!selectedCategory.englishName) {
+        setError(prev => ({ ...prev, englishName: "Required. Please enter a name." }))
         reject()
       }
-      if (categories.some(obj => obj.chineseName.toLowerCase() === (cat.chineseName + "").toLowerCase().trim())) {
-        setCatErrMsg(prev => ({ ...prev, chineseName: "名字已被用，請重新輸入." }))
+      if (!selectedCategory.position) {
+        setError(prev => ({ ...prev, position: "Required." }))
         reject()
       }
-      if (categories.some(obj => obj.englishName.toLowerCase() === (cat.englishName + "").toLowerCase().trim())) {
-        setCatErrMsg(prev => ({ ...prev, englishName: "This name is taken. Please use another name." }))
+      if (selectedCategory.position <= 0) {
+        setError(prev => ({ ...prev, position: "Value has to be greater than zero" }))
         reject()
       }
       else resolve()
     })
 
-    validate.then(() => {
-      setButtonDisabled(true)
-      const uid = cat.chineseName.trim() + cat.englishName.trim()
-      db.collection("categories").doc(uid).set({
-        uid,
-        chineseName: cat.chineseName.trim(),
-        englishName: cat.englishName.trim(),
-        createAt: new Date(),
-        productId: []
-      })
-        .then(() => {
-          setCat({})
-          setShowNewCategory(false)
-          setCategories(prev => {
-            return [...prev, cat]
-          })
-          setButtonDisabled(false)
+    validate.then(async () => {
+      let TempArr = categories
+      setLoading(true)
+      console.log(TempArr)
+
+      if (isNew) {
+        const res = db.collection("categories").doc()
+        TempArr.unshift({ ...selectedCategory, uid: res.id, index: categories.length })
+        console.log(TempArr)
+        // await res.set({ ...selectedCategory, uid: res.id })
+      }
+      else if (!isNew) {
+        TempArr[selectedCategory.index] = selectedCategory //update the updated element
+      }
+      console.log(TempArr)
+
+      let reSortedTempArr = arrayMove(TempArr, selectedCategory.index, selectedCategory.position - 1) //arrayMove(array, from, to)
+      console.log(reSortedTempArr)
+      console.log("reSortedCatTempArr", reSortedTempArr)
+
+      for (let i = 0; i < reSortedTempArr.length; i++) {
+        reSortedTempArr[i].position = i + 1
+      }
+
+      await Promise.all( //update database
+        reSortedTempArr.map(async (category, index) => {
+          console.log(category)
+
+          return await db.collection("categories").doc(category.uid).set(category)
         })
-        .catch(err => {
-          console.log(err)
-          setButtonDisabled(false)
-        })
+      )
+      setLoading(false)
+      setIsNew(false)
+      hideDialog()
     })
-  }
-
-  const onSave = async () => {
-    setLoading(true)
-    console.log(selectedCategory)
-
-    categories[selectedCategory.index] = selectedCategory
-
-    let reSortedCat = arrayMove(categories, selectedCategory.index, selectedCategory.position - 1)
-    console.log(reSortedCat)
-
-    reSortedCat.map((cat, index) => {
-      reSortedCat[index].position = index + 1
-    })
-
-    await Promise.all(
-      reSortedCat.map(async (category, index) => {
-        return await db.collection("categories").doc(category.uid).update(category)
-      })
-    )
-
-    setLoading(false)
-    hideDialog()
-
-  }
-
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState({})
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState("")
-
-  const [showEditDialog, setShowEditDialog] = useState(false)
-  const hideDialog = () => {
-    setShowEditDialog(false)
-  }
-
-  const onCategoryChange = (name, value) => {
-    setSelectedCategory(prev => ({ ...prev, [name]: value }))
   }
 
   useEffect(() => {
@@ -168,23 +151,24 @@ export default function Category() {
                 </HelperText>
               </InputView>
             </>}
-            <InputView>
-              <View style={{ marginVertical: 10 }}></View>
-              <TextInput
-                theme={{ colors: { primary: "grey" } }}
-                mode="outlined"
-                dense
-                label="Position*"
-                placeholder='Position'
-                value={selectedCategory.position}
-                onChangeText={value => { onCategoryChange("position", value) }}
-                error={error.position}
-              />
-              <HelperText type="error" visible={error.position}>
-                {error.position}
-              </HelperText>
-            </InputView>
-
+            {!isNew &&
+              <InputView>
+                <View style={{ marginVertical: 10 }}></View>
+                <TextInput
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  label="Position*"
+                  placeholder='Position'
+                  value={selectedCategory.position}
+                  onChangeText={value => { onCategoryChange("position", value) }}
+                  error={error.position}
+                />
+                <HelperText type="error" visible={error.position}>
+                  {error.position}
+                </HelperText>
+              </InputView>
+            }
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => hideDialog()}>Cancel</Button>
@@ -200,7 +184,8 @@ export default function Category() {
             <IconButton icon="plus-circle"
               onPress={() => {
                 setShowEditDialog(true)
-                setSelectedCategory({})
+                setIsNew(true)
+                setSelectedCategory({ position: 1 })
               }} />
           </View>
         </Row>
@@ -246,10 +231,14 @@ export default function Category() {
                     <IconButton icon="pencil"
                       onPress={() => {
                         setShowEditDialog(true)
+                        setError("")
                         setSelectedCategory({ ...category, index })
                       }} />
                     {category.uid !== "Others" &&
-                      <IconButton icon="close" />
+                      <IconButton icon="close"
+                        onPress={() => {
+                          db.collection("categories").doc(category.uid).delete()
+                        }} />
                     }
                   </View>
                 </View>
