@@ -19,13 +19,16 @@ export default function SaveProductButton() {
 
     const productRef = db.collection("products").doc()
     const timestamp = new Date()
-
+    console.log
     setError({})
 
     product.category = selectedCategory
 
     let validate = new Promise((resolve, reject) => {
-
+      if (!images) {
+        alert("Please add an image.")
+        reject("Please add an image.")
+      }
       if (!product.chineseName) {
         setError(prev => ({ ...prev, chineseName: "Required. Please enter a Chinese name" }))
         reject("No chinse name")
@@ -54,6 +57,7 @@ export default function SaveProductButton() {
     })
 
     validate.then(() => {
+      setLoading(true)
       console.log({
         ...product,
         uid: productRef.id,
@@ -71,21 +75,31 @@ export default function SaveProductButton() {
           //Update productID in categories collection
           selectedCategory && selectedCategory[0] &&
             selectedCategory.forEach((category) => {
-              db.collection("categories").doc(category).update({
+              db.collection("categories").doc(category.uid).update({
                 productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
               })
                 .then(() => {
                   //////reset everything after sumbitting to server
+                  setLoading(false)
                   setProduct(productInitValue)
                   setSelectedCategory([])
                   goBack()
                 })
-                .catch((err) => console.log(category, " NOT added. Err: ", err))
+                .catch((err) => {
+                  setLoading(false)
+                  console.log(category, " NOT added. Err: ", err)
+                })
             })
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+        })
     })
-      .catch(err => console.log("error:", err))
+      .catch(err => {
+        setLoading(false)
+        console.log("error:", err)
+      })
   }
 
   return (
