@@ -8,7 +8,7 @@ import { storage } from '../../../firebaseApp';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
-
+import arrayMove from 'array-move';
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
 import {
   Surface, IconButton, Button, TextInput, Portal,
@@ -76,17 +76,28 @@ export default function Category() {
     })
   }
 
-  const onSave = () => {
+  const onSave = async () => {
     setLoading(true)
     console.log(selectedCategory)
-    db.collection("categories").doc(selectedCategory.uid).update({
-      chineseName: selectedCategory.chineseName,
-      englishName: selectedCategory.englishName
+
+    categories[selectedCategory.index] = selectedCategory
+
+    let reSortedCat = arrayMove(categories, selectedCategory.index, selectedCategory.position - 1)
+    console.log(reSortedCat)
+
+    reSortedCat.map((cat, index) => {
+      reSortedCat[index].position = index + 1
     })
-      .then(() => {
-        setLoading(false)
-        hideDialog()
+
+    await Promise.all(
+      reSortedCat.map(async (category, index) => {
+        return await db.collection("categories").doc(category.uid).update(category)
       })
+    )
+
+    setLoading(false)
+    hideDialog()
+
   }
 
   const [categories, setCategories] = useState([])
@@ -109,6 +120,9 @@ export default function Category() {
       snapshot.forEach((doc) => {
         tempArr.push(doc.data())
       })
+      tempArr.sort((a, b) => {
+        return a.position - b.position
+      })
       setCategories(tempArr)
     })
   }, []);
@@ -120,17 +134,23 @@ export default function Category() {
         <Dialog visible={showEditDialog} onDismiss={hideDialog}>
           <Dialog.Title>{selectedCategory === {} ? "Edit" : "Add a new category"}</Dialog.Title>
           <Dialog.Content>
-            <InputView>
-              <TextInput
-                label="Chinese Name*"
-                placeholder='Chinese Name'
-                theme={{ colors: { primary: "grey" } }}
-                mode="outlined"
-                dense
-                value={selectedCategory.chineseName}
-                onChangeText={value => { onCategoryChange("chineseName", value) }}
-                error={error.chineseName}
-              />
+            {selectedCategory.uid !== "Others" && <>
+              <InputView>
+                <TextInput
+                  label="Chinese Name*"
+                  placeholder='Chinese Name'
+                  theme={{ colors: { primary: "grey" } }}
+                  mode="outlined"
+                  dense
+                  value={selectedCategory.chineseName}
+                  onChangeText={value => { onCategoryChange("chineseName", value) }}
+                  error={error.chineseName}
+                />
+                <HelperText type="error" visible={error.chineseName}>
+                  {error.chineseName}
+                </HelperText>
+              </InputView>
+
               <InputView>
                 <View style={{ marginVertical: 10 }}></View>
                 <TextInput
@@ -147,11 +167,24 @@ export default function Category() {
                   {error.englishName}
                 </HelperText>
               </InputView>
-
-              <HelperText type="error" visible={error.chineseName}>
-                {error.chineseName}
+            </>}
+            <InputView>
+              <View style={{ marginVertical: 10 }}></View>
+              <TextInput
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                label="Position*"
+                placeholder='Position'
+                value={selectedCategory.position}
+                onChangeText={value => { onCategoryChange("position", value) }}
+                error={error.position}
+              />
+              <HelperText type="error" visible={error.position}>
+                {error.position}
               </HelperText>
             </InputView>
+
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => hideDialog()}>Cancel</Button>
@@ -173,7 +206,7 @@ export default function Category() {
         </Row>
         <CardsWrapper>
 
-          {categories[0] && categories.map(category => {
+          {categories[0] && categories.map((category, index) => {
             return (
               <Surface style={{
                 paddingHorizontal: 4,
@@ -182,7 +215,9 @@ export default function Category() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 elevation: 4,
-                marginBottom: 10
+                marginBottom: 10,
+                borderWidth: 1,
+                borderColor: theme.lightGrey,
               }}>
                 <View style={{
                   height: 80,
@@ -198,25 +233,25 @@ export default function Category() {
                     justifyContent: "flex-start",
                     paddingLeft: 10
                   }}>
-                    <Text style={{ fontSize: 18, textAlign: "left" }}>{category.chineseName} / {category.englishName}</Text>
+                    <Text style={{ fontSize: 18, textAlign: "left" }}>{category.position + ". " + category.chineseName} / {category.englishName}</Text>
                   </View>
 
-                  {category.uid !== "Others" &&
-                    <View style={{
-                      flex: 1,
-                      justifyContent: "flex-end",
-                      alignItems: 'center',
-                      flexDirection: "row",
-                      flexWrap: "nowrap"
-                    }}>
-                      <IconButton icon="pencil"
-                        onPress={() => {
-                          setShowEditDialog(true)
-                          setSelectedCategory(category)
-                        }} />
+                  <View style={{
+                    flex: 1,
+                    justifyContent: "flex-end",
+                    alignItems: 'center',
+                    flexDirection: "row",
+                    flexWrap: "nowrap"
+                  }}>
+                    <IconButton icon="pencil"
+                      onPress={() => {
+                        setShowEditDialog(true)
+                        setSelectedCategory({ ...category, index })
+                      }} />
+                    {category.uid !== "Others" &&
                       <IconButton icon="close" />
-                    </View>
-                  }
+                    }
+                  </View>
                 </View>
 
               </Surface>
@@ -247,7 +282,7 @@ const CardsWrapper = styled.View`
 `;
 
 const InputView = styled.View`
-  margin-bottom: 30px
+  margin-bottom: 10px
 `;
 
 const Row = styled.View`
