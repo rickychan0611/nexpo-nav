@@ -1,6 +1,8 @@
 
 import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { ProductsContext } from "../../../context/ProductsContext";
+import { Context } from "../../../context/Context";
 import styled from "styled-components/native";
 import arrayMove from 'array-move';
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
@@ -14,7 +16,8 @@ export const firebase = require("firebase");
 export default function Category() {
 
   const { theme } = useContext(ThemeContext);
-
+  const { productData } = useContext(ProductsContext)
+  const { selectedCat, setSelectedCat } = useContext(Context)
   const [cat, setCat] = useState({});
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState({})
@@ -106,48 +109,78 @@ export default function Category() {
       return category.uid === selectedCategory.uid
     })
 
-    if (categories[deleteIndex].productId) {
-      const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
-      const uniq = [...new Set(combine)];
-      db.collection("categories").doc("mogZUvJlGmFETuTEscDU").update({ productId: uniq })
+    db.collection("products").where("category", "array-contains", selectedCategory.uid).get()
+      .then(async (snapshot) => {
+        let tempArr = []
 
-      // update category for all products. Put "Others" in their category array
-      Promise.all(
-        selectedCategory.productId[0] && selectedCategory.productId.map(async (uid) => {
-          console.log("!!!", selectedCategory)
-          return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
+        snapshot.forEach(doc => {
+          tempArr.push(doc.data())
         })
-      )
-    }
 
-    const deletedCats = categories.filter((item, index) => {
-      return item.uid !== selectedCategory.uid
-    })
+        await Promise.all(
+          tempArr[0] && tempArr.map(async (product) => {
+            console.log(product)
+            let index = product.category.indexOf(selectedCategory.uid)
 
-    console.log(deletedCats)
+            product.category[index] = "Others"
+            const uniq = [...new Set(product.category)];
 
-    db.collection("categories").doc(selectedCategory.uid).delete()
-      .then(async () => {
-
-        //update position
-        for (let i = 0; i < deletedCats.length; i++) { //update position by index
-          deletedCats[i].position = i + 1
-        }
-
-        await Promise.all( //update database
-          deletedCats.map(async (category, index) => {
-            console.log(category)
-
-            return await db.collection("categories").doc(category.uid).set(category)
+            if (product.uid) {
+              return await db.collection("products").doc(product.uid).update({ category: uniq })
+            }
+            else return
           })
         )
 
-        setLoading(false)
+
+        // if (categories[deleteIndex].productId) {
+        //   const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
+        //   const uniq = [...new Set(combine)];
+        //   db.collection("categories").doc("Others").update({ productId: uniq })
+
+        // update category for all products. Put "Others" in their category array
+        // Promise.all(
+        //   productData[0] && productData.map((product) => {
+        //     product.category[0] && product.category.map(async (uid) => {
+        //       return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
+        //     })
+        //   })
+        // )
+        // // }
+
+
+        // const deletedCats = categories.filter((item, index) => {
+        //   return item.uid !== selectedCategory.uid
+        // })
+
+        // console.log(deletedCats)
+
+
+        //DELETE
+        db.collection("categories").doc(selectedCategory.uid).delete()
+          .then(async () => {
+
+            //update position
+            for (let i = 0; i < deletedCats.length; i++) { //update position by index
+              deletedCats[i].position = i + 1
+            }
+
+            await Promise.all( //update database
+              deletedCats.map(async (category, index) => {
+                console.log(category)
+
+                return await db.collection("categories").doc(category.uid).set(category)
+              })
+            )
+
+            setLoading(false)
+          })
+          .catch((err) => {
+            console.log(err)
+            setLoading(true)
+          })
       })
-      .catch((err) => {
-        console.log(err)
-        setLoading(true)
-      })
+
   }
 
   useEffect(() => {
@@ -304,10 +337,11 @@ export default function Category() {
                         setSelectedCategory({ ...category, index })
                       }} />
                     {category.uid !== "Others" &&
-                      <IconButton icon="close"
+                      <IconButton icon="delete"
                         onPress={() => {
                           setShowDeleteDialog(true)
                           setSelectedCategory(category)
+                          setSelectedCat(category.uid)
                         }} />
                     }
                   </View>
