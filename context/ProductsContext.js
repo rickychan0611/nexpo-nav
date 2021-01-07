@@ -36,7 +36,7 @@ const ProductsProvider = ({ children }) => {
     console.log("run listenProducts")
     console.log(selectedCat)
 
-    db.collection("products").where("category", "array-contains", selectedCat)
+    selectedCat && db.collection("products").where("category", "array-contains", selectedCat)
       .onSnapshot((snapshot) => {
         let tempArr = []
         snapshot.forEach((doc) => {

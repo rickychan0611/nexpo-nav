@@ -16,7 +16,7 @@ export default function CategoryNames() {
       setSelectedCat(categories[0].uid)
     }
     listenCategories()
-  }, [])
+  }, [selectedCat])
 
   return (
     <>

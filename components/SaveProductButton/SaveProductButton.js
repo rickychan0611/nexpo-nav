@@ -7,10 +7,14 @@ import { Icon } from 'react-native-elements'
 import { Link, useRouting } from "expo-next-react-navigation";
 import { db } from "../../firebaseApp";
 import * as firebase from 'firebase/app';
+import { ProductsContext } from "../../context/ProductsContext";
 
 export default function SaveProductButton() {
   const { theme } = useContext(ThemeContext);
-  const { setSelectedCategory, setError, product, setProduct, selectedCategory, images, productInitValue } = useContext(Context);
+  const { setSelectedCat, setError, product, setProduct,
+    selectedCategory, images, productInitValue, loading, setLoading } = useContext(Context);
+  const { categories } = useContext(ProductsContext)
+
   const { navigate, goBack } = useRouting();
 
   const onCreateProductSubmit = () => {
@@ -25,6 +29,10 @@ export default function SaveProductButton() {
 
     let validate = new Promise((resolve, reject) => {
 
+      if (!images) {
+        alert("Please upload at least one image.")
+        reject("Please upload at least one image")
+      }
       if (!product.chineseName) {
         setError(prev => ({ ...prev, chineseName: "Required. Please enter a Chinese name" }))
         reject("No chinse name")
@@ -53,6 +61,7 @@ export default function SaveProductButton() {
     })
 
     validate.then(() => {
+      setLoading(true)
       //Creat a new product on the server
       productRef.set({
         ...product,
@@ -61,25 +70,43 @@ export default function SaveProductButton() {
         images: images && images
       })
         .then(() => {
+          setProduct(productInitValue)
+          // setSelectedCategory([product.category[0].uid])
+          setSelectedCat(product.category[0].uid)
+          setLoading(false)
+          navigate({ routeName: "admin/store-listings" })
+
+
           //Update productID in categories collection
-          selectedCategory && selectedCategory[0] &&
-            selectedCategory.forEach((category) => {
-              if (category.uid){
-              db.collection("categories").doc(category.uid).update({
-                productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
-              })
-                .then(() => {
-                  //////reset everything after sumbitting to server
-                  setProduct(productInitValue)
-                  setSelectedCategory([])
-                  // goBack()
-                })
-                .catch((err) => console.log(category, " NOT added. Err: ", err))
-            }})
+          // selectedCategory && selectedCategory[0] &&
+          // selectedCategory.forEach((category) => {
+          //   if (category.uid) {
+          //     db.collection("categories").doc(category.uid).update({
+          //       productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
+          //     })
+          //       .then(() => {
+          //         //////reset everything after sumbitting to server
+          //         setProduct(productInitValue)
+          //         setSelectedCategory([])
+          //         setLoading(false)
+          //         goBack()
+          //       })
+          //       .catch((err) => {
+          //         setLoading(false)
+          //         console.log(category, " NOT added. Err: ", err)
+          //       })
+          //   }
+          // })
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+          setLoading(false)
+          console.log(error)
+        })
     })
-      .catch(err => console.log("error:", err))
+      .catch(err => {
+        setLoading(false)
+        console.log("error:", err)
+      })
   }
 
   return (

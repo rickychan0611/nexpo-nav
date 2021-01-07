@@ -102,7 +102,7 @@ export default function Category() {
     console.log(selectedCategory)
 
 
-    db.collection("products").where("category", "array-contains", selectedCategory.uid).get()
+    selectedCategory && db.collection("products").where("category", "array-contains", selectedCategory.uid).get()
       .then(async (snapshot) => {
         let tempArr = []
 
@@ -138,12 +138,6 @@ export default function Category() {
             return true
           }
         })
-        console.log(deletedCat)
-        console.log(k)
-        console.log(k)
-        console.log(k)
-        console.log(k)
-        console.log(k)
 
         deletedCat.splice(k, 1)
         db.collection("categories").doc(selectedCategory.uid).delete()
