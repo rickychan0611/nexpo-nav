@@ -101,37 +101,42 @@ export default function Category() {
     setLoading(true)
     console.log(selectedCategory)
 
-    const othersIndex = categories.findIndex(category => {
-      return category.uid === "Others"
-    })
-
-    const deleteIndex = categories.findIndex(category => {
-      return category.uid === selectedCategory.uid
-    })
 
     db.collection("products").where("category", "array-contains", selectedCategory.uid).get()
       .then(async (snapshot) => {
         let tempArr = []
 
+
+        console.log(snapshot)
         snapshot.forEach(doc => {
           tempArr.push(doc.data())
+          console.log(tempArr)
         })
 
-        await Promise.all(
-          tempArr[0] && tempArr.map(async (product) => {
-            console.log(product)
-            let index = product.category.indexOf(selectedCategory.uid)
+        if (!snapshot.empty) {
+          await Promise.all(
+            tempArr.map(async (product) => {
+              console.log(product)
+              let index = product.category.indexOf(selectedCategory.uid)
 
-            product.category[index] = "Others"
-            const uniq = [...new Set(product.category)];
+              product.category[index] = "Others"
+              const uniq = [...new Set(product.category)];
 
-            if (product.uid) {
-              return await db.collection("products").doc(product.uid).update({ category: uniq })
-            }
-            else return
-          })
-        )
+              if (product.uid) {
+                return await db.collection("products").doc(product.uid).update({ category: uniq })
+                  .catch((err) => console.log(err))
+              }
+              else return
+            })
+          )
+        }
+        // const othersIndex = categories.findIndex(category => {
+        //   return category.uid === "Others"
+        // })
 
+        // const deleteIndex = categories.findIndex(category => {
+        //   return category.uid === selectedCategory.uid
+        // })
 
         // if (categories[deleteIndex].productId) {
         //   const combine = [...categories[othersIndex].productId, ...categories[deleteIndex].productId]
@@ -179,7 +184,8 @@ export default function Category() {
             console.log(err)
             setLoading(true)
           })
-      })
+      }).
+      catch(err => console.log(err))
 
   }
 
@@ -339,6 +345,7 @@ export default function Category() {
                     {category.uid !== "Others" &&
                       <IconButton icon="delete"
                         onPress={() => {
+                          console.log(category)
                           setShowDeleteDialog(true)
                           setSelectedCategory(category)
                           setSelectedCat(category.uid)

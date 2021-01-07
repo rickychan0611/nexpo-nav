@@ -50,7 +50,7 @@ export default function Product() {
     if (!selectedItem && id) {
       db.collection("products").doc(id).get()
         .then((doc) => {
-          setSelectedItem(doc.data())
+          !doc.empty && setSelectedItem(doc.data())
         })
     }
   }, [id])

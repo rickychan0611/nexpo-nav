@@ -192,16 +192,18 @@ export default function EditProduct() {
     if (!product.uid && getParam("id")) {
       db.collection("products").doc(getParam("id")).get()
         .then((doc) => {
-          console.log(doc.data())
-          setProduct(prev => ({ ...prev, ...doc.data() }))
-          setUploading(true)
-          setSelectedCategory(doc.data().category)
-          setImages(doc.data().images)
-          listenCategories()
-          setSelected("edit-product")
-          setTimeout(() => {
-            setUploading(false)
-          }, 200)
+          if (!doc.empty) {
+            console.log(doc.data())
+            setProduct(prev => ({ ...prev, ...doc.data() }))
+            setUploading(true)
+            setSelectedCategory(doc.data().category)
+            setImages(doc.data().images)
+            listenCategories()
+            setSelected("edit-product")
+            setTimeout(() => {
+              setUploading(false)
+            }, 200)
+          }
         })
         .catch(err => console.log(err))
     }

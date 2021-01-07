@@ -70,7 +70,7 @@ export default function Cart() {
     if (user) {
       db.collection('addressBook').where("userId", "==", user.uid).get()
         .then((snapshot) => {
-          snapshot.forEach((doc) => {
+          !snapshot.empty && snapshot.forEach((doc) => {
             setShippingAddress(prev => ({ ...prev, ...doc.data() }))
           })
         })
@@ -140,9 +140,9 @@ export default function Cart() {
                     }
                     else {
                       setPointErr('Value has to be smaller or equal to "' + user.points + '"')
-                      setTimeout(()=>{
+                      setTimeout(() => {
                         handleChanage("")
-                      },700)
+                      }, 700)
                     }
                   }}
                   keyboardType="phone-pad"

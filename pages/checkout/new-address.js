@@ -86,7 +86,7 @@ export default function newAddress() {
       setSelected("confirmOrder")
       navigate({
         routeName: "confirmOrder",
-      })   
+      })
     })
   }
 
@@ -99,9 +99,11 @@ export default function newAddress() {
     if (user) {
       db.collection('addressBook').where("userId", "==", user.email).get()
         .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            setShippingAddress(prev => ({ ...prev, ...doc.data() }))
-          })
+          if (!snapshot.empty) {
+            snapshot.forEach((doc) => {
+              setShippingAddress(prev => ({ ...prev, ...doc.data() }))
+            })
+          }
         })
         .catch(error => {
           console.log(error)
@@ -148,7 +150,7 @@ export default function newAddress() {
           </View>
           <Divider />
 
-          <AddressForm err={err} setErr={setErr} onSubmit={onSubmit}/>
+          <AddressForm err={err} setErr={setErr} onSubmit={onSubmit} />
 
           <View style={{ height: 100 }}></View>
         </ScrollView>
