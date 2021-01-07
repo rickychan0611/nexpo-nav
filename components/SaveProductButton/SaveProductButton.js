@@ -7,28 +7,24 @@ import { Icon } from 'react-native-elements'
 import { Link, useRouting } from "expo-next-react-navigation";
 import { db } from "../../firebaseApp";
 import * as firebase from 'firebase/app';
-import Loader from "../../components/Loader";
 
 export default function SaveProductButton() {
   const { theme } = useContext(ThemeContext);
-  const { setError, product, selectedCategory, images, loading, setLoading } = useContext(Context);
+  const { setSelectedCategory, setError, product, setProduct, selectedCategory, images, productInitValue } = useContext(Context);
   const { navigate, goBack } = useRouting();
-  const ctx = useContext(Context)
 
   const onCreateProductSubmit = () => {
 
     const productRef = db.collection("products").doc()
     const timestamp = new Date()
-    console.log
+    console.log(selectedCategory)
+    console.log(product)
     setError({})
 
     product.category = selectedCategory
 
     let validate = new Promise((resolve, reject) => {
-      if (!images) {
-        alert("Please add an image.")
-        reject("Please add an image.")
-      }
+
       if (!product.chineseName) {
         setError(prev => ({ ...prev, chineseName: "Required. Please enter a Chinese name" }))
         reject("No chinse name")
@@ -57,13 +53,6 @@ export default function SaveProductButton() {
     })
 
     validate.then(() => {
-      setLoading(true)
-      console.log({
-        ...product,
-        uid: productRef.id,
-        createAt: timestamp,
-        images: images && images
-      })
       //Creat a new product on the server
       productRef.set({
         ...product,
@@ -75,41 +64,31 @@ export default function SaveProductButton() {
           //Update productID in categories collection
           selectedCategory && selectedCategory[0] &&
             selectedCategory.forEach((category) => {
+              if (category.uid){
               db.collection("categories").doc(category.uid).update({
                 productId: firebase.firestore.FieldValue.arrayUnion(productRef.id)
               })
                 .then(() => {
                   //////reset everything after sumbitting to server
-                  setLoading(false)
                   setProduct(productInitValue)
                   setSelectedCategory([])
-                  goBack()
+                  // goBack()
                 })
-                .catch((err) => {
-                  setLoading(false)
-                  console.log(category, " NOT added. Err: ", err)
-                })
-            })
+                .catch((err) => console.log(category, " NOT added. Err: ", err))
+            }})
         })
-        .catch(error => {
-          setLoading(false)
-          console.log(error)
-        })
+        .catch(error => console.log(error))
     })
-      .catch(err => {
-        setLoading(false)
-        console.log("error:", err)
-      })
+      .catch(err => console.log("error:", err))
   }
 
   return (
     <>
-      {loading && <Loader />}
       {/* save button */}
       <IconWrapper>
         <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
           onPress={() => {
-            onCreateProductSubmit(ctx)
+            onCreateProductSubmit()
           }}>
           <Text style={{ fontSize: 20, color: "white" }}>Save </Text>
           <Icon

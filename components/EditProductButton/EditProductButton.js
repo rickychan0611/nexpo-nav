@@ -63,17 +63,19 @@ export default function EditProductButton() {
         })
         .then(() => {
           let promises = []
+          console.log(selectedCategory)
           //Update productID in categories collection
           selectedCategory && selectedCategory[0] &&
             selectedCategory.forEach((category) => {
-              let promise = db.collection("categories").doc(category).update({
+              if (category.uid){
+              let promise = db.collection("categories").doc(category.uid).update({
                 productId: firebase.firestore.FieldValue.arrayUnion(product.uid)
               })
                 .then(() => {
                 })
                 .catch((err) => console.log(category, " NOT added. Err: ", err))
               promises.push(promise)
-            })
+            }})
           Promise.all(promises).then(() => {
             setLoading(false)
             goBack()

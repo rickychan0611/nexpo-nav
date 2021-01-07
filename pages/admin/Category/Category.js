@@ -114,6 +114,7 @@ export default function Category() {
       // update category for all products. Put "Others" in their category array
       Promise.all(
         selectedCategory.productId[0] && selectedCategory.productId.map(async (uid) => {
+          console.log("!!!", selectedCategory)
           return await db.collection("products").doc(uid).update({ category: firebase.firestore.FieldValue.arrayUnion("Others") })
         })
       )
