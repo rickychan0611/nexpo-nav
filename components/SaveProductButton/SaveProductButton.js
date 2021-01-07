@@ -70,9 +70,8 @@ export default function SaveProductButton() {
         images: images && images
       })
         .then(() => {
-          setProduct(productInitValue)
-          // setSelectedCategory([product.category[0].uid])
-          setSelectedCat(product.category[0].uid)
+          setProduct(productInitValue) //reset value
+          setSelectedCat(product.category[0].uid) //select category when redirect
           setLoading(false)
           navigate({ routeName: "admin/store-listings" })
 

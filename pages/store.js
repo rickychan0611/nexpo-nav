@@ -4,7 +4,7 @@ import { Context } from "../context/Context";
 import { ProductsContext } from "../context/ProductsContext";
 
 import { SearchBar, Button } from 'react-native-elements';
-import { View, TouchableOpacity, Platform } from "react-native";
+import { View, TouchableOpacity, Platform, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import { db } from "../firebaseApp";
@@ -64,23 +64,27 @@ export default function Store({ ssrData }) {
             </CategoryScrollView>
 
             <ProductContainer>
-              {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
-                if (item.activated) {
-                  return (
-                    <TouchableOpacity key={item.uid}
-                      onPress={() => {
-                        setSelectedItem(item)
-                        navigate({
-                          routeName: "product",
-                          params: { id: item.uid },
-                          web: { as: `/product?id=${item.uid}` },
-                        })
-                      }}>
-                      <ProductCard item={item} />
-                    </TouchableOpacity>
-                  )
-                }
-              })}
+              {productData && productData[selectedCat] && productData[selectedCat].length > 0 ?
+                productData[selectedCat].map((item) => {
+                  if (item.activated) {
+                    return (
+                      <TouchableOpacity key={item.uid}
+                        onPress={() => {
+                          setSelectedItem(item)
+                          navigate({
+                            routeName: "product",
+                            params: { id: item.uid },
+                            web: { as: `/product?id=${item.uid}` },
+                          })
+                        }}>
+                        <ProductCard item={item} />
+                      </TouchableOpacity>
+                    )
+                  }
+                })
+                :
+                <Text style={{ paddingTop: 150, textAlign: 'center' }}>This category has no product.</Text>
+              }
               <View style={{ height: 150 }}></View>
             </ProductContainer>
           </ContextArea>

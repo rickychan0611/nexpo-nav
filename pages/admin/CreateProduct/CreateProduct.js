@@ -315,25 +315,6 @@ export default function CreateProduct() {
 
         <View style={{ padding: 0, marginBottom: 20 }}>
 
-          {/* <View >
-            <Checkbox.Item
-              label="其它 / Others"
-              labelStyle={{ color: theme.darkGrey }}
-              status={selectedCategory.indexOf("Others") === -1 ? "unchecked" : "checked"}
-              onPress={() => {
-                if (selectedCategory.indexOf("Others") === -1) {
-                  setSelectedCategory(prev => [...prev, "Others"])
-                }
-                else {
-                  let index = selectedCategory.indexOf("Others");
-                  let arr = [...selectedCategory];
-                  arr.splice(index, 1);
-                  setSelectedCategory(arr)
-                }
-              }}
-            />
-          </View> */}
-
           {categories && categories.map((category) => {
             // console.log(category)
             // const uid = category.chineseName + category.englishName

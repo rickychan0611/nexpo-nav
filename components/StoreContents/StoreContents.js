@@ -74,8 +74,9 @@ export default function StoreContents({ ssrData }) {
             </CategoryScrollView>
 
             <ProductContainer>
-              {productData && productData[selectedCat] && productData[selectedCat].map((item) => {
-                return (
+              {productData && productData[selectedCat] && productData[selectedCat].length > 0 ?
+                productData[selectedCat].map((item) => {
+                  return (
                     <TouchableOpacity key={item.uid}
                       onPress={() => {
                         setSelectedItem(item)
@@ -88,8 +89,10 @@ export default function StoreContents({ ssrData }) {
                       }}>
                       <ProductCard item={item} />
                     </TouchableOpacity>
-                )
-              })}
+                  )
+                }) :
+                <Text style={{ paddingTop: 150, textAlign: 'center' }}>This category has no product.</Text>
+              }
               <View style={{ height: 150 }}></View>
             </ProductContainer>
           </ContextArea>

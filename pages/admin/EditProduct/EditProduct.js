@@ -9,9 +9,10 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import onCreateProductInputChange from "../../../hooks/onCreateProductInputChange";
+import Loader from "../../../components/Loader";
 
 import { View, Platform, Image, TouchableOpacity, Text } from "react-native";
-import { Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption } from 'react-native-paper';
+import { IconButton, Checkbox, Subheading, Button, TextInput, Divider, Title, Card, Headline, HelperText, ProgressBar, Colors, Switch, Caption } from 'react-native-paper';
 
 import InputFields from "./InputFields";
 
@@ -31,7 +32,8 @@ export default function EditProduct() {
     images, setImages,
     swiperControl, setSwiperControl,
     selectedCategory, setSelectedCategory,
-    product, setProduct, error, selectedItem, setSelected
+    product, setProduct, error, selectedItem, setSelected,
+    loading, setLoading
   } = useContext(Context);
 
   const { categories, setCategories, listenCategories } = useContext(ProductsContext)
@@ -71,20 +73,19 @@ export default function EditProduct() {
 
     validate.then(() => {
       setButtonDisabled(true)
-      const uid = cat.chineseName.trim() + cat.englishName.trim()
-      db.collection("categories").doc(uid).set({
-        uid,
+      const catRef = db.collection("categories").doc()
+      catRef.set({
+        uid: catRef.id,
         chineseName: cat.chineseName.trim(),
         englishName: cat.englishName.trim(),
-        createAt: new Date(),
-        productId: []
+        position: 0
       })
         .then(() => {
           setCat({})
           setShowNewCategory(false)
-          setCategories(prev => {
-            return [...prev, cat]
-          })
+          // setCategories(prev => {
+          //   return [...prev, cat]
+          // })
           setButtonDisabled(false)
         })
         .catch(err => {
@@ -93,7 +94,6 @@ export default function EditProduct() {
         })
     })
   }
-
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
 
@@ -222,14 +222,15 @@ export default function EditProduct() {
 
   return (
     <>
+      {loading && <Loader />}
       <Container>
         <Headline style={{ color: theme.titleColor }}>Edit product</Headline>
         <ImageSwiper images={images} uploading={uploading} />
 
-        {images && images[0] && <AddImageContainer>
-          {images.map((image, index) => {
+        <AddImageContainer>
+          {images && images[0] && images.map((image, index) => {
             return (
-              <View key={index}>
+              <View key={image.url}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: "red", width: 20, height: 20, top: 0, left: -10, zIndex: 1000,
@@ -251,16 +252,14 @@ export default function EditProduct() {
           </TouchableOpacity>
 
         </AddImageContainer>
-        }
-
         {uploading && <ProgressBar progress={progress} color={Colors.red800} />}
 
-        {/* <Divider style={{ marginTop: 20, marginBottom: 20 }} />
+        <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
         <Row>
           <Subheading>Activate</Subheading >
           <Switch value={product.activated} onValueChange={() => onCreateProductInputChange("activated", !product.activated, ctx)} />
-        </Row> */}
+        </Row>
 
         <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
@@ -275,114 +274,108 @@ export default function EditProduct() {
 
         <Divider style={{ marginTop: 20, marginBottom: 20 }} />
 
-        <Title styles={{ marginBottom: 130 }} >Category:</Title>
+        <View style={{
+          flexDirection: "row",
+          flexWrap: "nowrap",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+          <Title styles={{ flex: 1, marginBottom: 130 }} >Category:</Title>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <IconButton icon={!showNewCategory ? "plus-circle" : "minus-circle"}
+              onPress={() => setShowNewCategory(!showNewCategory)} />
+          </View>
+        </View>
+
         {/* <Subheading styles={{ marginBottom: 130 }} >Select at least one category or create one.</Subheading> */}
         <Text style={{ color: "red" }}>
           {error.category_err}
         </Text>
+
+        {showNewCategory &&
+          <>
+            <Divider />
+            <View style={{ height: 30 }}></View>
+            <InputView>
+              <TextInput
+                label="請輸入中文類別名字*"
+                placeholder='中文名字'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                value={cat.chineseName}
+                onChangeText={value => { onAddCatChange("chineseName", value) }}
+                error={catErrMsg.chineseName}
+              />
+              <HelperText type="error" visible={catErrMsg.chineseName}>
+                {catErrMsg.chineseName}
+              </HelperText>
+            </InputView>
+            <InputView>
+              <TextInput
+                label="English Name*"
+                placeholder='English Name'
+                style={{ backgroundColor: theme.InputBoxBackgroundColor }}
+                theme={{ colors: { primary: "grey" } }}
+                mode="outlined"
+                dense
+                value={cat.englishName}
+                onChangeText={value => { onAddCatChange("englishName", value) }}
+                error={catErrMsg.englishName}
+              />
+              <HelperText type="error" visible={catErrMsg.englishName}>
+                {catErrMsg.englishName}
+              </HelperText>
+            </InputView>
+
+            <Button icon="plus" mode="contained" color={theme.green}
+              disabled={buttonDisabled}
+              labelStyle={{ color: "white" }}
+              onPress={() => onAddCategory()}>
+              Add
+            </Button>
+            <View style={{ height: 30 }}></View>
+
+          </>
+        }
+        <Divider />
+
         <View style={{ padding: 0, marginBottom: 20 }}>
 
-          <View >
-            <Checkbox.Item
-              label="其它 / Others"
-              labelStyle={{ color: theme.darkGrey }}
-              status={selectedCategory.indexOf("Others") === -1 ? "unchecked" : "checked"}
-              onPress={() => {
-                if (selectedCategory.indexOf("Others") === -1) {
-                  setSelectedCategory(prev => [...prev, "Others"])
-                }
-                else {
-                  let index = selectedCategory.indexOf("Others");
-                  let arr = [...selectedCategory];
-                  arr.splice(index, 1);
-                  setSelectedCategory(arr)
-                }
-              }}
-            />
-          </View>
-
-          {categories && categories.map((category, index) => {
-
-            const uid = category.uid
+          {categories && categories.map((category) => {
+            // console.log(category)
             // const uid = category.chineseName + category.englishName
+            const uid = category.uid
             return (
               <>
-                {category.uid !== "Others" &&
-                  <View key={index}>
-                    <Checkbox.Item
-                      label={category.chineseName + " / " + category.englishName}
-                      labelStyle={{ color: theme.darkGrey }}
-                      status={selectedCategory.indexOf(uid) === -1 ? "unchecked" : "checked"}
+                {/* {category.uid !== "Others" && */}
+                <View key={uid}>
+                  <Checkbox.Item
+                    label={category.chineseName + " / " + category.englishName}
+                    labelStyle={{ color: theme.darkGrey }}
+                    status={selectedCategory.indexOf(uid) === -1 ? "unchecked" : "checked"}
 
-                      // check category and save the uid into an array
-                      onPress={() => {
-                        if (selectedCategory.indexOf(uid) === -1) {
-                          setSelectedCategory(prev => [...prev, uid])
-                        }
-                        else {
-                          let index = selectedCategory.indexOf(uid);
-                          let arr = [...selectedCategory];
-                          arr.splice(index, 1);
-                          setSelectedCategory(arr)
-                        }
-                      }}
-                    />
-                  </View>
-                }
+                    // check category and save the uid into an array
+                    onPress={() => {
+                      if (selectedCategory.indexOf(uid) === -1) {
+                        setSelectedCategory(prev => [...prev, uid])
+                      }
+                      else {
+                        let index = selectedCategory.indexOf(uid);
+                        let arr = [...selectedCategory];
+                        arr.splice(index, 1);
+                        setSelectedCategory(arr)
+                      }
+                    }}
+                  />
+                </View>
+                {/* } */}
               </>
             )
           })}
-
-          {!showNewCategory &&
-            <Button onPress={() => setShowNewCategory(true)}
-              style={{ marginTop: 20 }}>
-              + Add a new category
-            </Button>}
-          {showNewCategory &&
-            <>
-              <InputView>
-                <TextInput
-                  label="請輸入中文類別名字*"
-                  placeholder='中文名字'
-                  style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-                  theme={{ colors: { primary: "grey" } }}
-                  mode="outlined"
-                  dense
-                  value={cat.chineseName}
-                  onChangeText={value => { onAddCatChange("chineseName", value) }}
-                  error={catErrMsg.chineseName}
-                />
-                <HelperText type="error" visible={catErrMsg.chineseName}>
-                  {catErrMsg.chineseName}
-                </HelperText>
-              </InputView>
-              <InputView>
-                <TextInput
-                  label="English Name*"
-                  placeholder='English Name'
-                  style={{ backgroundColor: theme.InputBoxBackgroundColor }}
-                  theme={{ colors: { primary: "grey" } }}
-                  mode="outlined"
-                  dense
-                  value={cat.englishName}
-                  onChangeText={value => { onAddCatChange("englishName", value) }}
-                  error={catErrMsg.englishName}
-                />
-                <HelperText type="error" visible={catErrMsg.englishName}>
-                  {catErrMsg.englishName}
-                </HelperText>
-              </InputView>
-
-              <Button icon="plus" mode="contained" color={theme.green}
-                disabled={buttonDisabled}
-                labelStyle={{ color: "white" }}
-                onPress={() => onAddCategory()}>
-                Add
-               </Button>
-            </>
-          }
-
         </View>
+        <View style={{ height: 150 }}></View>
       </Container>
     </>
   );

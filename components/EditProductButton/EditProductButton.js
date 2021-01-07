@@ -11,9 +11,8 @@ import Loader from "../../components/Loader";
 
 export default function EditProductButton() {
   const { theme } = useContext(ThemeContext);
-  const { setError, product, selectedCategory, images } = useContext(Context);
+  const { setError, product, selectedCategory, images, setSelectedCat, setLoading } = useContext(Context);
   const { navigate, getParam, goBack } = useRouting();
-  const [loading, setLoading] = useState(false);
 
   const onEditProductSubmit = () => {
 
@@ -22,7 +21,10 @@ export default function EditProductButton() {
     product.category = selectedCategory
 
     let validate = new Promise((resolve, reject) => {
-
+      if (!images) {
+        alert("Please upload at least one image.")
+        reject("Please upload at least one image")
+      }
       if (!product.chineseName) {
         setError(prev => ({ ...prev, chineseName: "Required. Please enter a Chinese name" }))
         reject("No chinse name")
@@ -62,25 +64,29 @@ export default function EditProductButton() {
           images: images && images
         })
         .then(() => {
-          let promises = []
           console.log(selectedCategory)
+          setLoading(false)
+          setSelectedCat(product.category[0].uid) //select category when redirect
+          navigate({ routeName: "admin/store-listings" })
+
+          // let promises = []
           //Update productID in categories collection
-          selectedCategory && selectedCategory[0] &&
-            selectedCategory.forEach((category) => {
-              if (category.uid){
-              let promise = db.collection("categories").doc(category.uid).update({
-                productId: firebase.firestore.FieldValue.arrayUnion(product.uid)
-              })
-                .then(() => {
-                })
-                .catch((err) => console.log(category, " NOT added. Err: ", err))
-              promises.push(promise)
-            }})
-          Promise.all(promises).then(() => {
-            setLoading(false)
-            goBack()
-          }
-          )
+          // selectedCategory && selectedCategory[0] &&
+          //   selectedCategory.forEach((category) => {
+          //     if (category.uid){
+          //     let promise = db.collection("categories").doc(category.uid).update({
+          //       productId: firebase.firestore.FieldValue.arrayUnion(product.uid)
+          //     })
+          //       .then(() => {
+          //       })
+          //       .catch((err) => console.log(category, " NOT added. Err: ", err))
+          //     promises.push(promise)
+          //   }})
+          // Promise.all(promises).then(() => {
+          //   setLoading(false)
+          //   goBack()
+          // }
+          // )
         })
         .catch(error => {
           setLoading(false)
@@ -95,7 +101,6 @@ export default function EditProductButton() {
 
   return (
     <>
-      {loading && <Loader />}
       {/* save button */}
       <IconWrapper>
         <TouchableOpacity style={{ flexDirection: "row", flexWrap: "nowrap", justifyContent: "center", alignItems: "center" }}
