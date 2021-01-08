@@ -83,9 +83,9 @@ export default function chooseCard() {
     return sort
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     checkCards()
-  },[])
+  }, [])
 
   return (
     <>
@@ -100,7 +100,7 @@ export default function chooseCard() {
                   setOnAddNew(false)
                 }
                 :
-                () => navigate({routeName:"checkout/payment-method"})
+                () => navigate({ routeName: "checkout/payment-method" })
             } />
             <ScrollView>
               {onEdit || onAddNew ? null :
@@ -164,9 +164,9 @@ export default function chooseCard() {
                           <TouchableOpacity onPress={() => {
                             cards.length === 1 && deleteCard(profile.customer_code, index, true)
                           }}>
-                            <Edit theme={theme} style={{ 
-                              color: cards.length !== 1 ? theme.lightGrey : theme.red 
-                              }}>
+                            <Edit theme={theme} style={{
+                              color: cards.length !== 1 ? theme.lightGrey : theme.red
+                            }}>
                               Delete</Edit>
                           </TouchableOpacity>
 
@@ -202,7 +202,7 @@ export default function chooseCard() {
             </ScrollView>
           </ContextArea>
 
-          <ShippingNextBtn onSubmit={onSubmit} />
+          {cards && cards[0] && <ShippingNextBtn onSubmit={onSubmit} />}
 
           <BottomBar style={{
             shadowColor: "#000",

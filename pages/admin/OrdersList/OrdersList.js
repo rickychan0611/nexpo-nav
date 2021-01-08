@@ -77,7 +77,14 @@ export default function OrdersList() {
     console.log("update sent")
     await db.collection("orders").doc(orderId).update({ status: status, "statusUpdatedAt": moment().format() })
       .then(() => {
+        setLoading(false)
+        closeMenu()
         return
+      })
+      .catch((err) => {
+        setLoading(false)
+        closeMenu()
+        console.log(err)
       })
   }
 

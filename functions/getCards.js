@@ -31,36 +31,39 @@ exports.getCards = functions.https.onCall(async (data) => {
     })
   )
 
-  const filteredProfiles = profiles.filter(function (el) {
-    return el !== undefined;
-  });
+  console.log(profiles)
+  if (profiles) {
+    const filteredProfiles = profiles.filter(function (el) {
+      return el !== undefined;
+    });
 
-  let checkDefaultId = filteredProfiles[0] && filteredProfiles.map((profile, index) => {
-    if (profile.customer_code === data.defaultProfileId) {
-      return index
+    let checkDefaultId = filteredProfiles[0] && filteredProfiles.map((profile, index) => {
+      if (profile.customer_code === data.defaultProfileId) {
+        return index
+      }
+      else return -1
+    })
+
+    if (checkDefaultId === -1 && data.defaultProfileId) {
+      admin.firestore().collection('users').doc(data.email)
+        .update({
+          defaultProfileId: profiles[0].customer_code,
+          profiles: filteredProfiles
+        })
+        .then(() => {
+          return
+        })
     }
-    else return -1
-  })
-
-  if (checkDefaultId === -1 && data.defaultProfileId) {
-    admin.firestore().collection('users').doc(data.email)
-      .update({
-        defaultProfileId: profiles[0].customer_code,
-        profiles: filteredProfiles
-      })
-      .then(()=>{
-        return
-      })
+    else if (checkDefaultId !== -1) {
+      admin.firestore().collection('users').doc(data.email)
+        .update({
+          // defaultProfileId: profiles[checkDefaultId].customer_code,
+          profiles: filteredProfiles
+        })
+        .then(() => {
+          return
+        })
+    }
   }
-  else if (checkDefaultId !== -1) {
-    admin.firestore().collection('users').doc(data.email)
-      .update({
-        // defaultProfileId: profiles[checkDefaultId].customer_code,
-        profiles: filteredProfiles
-      })
-      .then(()=>{
-        return
-      })
-  }
-  return 
+  return
 })

@@ -45,7 +45,7 @@ const ContextProvider = ({ children }) => {
   const [newOrderId, setNewOrderId] = useState("");
   const [selectedOrder, setSelectedOrder] = useState();
   const [orders, setOrders] = useState([]);
-  const [addressBook, setAddressBook] = useState();
+  const [addressBook, setAddressBook] = useState([]);
   const [onEdit, setOnEdit] = useState(false);
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
@@ -66,7 +66,7 @@ const ContextProvider = ({ children }) => {
   const [newCard, setNewCard] = useState({
     firstName: "John",
     lastName: "Deo",
-    cardNumber: "4030000010001234",
+    cardNumber: "4030000010001234", //fake card
     CVV: "123",
     expMonth: "11",
     expYear: "21",
@@ -87,22 +87,36 @@ const ContextProvider = ({ children }) => {
       if (user) {
         console.log("logged in", user.email);
         db.collection("users").doc(user.email).onSnapshot((doc) => {
-          setUser(doc.data());
+          console.log(doc)
+          if (doc.exists) {
+            setUser(doc.data());
+            let data = doc.data()
+            if (typeof (data.addressBook) == 'undefined') {
+              return
+            }
+            else {
+              let addressBook = data.addressBook ? data.addressBook : []
+              //convert addressBook to array
+              if (addressBook[0]) {
+                let tempArr = []
+                console.log(Object.keys(addressBook).length)
 
-          //convert addressBook to array
-          if (doc.data().addressBook) {
-            let addressBook = doc.data().addressBook
-            let tempArr = []
-            console.log(Object.keys(addressBook).length)
+                let sortedKey = Object.keys(addressBook) && Object.keys(addressBook)[0] &&
+                  Object.keys(addressBook).sort((a, b) => b - a)
 
-            let sortedKey = Object.keys(addressBook) && Object.keys(addressBook)[0] &&
-              Object.keys(addressBook).sort((a, b) => b - a)
-
-            sortedKey && sortedKey.map((key) => {
-              tempArr.push(addressBook[key])
-            })
-            setAddressBook(tempArr)
+                sortedKey && sortedKey.map((key) => {
+                  tempArr.push(addressBook[key])
+                })
+                setAddressBook(tempArr)
+              }
+            }
           }
+          // else {
+          //   auth.signOut().then(() => {
+          //     // navigate({ routeName: "login" })
+          //     setUser("")
+          //   })
+          // }
         })
         setInitLoaded(true)
         console.log(initLoaded)
@@ -118,9 +132,8 @@ const ContextProvider = ({ children }) => {
   //load card profile when app initiate
   const checkCards = () => {
     setLoadingCards(true)
-    console.log(user.profiles)
     console.log("card loading...")
-    if (user && user.profiles !== cards) {
+    if (user && user.profiles && user.profiles !== cards) {
       const getCards = functions.httpsCallable('getCards')
       user && user.profiles && getCards({
         profiles: user.profiles,
@@ -131,7 +144,7 @@ const ContextProvider = ({ children }) => {
           console.log(result.data)
           setCards(user.profiles)
           console.log("card loaded")
-          cards.map(profile => {
+          card && card[0] && cards.map(profile => {
             if (profile.customer_code === user.defaultProfileId) {
               setSelectedCard(profile)
             }

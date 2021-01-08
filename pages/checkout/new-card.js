@@ -202,7 +202,7 @@ export default function newCard() {
           else {
             console.log(result.data)
 
-            user.profiles.map( profile => {
+            user.profiles.map(profile => {
               if (profile.customer_code === user.defaultProfileId) {
                 setSelectedCard(profile)
               }
@@ -217,7 +217,7 @@ export default function newCard() {
           setLoading(false)
           setShowDialog(true)
           setErrMsg(err)
-          console.log("Error: " + err)
+          console.log("Add new card error: " + err)
         })
     })
     setLoading(false)

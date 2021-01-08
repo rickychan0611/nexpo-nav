@@ -51,9 +51,17 @@ export default function Cart() {
       return
     }
 
-    navigate({
-      routeName: "checkout/shipping",
-    })
+    else if (!user) {
+      navigate({
+        routeName: "account",
+      })
+    }
+
+    else {
+      navigate({
+        routeName: "checkout/shipping",
+      })
+    }
   }
 
   const handleChanage = (value) => {

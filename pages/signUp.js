@@ -27,11 +27,11 @@ schema
 
 export default function signUp() {
   const { navigate } = useRouting();
-  const {  setSelected } = useContext(Context);
+  const { setSelected } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const vw = Dimensions.get('window').width;
   const vh = Dimensions.get('window').height;
-  const [login, setLogin] = useState({ email: "", password: "", fristName: "", lastName: "" });
+  const [login, setLogin] = useState({ email: "", password: "", firstName: "", lastName: "" });
   const [errMsg, setErrMsg] = useState({});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ export default function signUp() {
   const hideModal = () => setVisible(false);
 
   const handleChange = (name, value) => {
-    setErrMsg({ email: "", password: "", fristName: "", lastName: "" })
+    setErrMsg({ email: "", password: "", firstName: "", lastName: "" })
 
     setLogin(prev => {
       return (
@@ -51,11 +51,11 @@ export default function signUp() {
   }
 
   const emailLogin = () => {
-    setErrMsg({ email: "", password: "", fristName: "", lastName: "" })
+    setErrMsg({ email: "", password: "", firstName: "", lastName: "" })
 
     let validate = new Promise((resolve, reject) => {
-      if (validator.isEmpty(login.fristName)) {
-        setErrMsg(prev => ({ ...prev, fristName: "Required. Please eneter an frist name." }))
+      if (validator.isEmpty(login.firstName)) {
+        setErrMsg(prev => ({ ...prev, firstName: "Required. Please eneter an frist name." }))
         reject()
       }
       if (validator.isEmpty(login.lastName)) {
@@ -90,11 +90,17 @@ export default function signUp() {
             // url: 'http://localhost:3000/?email=' + auth.currentUser.email
           })
             .then(function () {
-              db.collection("users").doc(doc.user.email).set({
+              let userInfo = {
                 uid: doc.user.uid,
                 email: doc.user.email,
-                password: login.password
-              })
+                password: login.password,
+                firstName: login.firstName,
+                lastname: login.lastName,
+                profile: [],
+                addressBook: [],
+                points: 0 //starting point
+              }
+              db.collection("users").doc(doc.user.email).set(userInfo)
                 .then(() => {
                   setLoading(false)
                   showModal()
@@ -211,8 +217,8 @@ export default function signUp() {
                   theme={{ colors: { primary: "grey" } }}
                   mode="outlined"
                   dense
-                  value={login.fristName}
-                  onChangeText={value => { handleChange("fristName", value) }}
+                  value={login.firstName}
+                  onChangeText={value => { handleChange("firstName", value) }}
                   onKeyPress={e => {
                     if (e.key === "Enter") {
                       console.log(e.key)
@@ -220,10 +226,10 @@ export default function signUp() {
                     }
                   }}
                   keyboardType="default"
-                  error={errMsg.fristName}
+                  error={errMsg.firstName}
                 />
-                <HelperText type="error" visible={errMsg.fristName}>
-                  {errMsg.fristName}
+                <HelperText type="error" visible={errMsg.firstName}>
+                  {errMsg.firstName}
                 </HelperText>
               </InputView>
 
@@ -320,7 +326,7 @@ export default function signUp() {
                   }}
                   error={errMsg.password}
                 />
-                <HelperText type="error" visible={errMsg.password}>
+                <HelperText type="error" visible={errMsg.password} style={{ width: 300 }}>
                   {errMsg.password}
                 </HelperText>
               </InputView>
