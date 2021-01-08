@@ -97,7 +97,7 @@ export default function signUp() {
                 firstName: login.firstName,
                 lastname: login.lastName,
                 profile: [],
-                addressBook: [],
+                addressBook: {},
                 points: 0 //starting point
               }
               db.collection("users").doc(doc.user.email).set(userInfo)

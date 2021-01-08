@@ -32,11 +32,14 @@ export default function shipping() {
   }
 
   useEffect(() => {
-    addressBook && addressBook.map((address) => {
-      if (user && user.addressType && user.addressType.shipping === address.id) {
-        setShippingAddress(address)
-      }
-    })
+    if (addressBook && addressBook[0]) {
+      addressBook.map((address) => {
+        console.log("address book", addressbook)
+        if (user && user.addressType && user.addressType.shipping === address.id) {
+          setShippingAddress(address)
+        }
+      })
+    }
   }, [addressBook])
 
   return (
@@ -45,7 +48,7 @@ export default function shipping() {
         <>
           {/* {!billing && !shipping && <Loader />} */}
           <ContextArea>
-            <IconButton icon="arrow-left" onPress={() => { goBack() }}/>
+            <IconButton icon="arrow-left" onPress={() => { goBack() }} />
             <ScrollView>
               <View
                 style={{
@@ -80,7 +83,7 @@ export default function shipping() {
               </View>
               <Divider />
 
-              {!shippingAddress ?
+              {shippingAddress ?
                 <>
                   <AddressForm type="shipping" tasker={"1stAddress"} />
                 </>
