@@ -121,11 +121,18 @@ export default function BottomBar() {
 
           <Button onPress={() => {
             setSelected("qrcode")
-            if (user) {
+            if (user){
+            if (user.role === "admin") {
+              navigate({
+                routeName: "qrScanner",
+              })
+            }
+            else {
               navigate({
                 routeName: "qrcode",
               })
             }
+          }
             else {
               navigate({
                 routeName: "login",
