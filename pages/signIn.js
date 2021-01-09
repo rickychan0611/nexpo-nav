@@ -76,7 +76,6 @@ export default function signIn() {
       setLoading(true)
       auth.signInWithEmailAndPassword(login.email, login.password)
         .then(() => {
-          AsyncStorage.clear()
           setLoading(false)
           showModal()
           setSelected("home")

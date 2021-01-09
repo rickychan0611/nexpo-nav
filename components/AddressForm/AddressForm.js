@@ -13,13 +13,12 @@ import Loader from "../../components/Loader"
 export default function AddressForm({
   type, isNewShipping,
   address, index,
-  onEdit, setOnEdit,
-  onAddNew, setOnAddNew,
+  onEdit, onAddNew,
   hasShippingAddress, setHasShippingAddress,
   tasker
 }) {
 
-  const { user, editAddress } = useContext(Context);
+  const { user, editAddress, setOnEdit, setOnAddNew } = useContext(Context);
 
   const empty = {
     address1: "",
@@ -98,6 +97,7 @@ export default function AddressForm({
       setLoading(true)
       setErr(empty)
 
+      console.log("tasker", tasker)
       console.log(hasShippingAddress)
       if (tasker === "1stAddress") {
         const id = moment().unix()
@@ -395,6 +395,7 @@ export default function AddressForm({
                   onPress={() => {
                     setOnEdit(false)
                     setOnAddNew(false)
+                    goBack()
                   }}
                 >
                   Cancel</Button>

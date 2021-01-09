@@ -1,22 +1,22 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
 
 export default function useQty() {
-  const {newOrderProductList, total} = useContext(Context);
+  const { newOrderProductList, total } = useContext(Context);
   const [counter, setCounter] = useState(0)
-  useEffect(()=>{
+  useEffect(() => {
     let totalCount = 0;
-    if (newOrderProductList.length > 0 ) {
+    if (newOrderProductList && newOrderProductList[0] && newOrderProductList.length > 0) {
 
       newOrderProductList.map((item, index) => {
         totalCount = totalCount + item.quantity
         setCounter(totalCount)
       })
-    } 
+    }
     else setCounter(0);
-  },[total])
+  }, [total])
 
   return counter;
 };

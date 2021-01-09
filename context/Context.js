@@ -92,7 +92,7 @@ const ContextProvider = ({ children }) => {
             setUser(doc.data());
           }
 
-          else if (doc.exists && doc.data().addressBook) {
+          if (doc.exists && doc.data().addressBook) {
             console.log("context: 91: USER: ", doc.data())
             //convert addressBook to array
             let tempArr = []
@@ -175,7 +175,8 @@ const ContextProvider = ({ children }) => {
     }
   }
   useEffect(() => {
-    if (newOrderProductList[0]) {
+    if (newOrderProductList && newOrderProductList[0]) {
+      console.log("store dataaaaaaaaaaaaaaaaaa")
       storeData()
     }
   }, [newOrderProductList, total])

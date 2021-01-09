@@ -81,6 +81,7 @@ export default function shipping() {
               <Divider />
               <Text>
               </Text>
+
               {!shippingAddress ?
                 <>
                   <AddressForm type="shipping" tasker={"1stAddress"} />
