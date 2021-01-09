@@ -87,36 +87,24 @@ const ContextProvider = ({ children }) => {
       if (user) {
         console.log("logged in", user.email);
         db.collection("users").doc(user.email).onSnapshot((doc) => {
-          console.log(doc)
-          if (doc.exists) {
+          if (doc.exists && doc.data().addressBook) {
+            console.log(doc.data().addressBook)
             setUser(doc.data());
             let data = doc.data()
-            if (typeof (data.addressBook) == 'undefined') {
-              return
-            }
-            else {
-              let addressBook = data.addressBook ? data.addressBook : []
-              //convert addressBook to array
-              if (addressBook[0]) {
-                let tempArr = []
-                console.log(Object.keys(addressBook).length)
+            //convert addressBook to array
+              let tempArr = []
+              console.log(Object.keys(doc.data().addressBook).length)
 
-                let sortedKey = Object.keys(addressBook) && Object.keys(addressBook)[0] &&
-                  Object.keys(addressBook).sort((a, b) => b - a)
+              let sortedKey = Object.keys(doc.data().addressBook) && Object.keys(doc.data().addressBook)[0] &&
+                Object.keys(doc.data().addressBook).sort((a, b) => b - a)
 
-                sortedKey && sortedKey.map((key) => {
-                  tempArr.push(addressBook[key])
-                })
-                setAddressBook(tempArr)
-              }
-            }
+              sortedKey && sortedKey.forEach((key) => {
+                console.log(doc.data().addressBook[key])
+                doc.data().addressBook[key]
+                tempArr.push(doc.data().addressBook[key])
+              })
+              setAddressBook(tempArr)
           }
-          // else {
-          //   auth.signOut().then(() => {
-          //     // navigate({ routeName: "login" })
-          //     setUser("")
-          //   })
-          // }
         })
         setInitLoaded(true)
         console.log(initLoaded)

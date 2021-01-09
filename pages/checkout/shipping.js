@@ -37,7 +37,7 @@ export default function shipping() {
         setShippingAddress(address)
       }
     })
-  }, [addressBook])
+  }, [user, addressBook])
 
   return (
     <>
@@ -78,16 +78,15 @@ export default function shipping() {
                 <IconButton icon="circle" size={14} color={theme.lightGrey} />
                 <IconButton icon="circle" size={14} color={theme.lightGrey} />
               </View>
-              <Divider />
-
+              <Divider />π
+                <Text>
+                </Text>
               {!shippingAddress ?
                 <>
                   <AddressForm type="shipping" tasker={"1stAddress"} />
                 </>
                 :
                 <>
-
-
                   <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
                     Shipping Address:
               </Title>
