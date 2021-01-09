@@ -80,17 +80,20 @@ const ContextProvider = ({ children }) => {
 
   useEffect(() => {
 
+    auth.onAuthStateChanged((authUser) => {
+      // console.log("context: 84: USER: ", authUser)
 
-    auth.onAuthStateChanged((user) => {
-      console.log(initLoaded)
+      if (authUser) {
+        console.log("logged in", authUser.email);
 
-      if (user) {
-        console.log("logged in", user.email);
-        db.collection("users").doc(user.email).onSnapshot((doc) => {
-          if (doc.exists && doc.data().addressBook) {
-            console.log(doc.data().addressBook)
+        db.collection("users").doc(authUser.email).onSnapshot((doc) => {
+
+          if (doc.exists) {
             setUser(doc.data());
-            let data = doc.data()
+          }
+
+          else if (doc.exists && doc.data().addressBook) {
+            console.log("context: 91: USER: ", doc.data())
             //convert addressBook to array
             let tempArr = []
             console.log(Object.keys(doc.data().addressBook).length)
@@ -105,9 +108,12 @@ const ContextProvider = ({ children }) => {
             })
             setAddressBook(tempArr)
           }
+          else {
+            console.log("Not logged in")
+          }
+          setInitLoaded(true)
+          // console.log("context: 108: USER: ", user)
         })
-        setInitLoaded(true)
-        console.log(initLoaded)
       }
 
       else {
@@ -158,7 +164,7 @@ const ContextProvider = ({ children }) => {
 
   //save newOrderProductList to AsyncStorage when it is updated
   const storeData = async () => {
-    if (newOrderProductList && selectedItem && total) {
+    if (newOrderProductList[0] && selectedItem && total) {
       try {
         await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
         await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))

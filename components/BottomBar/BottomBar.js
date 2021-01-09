@@ -10,10 +10,10 @@ import { Context } from "../../context/Context";
 
 let useRouter;
 if (Platform.OS === 'web') {
-  import ('next/router')
-  .then((importNext)=>{
-    useRouter = importNext.useRouter
-  })
+  import('next/router')
+    .then((importNext) => {
+      useRouter = importNext.useRouter
+    })
 }
 
 
@@ -27,19 +27,19 @@ export default function BottomBar() {
 
   const BadgedIcon = qty > 0 ? withBadge(qty)(Icon) : Icon
 
-   //for web only. make bottom bar icon selected
-   useEffect(() => {
+  //for web only. make bottom bar icon selected
+  useEffect(() => {
+
     if (router) {
       let pathname = router.pathname.substring(1)
       console.log(pathname)
       if (
         pathname === "checkout" ||
-        pathname === "checkout/shipping" 
-        )
-        {setSelected("cart")}
+        pathname === "checkout/shipping"
+      ) { setSelected("cart") }
       else setSelected(pathname)
     }
-  }, [router])
+  }, [router, user])
 
   return (
     <>
@@ -99,6 +99,7 @@ export default function BottomBar() {
           </Button>
 
           <Button onPress={() => {
+            console.log("account")
             setSelected("account")
             if (user) {
               navigate({
@@ -121,18 +122,18 @@ export default function BottomBar() {
 
           <Button onPress={() => {
             setSelected("qrcode")
-            if (user){
-            if (user.role === "admin") {
-              navigate({
-                routeName: "qrScanner",
-              })
+            if (user) {
+              if (user.role === "admin") {
+                navigate({
+                  routeName: "qrScanner",
+                })
+              }
+              else {
+                navigate({
+                  routeName: "qrcode",
+                })
+              }
             }
-            else {
-              navigate({
-                routeName: "qrcode",
-              })
-            }
-          }
             else {
               navigate({
                 routeName: "login",

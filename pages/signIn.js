@@ -19,6 +19,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import validator from 'validator';
 import passwordValidator from 'password-validator';
 import Loader from "../components/Loader";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 var schema = new passwordValidator();
 schema
@@ -33,7 +34,7 @@ schema
 
 export default function signIn() {
   const { navigate } = useRouting();
-  const { user, setUser, selected, setSelected } = useContext(Context);
+  const { authState, setSelected } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const vw = Dimensions.get('window').width;
   const vh = Dimensions.get('window').height;
@@ -41,6 +42,7 @@ export default function signIn() {
   const [errMsg, setErrMsg] = useState({});
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openEye, setOpenEye] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -73,20 +75,21 @@ export default function signIn() {
     else {
       setLoading(true)
       auth.signInWithEmailAndPassword(login.email, login.password)
-      .then(() => {
-        setLoading(false)
-        showModal()
-        setSelected("cart")
-        navigate({
-          routeName: "cart"
+        .then(() => {
+          AsyncStorage.clear()
+          setLoading(false)
+          showModal()
+          setSelected("cart")
+          navigate({
+            routeName: "home"
+          })
         })
-      })
-      .catch(function (error) {
-        setLoading(false)
-        // Handle Errors here.
-        setLoading(false)
-        setErrMsg(prev => ({ ...prev, email: error.message }))
-      });
+        .catch(function (error) {
+          setLoading(false)
+          // Handle Errors here.
+          setLoading(false)
+          setErrMsg(prev => ({ ...prev, email: error.message }))
+        });
     }
   }
 
@@ -122,14 +125,14 @@ export default function signIn() {
 
   return (
     <>
-    {loading && <Loader/>}
-    <Portal>
+      {loading && <Loader />}
+      <Portal>
         <Dialog visible={visible} onDismiss={hideModal}>
           <Dialog.Title>Login Successful</Dialog.Title>
           <Dialog.Actions>
-          <Button 
-            contained
-            color="white"
+            <Button
+              contained
+              color="white"
               style={{
                 backgroundColor: theme.black,
                 borderWidth: 1,
@@ -138,7 +141,8 @@ export default function signIn() {
                 marginBottom: 10
               }}
               onPress={() => {
-                hideModal()}}>
+                hideModal()
+              }}>
               OK</Button>
           </Dialog.Actions>
         </Dialog>
@@ -190,6 +194,9 @@ export default function signIn() {
                     }
                   }}
                   keyboardType="email-address"
+                  type="email"
+                  autocorrect="off"
+                  autocapitalize="none"
                   error={errMsg.email}
                 />
                 <HelperText type="error" visible={errMsg.email}>
@@ -199,8 +206,7 @@ export default function signIn() {
 
               <InputView>
                 <TextInput
-                icon="camera"
-                  secureTextEntry={true}
+                  secureTextEntry={!openEye ? true : false}
                   label="Password*"
                   placeholder='Enter your password'
                   style={{
@@ -210,6 +216,14 @@ export default function signIn() {
                     maxWidth: 400,
                     outline: "none"
                   }}
+                  right={
+                    <TextInput.Icon
+                      onPress={() => {
+                        setOpenEye(!openEye)
+                      }}
+                      name={openEye ? "eye" : "eye-off"}
+                    />
+                  }
                   theme={{ colors: { primary: "grey" } }}
                   mode="outlined"
                   dense
@@ -230,7 +244,7 @@ export default function signIn() {
               <Button contain color="white" style={{ backgroundColor: theme.black, marginBottom: 40 }}
                 onPress={() => emailLogin()}>Submit</Button>
               <Divider />
-              <Link routeName="forgotPassword" style={{marginBottom: 20}}><Caption>Forgot Password?</Caption></Link>
+              <Link routeName="forgotPassword" style={{ marginBottom: 20 }}><Caption>Forgot Password?</Caption></Link>
               <Link routeName="signUp"><Caption>Don't have an account? Sign up</Caption></Link>
               <InputView>
               </InputView>

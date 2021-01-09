@@ -9,7 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
-import home from "./pages";
+import home from "./pages/home";
 import qrcode from "./pages/qrcode";
 import store from "./pages/store";
 import product from "./pages/product";

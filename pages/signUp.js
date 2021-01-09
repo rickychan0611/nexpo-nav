@@ -286,6 +286,9 @@ export default function signUp() {
                     }
                   }}
                   keyboardType="email-address"
+                  type="email"
+                  autocorrect="off"
+                  autocapitalize="none"
                   error={errMsg.email}
                 />
                 <HelperText type="error" visible={errMsg.email}>

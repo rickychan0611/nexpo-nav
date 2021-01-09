@@ -8,6 +8,7 @@ import { Image, Platform, ScrollView, Text, View } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import pointBG from "../public/pointBG.jpg"
 import moment from "moment";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import BottomBar from "../components/BottomBar";
 import Status from "../components/Status";
@@ -19,6 +20,8 @@ export default function account() {
   const { theme } = useContext(ThemeContext);
   const {
     user, setUser, setSelectedOrder, setSelected,
+    setNewOrderProductList,
+    setTotal
   } = useContext(Context);
 
   const {
@@ -28,7 +31,7 @@ export default function account() {
 
   useEffect(() => {
     if (!user) {
-      navigate({routeName: "login"})
+      navigate({ routeName: "login" })
     }
     else listenMyOrders()
   }, [user])
@@ -101,8 +104,8 @@ export default function account() {
                   style={{ backgroundColor: "white" }}
                   icon="shield-account"
                   label="Admin Panel"
-                  onPress={()=>navigate({routeName: "admin/store-listings"})
-                }
+                  onPress={() => navigate({ routeName: "admin/store-listings" })
+                  }
                 />
                 <Divider />
               </>
@@ -118,10 +121,20 @@ export default function account() {
               icon="logout"
               label="Logout"
               onPress={() => {
-                auth.signOut().then(() => {
-                  navigate({ routeName: "login" })
-                  setUser("")
-                })
+                setLoading(true)
+                auth.signOut()
+                  .then(() => {
+                    AsyncStorage.removeItem(["newOrderProductList", "total"])
+                    navigate({ routeName: "login" })
+                    setUser("")
+                    setNewOrderProductList("")
+                    setTotal()
+                    setLoading(false)
+                  })
+                  .catch((err) => {
+                    console.log("logout err: ", err)
+                    setLoading(false)
+                  })
               }}
             />
           </DrawerContainer>
