@@ -66,7 +66,7 @@ export default function AdminSideBar({ data }) {
           navigate({ routeName: "home" })
           setOpenWebAdminMenu(false)
         }}>
-          Quit
+          Exit Admin
           </Name>
       </TouchableOpacity>
 

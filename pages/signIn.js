@@ -79,7 +79,7 @@ export default function signIn() {
           AsyncStorage.clear()
           setLoading(false)
           showModal()
-          setSelected("cart")
+          setSelected("home")
           navigate({
             routeName: "home"
           })
@@ -199,7 +199,7 @@ export default function signIn() {
                   autocapitalize="none"
                   error={errMsg.email}
                 />
-                <HelperText type="error" visible={errMsg.email}>
+                <HelperText type="error" visible={errMsg.email} style={{ width: 320 }}>
                   {errMsg.email}
                 </HelperText>
               </InputView>
@@ -236,7 +236,7 @@ export default function signIn() {
                   }}
                   error={errMsg.password}
                 />
-                <HelperText type="error" visible={errMsg.password}>
+                <HelperText type="error" visible={errMsg.password} style={{ width: 320 }}>
                   {errMsg.password}
                 </HelperText>
               </InputView>

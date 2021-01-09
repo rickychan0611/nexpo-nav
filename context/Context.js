@@ -164,7 +164,7 @@ const ContextProvider = ({ children }) => {
 
   //save newOrderProductList to AsyncStorage when it is updated
   const storeData = async () => {
-    if (newOrderProductList[0] && selectedItem && total) {
+    if (newOrderProductList && selectedItem && total) {
       try {
         await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
         await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))

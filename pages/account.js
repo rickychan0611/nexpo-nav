@@ -127,7 +127,7 @@ export default function account() {
                     AsyncStorage.removeItem(["newOrderProductList", "total"])
                     navigate({ routeName: "login" })
                     setUser("")
-                    setNewOrderProductList("")
+                    setNewOrderProductList()
                     setTotal()
                     setLoading(false)
                   })
