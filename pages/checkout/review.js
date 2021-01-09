@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { Context } from "../../context/Context";
@@ -21,8 +20,6 @@ export default function review() {
     initLoaded,
     checked, setChecked
   } = useContext(Context);
-
-  const [paymentMethod, setPaymentMethod] = useState("credit")
 
   const onSubmit = () => {
     navigate({ routeName: "checkout/payment" })

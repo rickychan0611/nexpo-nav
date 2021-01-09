@@ -23,8 +23,9 @@ exports.getCards = functions.https.onCall(async (data) => {
       })
         .then(response => response.json())
         .then(data => {
-          if (data.code === 1) {
-            return profile
+          if (data) {
+            console.log("#########################", data)
+            return data
           }
           else return undefined
         })
@@ -65,5 +66,5 @@ exports.getCards = functions.https.onCall(async (data) => {
         })
     }
   }
-  return
+  return profiles
 })

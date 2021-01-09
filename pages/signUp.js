@@ -95,8 +95,8 @@ export default function signUp() {
                 email: doc.user.email,
                 password: login.password,
                 firstName: login.firstName,
-                lastname: login.lastName,
-                profile: [],
+                lastName: login.lastName,
+                profiles: [],
                 addressBook: {},
                 points: 0 //starting point
               }

@@ -87,28 +87,24 @@ const ContextProvider = ({ children }) => {
       if (user) {
         console.log("logged in", user.email);
         db.collection("users").doc(user.email).onSnapshot((doc) => {
-          console.log(doc.data())
-          if (doc.exists) {
+          if (doc.exists && doc.data().addressBook) {
+            console.log(doc.data().addressBook)
             setUser(doc.data());
+            let data = doc.data()
             //convert addressBook to array
             let tempArr = []
-            console.log(doc.data().addressBook)
             console.log(Object.keys(doc.data().addressBook).length)
 
             let sortedKey = Object.keys(doc.data().addressBook) && Object.keys(doc.data().addressBook)[0] &&
               Object.keys(doc.data().addressBook).sort((a, b) => b - a)
 
-            sortedKey && sortedKey.map((key) => {
-              tempArr.push(addressBook[key])
+            sortedKey && sortedKey.forEach((key) => {
+              console.log(doc.data().addressBook[key])
+              doc.data().addressBook[key]
+              tempArr.push(doc.data().addressBook[key])
             })
             setAddressBook(tempArr)
           }
-          // else {
-          //   auth.signOut().then(() => {
-          //     // navigate({ routeName: "login" })
-          //     setUser("")
-          //   })
-          // }
         })
         setInitLoaded(true)
         console.log(initLoaded)
@@ -133,11 +129,12 @@ const ContextProvider = ({ children }) => {
         email: user.email
       })
         .then((result) => {
-          console.log(result.data)
+          console.log(result)
           setCards(user.profiles)
           console.log("card loaded")
-          card && card[0] && cards.map(profile => {
+          cards && cards[0] && cards.map(profile => {
             if (profile.customer_code === user.defaultProfileId) {
+              console.log("@@@@@@@profile", profile)
               setSelectedCard(profile)
             }
           })

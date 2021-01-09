@@ -32,15 +32,12 @@ export default function shipping() {
   }
 
   useEffect(() => {
-    if (addressBook && addressBook[0]) {
-      addressBook.map((address) => {
-        console.log("address book", addressbook)
-        if (user && user.addressType && user.addressType.shipping === address.id) {
-          setShippingAddress(address)
-        }
-      })
-    }
-  }, [addressBook])
+    addressBook && addressBook.map((address) => {
+      if (user && user.addressType && user.addressType.shipping === address.id) {
+        setShippingAddress(address)
+      }
+    })
+  }, [user, addressBook])
 
   return (
     <>
@@ -82,15 +79,14 @@ export default function shipping() {
                 <IconButton icon="circle" size={14} color={theme.lightGrey} />
               </View>
               <Divider />
-
-              {shippingAddress ?
+              <Text>
+              </Text>
+              {!shippingAddress ?
                 <>
                   <AddressForm type="shipping" tasker={"1stAddress"} />
                 </>
                 :
                 <>
-
-
                   <Title style={{ color: "black", fontWeight: "bold", fontSize: 16, marginHorizontal: 10 }}>
                     Shipping Address:
               </Title>

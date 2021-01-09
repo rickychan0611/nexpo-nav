@@ -53,8 +53,8 @@ export default function confirmOrder() {
   return (
     <>
       <ContextArea>
-        <IconButton icon="arrow-left" 
-        onPress={() => { navigate({routeName: "checkout/choose-card"}) }} />
+        <IconButton icon="arrow-left"
+          onPress={() => { navigate({ routeName: "checkout/choose-card" }) }} />
         <ScrollView>
           <View
             style={{
@@ -175,19 +175,19 @@ export default function confirmOrder() {
                 paddingTop: 10
               }}>
                 Billing Address
-          </Title>
-              <TableRow style={{ paddingRight: 40 }}>
-                <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
-                  {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
-                  {shippingAddress.address1 + "\n"}
-                  {shippingAddress.address2 && shippingAddress.address2 + "\n"}
-                  {shippingAddress.city + "\n"}
-                  {shippingAddress.province + ", "}
-                  {shippingAddress.country + "\n"}
-                  {shippingAddress.postalCode + "\n"}
-                  {shippingAddress.phoneNumber + "\n"}
-                </Text></AddressLeft>
-              </TableRow>
+                  </Title>
+                  <TableRow style={{ paddingRight: 40 }}>
+                    <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>
+                      {shippingAddress.firstName + " " + shippingAddress.lastName + "\n"}
+                      {shippingAddress.address1 + "\n"}
+                      {shippingAddress.address2 && shippingAddress.address2 + "\n"}
+                      {shippingAddress.city + "\n"}
+                      {shippingAddress.province + ", "}
+                      {shippingAddress.country + "\n"}
+                      {shippingAddress.postalCode + "\n"}
+                      {shippingAddress.phoneNumber + "\n"}
+                    </Text></AddressLeft>
+                  </TableRow>
               {shippingAddress.message ?
                 <TableRow style={{ paddingTop: 10, paddingRight: 40 }}>
                   <AddressLeft><Text style={{ color: "grey", textAlign: "left" }}>Note:</Text></AddressLeft>
@@ -205,19 +205,21 @@ export default function confirmOrder() {
             marginHorizontal: 10,
             paddingTop: 10
           }}>
-            Payment Infomation
-              </Title>
+            Payment Information
+          </Title>
 
           <TableRow style={{ paddingRight: 40 }}>
             <AddressLeft><Text style={{ color: "grey" }}>
               {paymentMethod === "cash" ?
                 "Pay upon delivery" :
                 <>
-                  {selectedCard && <>
-                    <Text style={{ fontWeight: "bold", fontSize: 15 }}>{selectedCard.card.name.split(',')[0] + "\n"}</Text>
-                    <Text>{selectedCard.card.number + "\n"}</Text>
-                    <Text>Expiry Date: {selectedCard.card.expiry_month + "/" + selectedCard.card.expiry_year + "\n"}</Text>
-                  </>}
+                  {
+                    selectedCard && <>
+                      <Text style={{ fontWeight: "bold", fontSize: 15 }}>{selectedCard.card.name.split(',')[0] + "\n"}</Text>
+                      <Text>{selectedCard.card.number + "\n"}</Text>
+                      <Text>Expiry Date: {selectedCard.card.expiry_month + "/" + selectedCard.card.expiry_year + "\n"}</Text>
+                    </>
+                  }
                 </>
               }
             </Text></AddressLeft>
