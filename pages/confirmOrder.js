@@ -42,7 +42,7 @@ export default function confirmOrder() {
 
   useEffect(() => {
     console.log(selectedCard)
-    if (!user || !shippingAddress || !newOrderProductList) {
+    if (!user || !shippingAddress) {
       setSelected("cart")
       navigate({
         routeName: "cart",

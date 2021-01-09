@@ -84,8 +84,16 @@ export default function chooseCard() {
   }
 
   useEffect(() => {
-    checkCards()
-  }, [])
+    // checkCards()
+
+    user.profiles && user.profiles[0] && user.profiles.map(profile => {
+      if (profile.customer_code === user.defaultProfileId) {
+        console.log("!!!!!!!!!!!!!profile", profile)
+        setSelectedCard(profile)
+      }
+    })
+    // setSelectedCard(profile)
+  }, [user])
 
   return (
     <>
