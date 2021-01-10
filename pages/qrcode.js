@@ -7,6 +7,8 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../components/BottomBar";
 import { firebase, db, functions } from "../firebaseApp";
 import { ThemeContext } from "../context/ThemeContext";
+// const QRCode = require('qrcode')
+import QRCode from 'react-native-qrcode-svg';
 
 export default function qrcode() {
   const { navigate } = useRouting();
@@ -15,20 +17,33 @@ export default function qrcode() {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (user && QRcodeUrl === "") {
-      setLoading(true)
-      const getQRcode = functions.httpsCallable('createQRcode')
-      getQRcode({
-        user
-      })
-        .then((data) => {
-          console.log(data)
-          setQRcodeUrl(data.data)
-          setLoading(false)
-        })
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (user) {
+  //     setLoading(true)
+
+  //     const promise = new Promise((resolve, reject) => {
+  //       QRCode.toDataURL(user.email, function (err, url) {
+  //         console.log(url)
+  //         resolve(url)
+  //       })
+  //     })
+
+  //     promise.then((data) => {
+  //       console.log(data)
+  //       setQRcodeUrl(data)
+  //       setLoading(false)
+  //     })
+  //     // const getQRcode = functions.httpsCallable('createQRcode')
+  //     // getQRcode({
+  //     //   user
+  //     // })
+  //     //   .then((data) => {
+  //     //     console.log(data)
+  //     //     setQRcodeUrl(data.data)
+  //     //     setLoading(false)
+  //     //   })
+  //   }
+  // }, [user])
 
   return (
     <>
@@ -76,12 +91,16 @@ export default function qrcode() {
           {loading ?
             <ActivityIndicator animating={true} color={Colors.red800} />
             :
-            <Image
-              style={{
-                width: 220,
-                height: 220,
-              }}
-              source={QRcodeUrl} />
+
+            <QRCode
+              value={user.email}
+              size={150} />
+            // <Image
+            //   style={{
+            //     width: 220,
+            //     height: 220,
+            //   }}
+            //   source={QRcodeUrl} />
           }
         </View>
 
