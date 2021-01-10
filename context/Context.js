@@ -169,6 +169,7 @@ const ContextProvider = ({ children }) => {
         await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
         await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
         await AsyncStorage.setItem('total', (+total).toFixed(2))
+        console.log(AsyncStorage.getItem('newOrderProductList'))
       } catch (e) {
         console.log("AsyncStorage Save Error:", e)
       }

@@ -202,6 +202,7 @@ export default function newCard() {
           else {
             console.log(result.data)
 
+
             user.profiles.map(profile => {
               if (profile.customer_code === user.defaultProfileId) {
                 setSelectedCard(profile)
@@ -237,7 +238,7 @@ export default function newCard() {
         <Dialog visible={showDialog} onDismiss={hideDialog}>
           <Dialog.Title>Error</Dialog.Title>
           <Dialog.Content>
-            {/* <Paragraph>{errMsg}</Paragraph> */}
+            <Paragraph><Text>{JSON.stringify(errMsg)}</Text></Paragraph>
           </Dialog.Content>
         </Dialog>
       </Portal>

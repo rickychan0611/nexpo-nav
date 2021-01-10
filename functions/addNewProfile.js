@@ -67,23 +67,23 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
       return data
     })
 
-    console.log("getProfile")
-    console.log(getProfile)
+  console.log("getProfile")
+  console.log(getProfile)
 
-    if (getProfile.code !== 1) {
-      return getProfile
-    }
+  if (getProfile.code !== 1) {
+    return { message: "Please check if card or billing address is correct." }
+  }
 
-    else {
-  return await admin.firestore().collection('users').doc(info.billing.email_address)
-    .update({
-      profiles: admin.firestore.FieldValue.arrayUnion(getProfile),
-      defaultProfileId: getProfile.customer_code
-    })
-    .then((res) => {
-      console.log('res')
-      console.log(res)
-      return getProfile
-    })
-    }
+  else {
+    return await admin.firestore().collection('users').doc(info.billing.email_address)
+      .update({
+        profiles: admin.firestore.FieldValue.arrayUnion(getProfile),
+        defaultProfileId: getProfile.customer_code
+      })
+      .then((res) => {
+        console.log('res')
+        console.log(res)
+        return getProfile
+      })
+  }
 })
