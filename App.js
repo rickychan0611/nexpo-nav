@@ -19,6 +19,7 @@ import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
 import qrScanner from "./pages/admin/qrScanner";
 import orders from "./pages/admin/orders";
+import stats from "./pages/admin/stats";
 import editProduct from "./pages/admin/edit-product";
 import createProduct from "./pages/admin/create-product";
 import storeListings from "./pages/admin/store-listings";
@@ -85,6 +86,7 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="stats" component={stats} options={options("Stats")} />
           <Stack.Screen name="qrScanner" component={qrScanner} options={options("QR code scanner")} />
           <Stack.Screen name="admin/edit-category" component={edit_category} options={options("Category")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />

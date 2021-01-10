@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export const firebase = require("firebase");
 // Required for side-effects
 require("firebase/auth");
@@ -23,5 +25,8 @@ export const auth = firebase.auth()
 export const storage = firebase.storage()
 export const functions = firebase.functions()
 
-functions.useFunctionsEmulator('http://localhost:5001')
+
+if (__DEV__ || Platform.OS === "web") {
+    functions.useFunctionsEmulator('http://localhost:5001')
+}
 
