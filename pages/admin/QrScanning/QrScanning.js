@@ -1,16 +1,30 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Text, View, StyleSheet, Button, Animated, Dimensions } from 'react-native';
-import styled, { keyframes } from 'styled-components';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import scanner from "../../../assets/scanner.png";
-import styles from "./styles";
 import { IconButton } from "react-native-paper";
 import { useRouting } from "expo-next-react-navigation";
 import Loader from "../../../components/Loader"
 import { db } from "../../../firebaseApp"
 import { Context } from '../../../context/Context';
 
-export default function QRScanner({ navigation }) {
+const { width } = Dimensions.get('window')
+
+const styles = {
+  container: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  description: {
+    fontSize: width * 0.05,
+    textAlign: 'center',
+    width: '100%',
+    color: 'white',
+    marginTop: 10
+  }
+}
+
+export default function QrScanning() {
   const [hasPermission, setHasPermission] = useState(null)
   const [scanned, setScanned] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -139,10 +153,15 @@ export default function QRScanner({ navigation }) {
                 navigate({ routeName: "redeem-points" })
               }}
             />
-            <Row>
+            <View style={{
+              flexDirection: 'row',
+              flexWwrap: 'nowrap',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
               <Text style={styles.description}>
                 Scan QR Code </Text>
-            </Row>
+            </View>
           </View>
           <Animated.Image
             source={scanner}
@@ -154,10 +173,3 @@ export default function QRScanner({ navigation }) {
       </View></>
   );
 }
-
-const Row = styled.View`
- flex-direction: row;
- flex-wrap: nowrap;
- justify-content: space-between;
- align-items: center
-`;

@@ -59,20 +59,25 @@ export default function signIn() {
 
   const emailLogin = () => {
     setErrMsg({ email: "", password: "" })
-    if (validator.isEmpty(login.email)) {
-      setErrMsg(prev => ({ ...prev, email: "Required. Please eneter an email." }))
-    }
-    if (!validator.isEmail(login.email)) {
-      setErrMsg(prev => ({ ...prev, email: "Email address is not valid" }))
-    }
-    if (validator.isEmpty(login.password)) {
-      setErrMsg(prev => ({ ...prev, password: "Required. Please eneter a password." }))
-    }
-    // if (!schema.validate(login.password)) {
-    //   setErrMsg(prev => ({ ...prev, password: "Must contain 6 characters with 1 uppercase letter and 2 digits" }))
-    // }
-    // auth.createUserWithEmailAndPassword(login.email, login.password)
-    else {
+    let validate = new Promise((resolve, reject) => {
+
+      if (validator.isEmpty(login.email)) {
+        setErrMsg(prev => ({ ...prev, email: "Required. Please eneter an email." }))
+        reject()
+      }
+      if (!validator.isEmail(login.email)) {
+        setErrMsg(prev => ({ ...prev, email: "Email address is not valid" }))
+        reject()
+      }
+      if (validator.isEmpty(login.password)) {
+        setErrMsg(prev => ({ ...prev, password: "Required. Please eneter a password." }))
+        reject()
+      }
+      else {
+        resolve()
+      }
+    })
+    validate.then(() => {
       setLoading(true)
       auth.signInWithEmailAndPassword(login.email, login.password)
         .then(() => {
@@ -88,8 +93,8 @@ export default function signIn() {
           // Handle Errors here.
           setLoading(false)
           setErrMsg(prev => ({ ...prev, email: error.message }))
-        });
-    }
+        })
+    })
   }
 
   useEffect(() => {
