@@ -10,6 +10,7 @@ import { ThemeContext } from "../context/ThemeContext";
 // const QRCode = require('qrcode')
 import QRCode from 'react-native-qrcode-svg';
 import { set } from "react-native-reanimated";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function qrcode() {
   const { navigate } = useRouting();
@@ -52,86 +53,87 @@ export default function qrcode() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-
-      <View style={{
-        // flex: 1,
-        width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 500,
-        height: "100%",
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: "center",
-        paddingBottom: 60,
-        posotion: "relative",
-        backgroundColor: theme.red
-      }}>
-        <Text style={{
-          color: "white",
-          fontSize: 30,
-          fontWeight: "bold",
-          textAlign: "center",
-          marginBottom: 20
-        }}>
-          {"掃碼優惠\nScan your code"}
-        </Text>
-
-        <Text style={{
-          color: "white",
-          fontSize: 15,
-          // fontWeight: "bold",
-          textAlign: "center",
-          marginBottom: 40
-        }}>
-          {`每10,000分可在\n天天漁港海鮮酒家作$10使用\n\n`}
-          {`Every 10,000 points is worth $10 value at\n`}
-          {`Tin Tin Harbar Seafood Restaurant.`}
-        </Text>
-
+      <ScrollView>
         <View style={{
-          backgroundColor: "white",
-          justifyContent: "center",
+          // flex: 1,
+          width: Platform.OS === "web" ? '100vw' : '100%',
+          maxWidth: 500,
+          height: "100%",
+          flexDirection: 'column',
+          justifyContent: 'center',
           alignItems: "center",
-          width: 220,
-          height: 220
+          paddingBottom: 60,
+          posotion: "relative",
+          backgroundColor: theme.red
         }}>
-          {loading ?
-            <ActivityIndicator animating={true} color={Colors.red800} />
-            :
-
-            <QRCode
-              value={user.email}
-              size={150} />
-            // <Image
-            //   style={{
-            //     width: 220,
-            //     height: 220,
-            //   }}
-            //   source={QRcodeUrl} />
-          }
-        </View>
-
-        <View style={{
-          backgroundColor: "white",
-          width: 220,
-          height: 80,
-          margin: 10,
-          justifyContent: "center",
-          alignItems: "center"
-        }}>
-          <Text>your points:</Text>
           <Text style={{
-            fontSize: 20,
-            fontWeight: "bold"
-          }}>{user.points}</Text>
+            color: "white",
+            fontSize: 30,
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 20
+          }}>
+            {"掃碼優惠\nScan your code"}
+          </Text>
 
-        </View>
+          <Text style={{
+            color: "white",
+            fontSize: 15,
+            // fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: 40
+          }}>
+            {`每10,000分可在\n天天漁港海鮮酒家作$10使用\n\n`}
+            {`Every 10,000 points is worth $10 value at\n`}
+            {`Tin Tin Harbar Seafood Restaurant.`}
+          </Text>
 
-        <View style={{
-          position: "absolute",
-          bottom: 80,
-        }}>
+          <View style={{
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 220,
+            height: 220
+          }}>
+            {loading ?
+              <ActivityIndicator animating={true} color={Colors.red800} />
+              :
+
+              <QRCode
+                value={user.email}
+                size={150} />
+              // <Image
+              //   style={{
+              //     width: 220,
+              //     height: 220,
+              //   }}
+              //   source={QRcodeUrl} />
+            }
+          </View>
+
+          <View style={{
+            backgroundColor: "white",
+            width: 220,
+            height: 80,
+            margin: 10,
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+            <Text>your points:</Text>
+            <Text style={{
+              fontSize: 20,
+              fontWeight: "bold"
+            }}>{user.points}</Text>
+
+          </View>
+
+          <View style={{
+            position: "absolute",
+            bottom: 80,
+          }}>
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       <BottomBar style={{
         shadowColor: "#000",

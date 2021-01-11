@@ -87,8 +87,8 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="redeem-points" component={redeem_points} options={options("QR code Redeem")} />
-          <Stack.Screen name="qrScanner" component={qrScanner} options={options("QR code scanner")} />
+          <Stack.Screen name="admin/redeem-points" component={redeem_points} options={options("QR code Redeem")} />
+          <Stack.Screen name="admin/qrScanner" component={qrScanner} options={options("QR code scanner")} />
           <Stack.Screen name="admin/store-stats" component={store_stats} options={options("Stats")} />
           <Stack.Screen name="admin/edit-category" component={edit_category} options={options("Category")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />

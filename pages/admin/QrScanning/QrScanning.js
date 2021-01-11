@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Text, View, StyleSheet, Button, Animated, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Button, Animated, Dimensions, Platform } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import scanner from "../../../assets/scanner.png";
 import { IconButton } from "react-native-paper";
@@ -33,7 +33,7 @@ export default function QrScanning() {
   const { redeemPoints } = useContext(Context)
 
   useEffect(() => {
-    (async () => {
+    Platform.OS !== 'web' && (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setTimeout(() => {
         setHasPermission(status === 'granted');
@@ -65,7 +65,7 @@ export default function QrScanning() {
       let newPoints
 
       if (redeemPoints > customer.points) {
-        navigate({ routeName: "redeem-points" })
+        navigate({ routeName: "admin/redeem-points" })
         throw (`Not enough points. Customer only have ${customer.points} points.`)
       }
       else {
@@ -76,7 +76,7 @@ export default function QrScanning() {
           openRedeemDialog: true
         }).then(() => {
           alert(`Success! Customer (${customer.firstName}), has redeemed ${redeemPoints} points`)
-          navigate({ routeName: "redeem-points" })
+          navigate({ routeName: "admin/redeem-points" })
         })
       }
     }
@@ -127,6 +127,7 @@ export default function QrScanning() {
     setTimeout(() => {
       moveImage();
     }, 1000)
+    Platform.OS === 'web' && alert("This function only works on mobile phone with camera")
   }, []);
 
 
@@ -150,7 +151,7 @@ export default function QrScanning() {
             <IconButton icon="chevron-left" color="white"
               style={{ position: "absolute" }}
               onPress={() => {
-                navigate({ routeName: "redeem-points" })
+                navigate({ routeName: "admin/redeem-points" })
               }}
             />
             <View style={{

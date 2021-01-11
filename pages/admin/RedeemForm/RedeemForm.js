@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { View, Text, Platform } from "react-native";
 import styled from "styled-components/native";
 import { TextInput, HelperText, Button } from 'react-native-paper';
 import { Context } from "../../../context/Context";
@@ -18,6 +18,10 @@ export default function RedeemForm() {
   const onSubmit = () => {
     setError('')
     let validate = new Promise((resolve, reject) => {
+      if (Platform.OS === 'web') {
+        alert("This function only works on mobile phone with camera")
+        reject()
+      }
       if (!redeemPoints) {
         setError(prev => ({ ...prev, redeemPoints: "Required" }))
         reject()
@@ -34,9 +38,13 @@ export default function RedeemForm() {
       console.log("load scanner")
       setLoading(true)
       setError("")
-      navigate({ routeName: "qrScanner" })
+      navigate({ routeName: "admin/qrScanner" })
     })
   }
+
+  useEffect(() => {
+    Platform.OS === 'web' && alert("This function only works on mobile phone with camera")
+  }, []);
 
   return (
     <>

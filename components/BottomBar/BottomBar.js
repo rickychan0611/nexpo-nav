@@ -125,7 +125,7 @@ export default function BottomBar() {
             if (user) {
               if (user.role === "admin") {
                 navigate({
-                  routeName: "redeem-points",
+                  routeName: "admin/redeem-points",
                 })
               }
               else {
