@@ -27,9 +27,9 @@ export const storage = firebase.storage()
 export const functions = firebase.functions()
 
 
-// if (__DEV__ || Platform.OS === "web") {
-//     functions.useFunctionsEmulator('http://localhost:5001')
-// }
+if (__DEV__ || Platform.OS === "web") {
+    functions.useFunctionsEmulator('http://localhost:5001')
+}
 
 // if (__DEV__ || Platform.OS === "web") {
 // Point to the RTDB emulator running on localhost.
