@@ -17,6 +17,7 @@ import cart from "./pages/cart";
 import confirmOrder from "./pages/confirmOrder";
 import admin from "./pages/admin";
 import panel from "./pages/admin/panel";
+import redeem_points from "./pages/admin/redeem-points";
 import qrScanner from "./pages/admin/qrScanner";
 import orders from "./pages/admin/orders";
 import store_stats from "./pages/admin/store-stats";
@@ -86,8 +87,9 @@ function App() {
     <>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="admin/store-stats" component={store_stats} options={options("Stats")} />
+          <Stack.Screen name="redeem-points" component={redeem_points} options={options("QR code Redeem")} />
           <Stack.Screen name="qrScanner" component={qrScanner} options={options("QR code scanner")} />
+          <Stack.Screen name="admin/store-stats" component={store_stats} options={options("Stats")} />
           <Stack.Screen name="admin/edit-category" component={edit_category} options={options("Category")} />
           <Stack.Screen name="store" component={store} options={options("Shop")} />
           <Stack.Screen name="qrcode" component={qrcode} options={options("QRcode")} />

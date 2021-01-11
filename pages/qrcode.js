@@ -2,51 +2,57 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
 import { Platform, Image, View, Dimensions, Text } from "react-native";
-import { ActivityIndicator, Colors } from 'react-native-paper';
+import { ActivityIndicator, Colors, Portal, Dialog, Paragraph, Button } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../components/BottomBar";
 import { firebase, db, functions } from "../firebaseApp";
 import { ThemeContext } from "../context/ThemeContext";
 // const QRCode = require('qrcode')
 import QRCode from 'react-native-qrcode-svg';
+import { set } from "react-native-reanimated";
 
 export default function qrcode() {
   const { navigate } = useRouting();
   const { user, QRcodeUrl, setQRcodeUrl } = useContext(Context);
   const { theme } = useContext(ThemeContext);
-
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const hideModal = () => setShowModal(false)
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setLoading(true)
-
-  //     const promise = new Promise((resolve, reject) => {
-  //       QRCode.toDataURL(user.email, function (err, url) {
-  //         console.log(url)
-  //         resolve(url)
-  //       })
-  //     })
-
-  //     promise.then((data) => {
-  //       console.log(data)
-  //       setQRcodeUrl(data)
-  //       setLoading(false)
-  //     })
-  //     // const getQRcode = functions.httpsCallable('createQRcode')
-  //     // getQRcode({
-  //     //   user
-  //     // })
-  //     //   .then((data) => {
-  //     //     console.log(data)
-  //     //     setQRcodeUrl(data.data)
-  //     //     setLoading(false)
-  //     //   })
-  //   }
-  // }, [user])
+  useEffect(() => {
+    if (user.openRedeemDialog) {
+      setShowModal(true)
+    }
+  }, [user])
 
   return (
     <>
+      <Portal>
+        <Dialog visible={showModal} onDismiss={hideModal}>
+          <Dialog.Title>Congratulations</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>You have redemed {user.redeemedPoints} points! </Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button
+              contained
+              color="white"
+              style={{
+                backgroundColor: theme.red,
+                borderWidth: 1,
+                borderRadius: 25,
+                width: 80,
+                marginBottom: 10
+              }}
+              onPress={() => {
+                db.collection('users').doc(user.email).update({ openRedeemDialog: false })
+                hideModal()
+              }}>
+              OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+
       <View style={{
         // flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',

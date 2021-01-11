@@ -61,6 +61,7 @@ const ContextProvider = ({ children }) => {
   const [isAddNewCard, setIsAddNewCard] = useState(false)
   const [loadingCards, setLoadingCards] = useState(false)
   const [QRcodeUrl, setQRcodeUrl] = useState("");
+  const [redeemPoints, setRedeemPoints] = useState("");
 
 
   const [newCard, setNewCard] = useState({
@@ -250,7 +251,8 @@ const ContextProvider = ({ children }) => {
           loadingCards, setLoadingCards,
           productInitValue,
           QRcodeUrl, setQRcodeUrl,
-          loading, setLoading
+          loading, setLoading,
+          redeemPoints, setRedeemPoints
         }
       }
     >

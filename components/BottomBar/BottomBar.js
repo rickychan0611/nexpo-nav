@@ -125,7 +125,7 @@ export default function BottomBar() {
             if (user) {
               if (user.role === "admin") {
                 navigate({
-                  routeName: "qrScanner",
+                  routeName: "redeem-points",
                 })
               }
               else {
