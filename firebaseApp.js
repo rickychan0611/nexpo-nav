@@ -30,8 +30,9 @@ export const functions = firebase.functions()
 if (__DEV__ || Platform.OS === "web") {
     functions.useFunctionsEmulator('http://localhost:5001')
 }
-
-// if (__DEV__ || Platform.OS === "web") {
-// Point to the RTDB emulator running on localhost.
-// database.useEmulator("localhost", 9000);
-// }
+if (__DEV__ || Platform.OS === "android") {
+    functions.useFunctionsEmulator('http://10.0.2.2:5001')
+}
+if (__DEV__ || Platform.OS === "ios") {
+    functions.useFunctionsEmulator('http://localhost:5001')
+}

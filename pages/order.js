@@ -7,7 +7,7 @@ import { Divider, IconButton, Headline, Button, Paragraph, Dialog, Portal, Activ
 import { Image, Platform, ScrollView, View, Text } from "react-native";
 import { Link, useRouting } from "expo-next-react-navigation";
 import moment from "moment";
-import { db } from "../firebaseApp";
+import { db, functions } from "../firebaseApp";
 
 import BottomBar from "../components/BottomBar";
 import TotalDetails from "../components/TotalDetails";
@@ -34,7 +34,13 @@ export default function order() {
     setCancelLoading(true)
     const orderRef = db.collection("orders").doc(selectedOrder.orderId)
     await orderRef.update({ status: "Order Cancelled" })
-    db.collection("users").doc(user.email).update({points: user.points - (selectedOrder.totalAmt * 100)})
+    await db.collection("users").doc(user.email).update({ points: user.points - (selectedOrder.totalAmt * 100) })
+    const onUpdate = functions.httpsCallable('minusTotalCounter')
+    onUpdate({
+      total: selectedOrder.totalAmt,
+      MM_YYYY: moment(selectedOrder.createAt).format("MM_YYYY"),
+      DD: moment(selectedOrder.createAt).format("DD")
+    })
     setSelectedOrder(prev => ({ ...prev, status: "Order Cancelled" }))
     showCancelledDialog()
     hideCancelDialog()
@@ -81,7 +87,7 @@ export default function order() {
             <Button onPress={() => {
               setSelected("account")
               hideCancelledDialog()
-              navigate({routeName: "account"})
+              navigate({ routeName: "account" })
             }}>OK</Button>
           </Dialog.Actions>
         </Dialog>
@@ -126,8 +132,8 @@ export default function order() {
                     flexWrap: "nowrap",
                   }}>
                     <StatusContainer>
-                      <Status status={selectedOrder.status} theme={theme} 
-                      style={{margin: 0}}/>
+                      <Status status={selectedOrder.status} theme={theme}
+                        style={{ margin: 0 }} />
                     </StatusContainer>
                     <Text style={{
                       fontSize: 16,

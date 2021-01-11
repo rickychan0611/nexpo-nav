@@ -17,6 +17,7 @@ export default function AdminSideBar({ data }) {
     <Container>
       <TouchableOpacity>
         <Name onPress={() => {
+          navigate({ routeName: "admin/store-stats" })
           setOpenWebAdminMenu(false)
         }}>
           Dashboard

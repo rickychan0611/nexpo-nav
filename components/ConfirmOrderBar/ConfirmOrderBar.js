@@ -168,12 +168,14 @@ export default function ConfirmOrderBar() {
 
   const updateStats = () => {
     console.log("updateStats")
-    const onUpdate = functions.httpsCallable('triggerTotalCounter')
+    const onUpdate = functions.httpsCallable('addTotalCounter')
     onUpdate({
-      total: total
+      total: total,
+      MM_YYYY: moment().format("MM_YYYY"),
+      DD: moment().format("DD")
     })
       .then((data) => {
-        console.log("dddddd", data)
+        console.log("counter added")
       })
     // database.ref('stats/').update({ hello: "fukc" })
     //   .then(() => {

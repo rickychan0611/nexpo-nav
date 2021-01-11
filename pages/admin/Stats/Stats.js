@@ -9,25 +9,24 @@ import {
   Surface, IconButton, Button, TextInput, Portal,
   Dialog, Card, Headline, HelperText, Paragraph
 } from 'react-native-paper';
-import { db, database } from "../../../firebaseApp";
+import { database } from "../../../firebaseApp";
 export const firebase = require("firebase");
 
 export default function Stats() {
 
   const { theme } = useContext(ThemeContext);
-  const { productData } = useContext(ProductsContext)
-  const { selectedCat, setSelectedCat } = useContext(Context)
-  const [cat, setCat] = useState({});
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState({})
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState("")
-  const [isNew, setIsNew] = useState(false)
 
-  // useEffect(() => {
-  //   db.collection("stats").doc(today)
-  // }, []
-  // )
+  const [isNew, setIsNew] = useState(false)
+  const [totalOrders, setTotalOrders] = useState(0)
+  const [totalAmt, setTotalAmt] = useState(0)
+
+  useEffect(() => {
+    database.ref("stats/allTime").on("value", (snapshot) => {
+      setTotalOrders(snapshot.val().orders)
+      setTotalAmt(snapshot.val().total)
+    })
+  }, []
+  )
   return (
     <>
       <Container>
@@ -44,8 +43,7 @@ export default function Stats() {
         </Row>
         <CardsWrapper>
           <Surface style={{
-            paddingHorizontal: 4,
-            height: 80,
+            padding: 26,
             width: "100%",
             alignItems: 'center',
             justifyContent: 'center',
@@ -55,10 +53,10 @@ export default function Stats() {
             borderColor: theme.lightGrey,
           }}>
             <Text>Orders</Text>
+            <Text style={{ fontSize: 40, fontWeight: "bold" }}>{totalOrders}</Text>
           </Surface>
           <Surface style={{
-            paddingHorizontal: 4,
-            height: 80,
+            padding: 26,
             width: "100%",
             alignItems: 'center',
             justifyContent: 'center',
@@ -68,6 +66,7 @@ export default function Stats() {
             borderColor: theme.lightGrey,
           }}>
             <Text>Revenue</Text>
+            <Text style={{ fontSize: 40, fontWeight: "bold" }}>${totalAmt.toFixed(2)}</Text>
           </Surface>
         </CardsWrapper>
       </Container>
