@@ -9,7 +9,7 @@ import {
   Surface, IconButton, Button, TextInput, Portal,
   Dialog, Card, Headline, HelperText, Paragraph
 } from 'react-native-paper';
-import { db } from "../../../firebaseApp";
+import { db, database } from "../../../firebaseApp";
 export const firebase = require("firebase");
 
 export default function Stats() {
@@ -24,6 +24,10 @@ export default function Stats() {
   const [loading, setLoading] = useState("")
   const [isNew, setIsNew] = useState(false)
 
+  // useEffect(() => {
+  //   db.collection("stats").doc(today)
+  // }, []
+  // )
   return (
     <>
       <Container>

@@ -6,9 +6,10 @@ import { IconButton, Portal, Dialog, Paragraph, Button } from "react-native-pape
 import styled from 'styled-components/native';
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
-import { db, firebase, functions } from "../../firebaseApp";
+import { db, database, functions } from "../../firebaseApp";
 import Loader from "../Loader";
-import moment from "moment";
+import moment, { now } from "moment";
+import firebase from "firebase"
 
 export default function ConfirmOrderBar() {
   const { navigate, goBack } = useRouting();
@@ -63,6 +64,7 @@ export default function ConfirmOrderBar() {
         console.log("finish creditCardPayment run")
         console.log(paymentData)
         if (paymentData && paymentData.approved === "1") {
+
           const orderRef = db.collection("orders").doc(now + "A" + orderId)
           await orderRef.set({
             paymentData,
@@ -80,6 +82,13 @@ export default function ConfirmOrderBar() {
             paymentStatus: paymentData.message
           })
             .then(() => {
+              database.ref('stats/1111').update({ helkl })
+                .catch((err) => {
+                  alert(err)
+                })
+
+
+
               db.collection("users").doc(user.email).update({
                 points: user.points + (total * 100)
               })
@@ -133,6 +142,7 @@ export default function ConfirmOrderBar() {
               points: user.points + (total * 100)
             })
               .then(() => {
+                updateStats() //update stats in database
                 setLoading(false)
                 setSelected("orderSuccess")
                 navigate({
@@ -154,6 +164,29 @@ export default function ConfirmOrderBar() {
       setLoading(false)
       setShowDialog(true)
     }
+  }
+
+  const updateStats = () => {
+    console.log("updateStats")
+    const onUpdate = functions.httpsCallable('triggerTotalCounter')
+    onUpdate({
+      total: total
+    })
+      .then((data) => {
+        console.log("dddddd", data)
+      })
+    // database.ref('stats/').update({ hello: "fukc" })
+    //   .then(() => {
+    //     alert("added")
+    //     setLoading(false)
+    //     setSelected("orderSuccess")
+    //     navigate({
+    //       routeName: "orderSuccess",
+    //     })
+    //   })
+    //   .catch((err) => {
+    //     alert(err)
+    //   })
   }
 
   useEffect(() => {
