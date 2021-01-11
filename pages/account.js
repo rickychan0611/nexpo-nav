@@ -110,12 +110,12 @@ export default function account() {
                 <Divider />
               </>
             }
-            <Drawer.Item
+            {/* <Drawer.Item
               style={{ backgroundColor: "white" }}
               icon="cogs"
               label="Settings"
             />
-            <Divider />
+            <Divider /> */}
             <Drawer.Item
               style={{ backgroundColor: "white" }}
               icon="logout"

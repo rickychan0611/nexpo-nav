@@ -125,7 +125,7 @@ const ContextArea = styled.View`
 
 `;
 const CategoryScrollView = styled.ScrollView`
-      height: 100%;
+      height: ${Platform.OS === "web" ? 'calc(100vh-70px)' : '100%'};
       background-color: white;
       border-right-color: #e8e6e6;
 `;
@@ -145,6 +145,6 @@ const ProductContainer = styled.ScrollView`
       flex: 5;
       background-color: white;
       /* background-color: #e8e6e6; */
-      height: 100%;
+      height: ${Platform.OS === "web" ? 'calc(100vh-70px)' : '100%'};
       flex-direction: column;
 `;
