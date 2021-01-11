@@ -1,7 +1,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/Context";
-import { Platform, Image, View, Dimensions, Text } from "react-native";
+import { Platform, ScrollView, View, Text } from "react-native";
 import { ActivityIndicator, Colors, Portal, Dialog, Paragraph, Button } from 'react-native-paper';
 import { Link, useRouting } from "expo-next-react-navigation";
 import BottomBar from "../components/BottomBar";
@@ -9,8 +9,6 @@ import { firebase, db, functions } from "../firebaseApp";
 import { ThemeContext } from "../context/ThemeContext";
 // const QRCode = require('qrcode')
 import QRCode from 'react-native-qrcode-svg';
-import { set } from "react-native-reanimated";
-import { ScrollView } from "react-native-gesture-handler";
 
 export default function qrcode() {
   const { navigate } = useRouting();
@@ -53,18 +51,21 @@ export default function qrcode() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <ScrollView>
+      <ScrollView style={{
+        width: Platform.OS === "web" ? '100vw' : '100%',
+        height: Platform.OS === "web" ? '100vh' : '100%',
+        maxWidth: 500,
+        backgroundColor: theme.red,
+        paddingTop: 60,
+        paddingBottom: 120,
+
+      }}>
         <View style={{
           // flex: 1,
-          width: Platform.OS === "web" ? '100vw' : '100%',
-          maxWidth: 500,
-          height: "100%",
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: "center",
-          paddingBottom: 60,
-          posotion: "relative",
-          backgroundColor: theme.red
+          // posotion: "relative",
         }}>
           <Text style={{
             color: "white",
@@ -134,7 +135,6 @@ export default function qrcode() {
           </View>
         </View>
       </ScrollView>
-
       <BottomBar style={{
         shadowColor: "#000",
         shadowOffset: {

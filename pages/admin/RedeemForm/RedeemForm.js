@@ -19,7 +19,7 @@ export default function RedeemForm() {
     setError('')
     let validate = new Promise((resolve, reject) => {
       if (Platform.OS === 'web') {
-        alert("This function only works on mobile phone with camera")
+        alert("This function doesn't work on web browser. Please use APP")
         reject()
       }
       if (!redeemPoints) {
@@ -43,7 +43,7 @@ export default function RedeemForm() {
   }
 
   useEffect(() => {
-    Platform.OS === 'web' && alert("This function only works on mobile phone with camera")
+    Platform.OS === 'web' && alert("This function doesn't work on web browser. Please use APP")
   }, []);
 
   return (
