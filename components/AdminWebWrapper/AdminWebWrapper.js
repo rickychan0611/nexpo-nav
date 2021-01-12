@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Sidebar from "react-sidebar";
 
-import { Platform} from "react-native";
+import { Platform } from "react-native";
 import styled from "styled-components/native";
 
 import { Context } from "../../context/Context";
@@ -9,8 +9,8 @@ import { ThemeContext } from "../../context/ThemeContext";
 import AdminTopBar from "../../components/AdminTopBar";
 import AdminSideBar from "../../components/AdminSideBar";
 
-export default function AdminWebWrapper({children}) {
-  const {theme} = useContext(ThemeContext);
+export default function AdminWebWrapper({ children }) {
+  const { theme } = useContext(ThemeContext);
   const {
     openWebAdminMenu, setOpenWebAdminMenu, data
   } = useContext(Context);
@@ -26,19 +26,19 @@ export default function AdminWebWrapper({children}) {
           <Sidebar
             sidebar={menu}
             open={openWebAdminMenu}
-            onSetOpen={()=>setOpenWebAdminMenu(false)}
+            onSetOpen={() => setOpenWebAdminMenu(false)}
             shadow
-            styles={{ sidebar: { position: "fixed", left: 0, background: "white", paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170} }}
+            styles={{ sidebar: { position: "fixed", left: 0, background: "white", paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170 } }}
           >
             {/* <WebContentColumn   backgroundColor={theme.backgroundColor}> */}
-              {children}
+            {children}
             {/* </WebContentColumn> */}
           </Sidebar>
         </WebContextArea>
       </>
     )
   }
-}  
+}
 
 const WebContextArea = styled.View`
       flex: 1;
@@ -46,9 +46,8 @@ const WebContextArea = styled.View`
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      /* background-color: ${props => props.backgroundColor}; */
+      background-color: white;
       width: 100%;
-      /* max-height: 400px; */
-      /* App width */
       max-width: 500px;
+      height: 100vh;
 `;

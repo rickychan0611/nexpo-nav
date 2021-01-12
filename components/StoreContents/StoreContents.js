@@ -43,21 +43,21 @@ export default function StoreContents({ ssrData }) {
 
   return (
     <>
-      <CartBarWrapper up={newOrderProductList.length > 0}>
-        <View style={{
-          // flex:1,
-          height: 30,
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          flexDirection: "row",
-          flexWrap: "nowrap",
-          backgroundColor: "#fcfa92"
-        }}>
-          <Text> --- Edit Mode ---</Text>
-        </View>
-        {productData && <>
-          {/* <SearchBar
+      {/* <CartBarWrapper up={newOrderProductList.length > 0}> */}
+      <View style={{
+        // flex:1,
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        backgroundColor: "#fcfa92"
+      }}>
+        <Text> --- Edit Mode ---</Text>
+      </View>
+      {productData && <>
+        {/* <SearchBar
             placeholder="Search"
             // onChangeText={this.updateSearch}
             // value={"search"}
@@ -67,38 +67,38 @@ export default function StoreContents({ ssrData }) {
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           /> */}
-          <ContextArea up={newOrderProductList.length > 0}>
+        <ContextArea up={newOrderProductList.length > 0}>
 
-            <CategoryScrollView up={newOrderProductList.length > 0}>
-              <CategoryNames />
-            </CategoryScrollView>
+          <CategoryScrollView up={newOrderProductList.length > 0}>
+            <CategoryNames />
+          </CategoryScrollView>
 
-            <ProductContainer>
-              {productData && productData[selectedCat] && productData[selectedCat].length > 0 ?
-                productData[selectedCat].map((item) => {
-                  return (
-                    <TouchableOpacity key={item.uid}
-                      onPress={() => {
-                        setSelectedItem(item)
-                        setProduct(item)
-                        navigate({
-                          routeName: "admin/edit-product",
-                          params: { id: item.uid, path: "edit-product" },
-                          web: { as: `/admin/edit-product?id=${item.uid}` },
-                        })
-                      }}>
-                      <ProductCard item={item} />
-                    </TouchableOpacity>
-                  )
-                }) :
-                <Text style={{ paddingTop: 150, textAlign: 'center' }}>This category has no product.</Text>
-              }
-              <View style={{ height: 150 }}></View>
-            </ProductContainer>
-          </ContextArea>
-        </>
-        }
-      </CartBarWrapper>
+          <ProductContainer>
+            {productData && productData[selectedCat] && productData[selectedCat].length > 0 ?
+              productData[selectedCat].map((item) => {
+                return (
+                  <TouchableOpacity key={item.uid}
+                    onPress={() => {
+                      setSelectedItem(item)
+                      setProduct(item)
+                      navigate({
+                        routeName: "admin/edit-product",
+                        params: { id: item.uid, path: "edit-product" },
+                        web: { as: `/admin/edit-product?id=${item.uid}` },
+                      })
+                    }}>
+                    <ProductCard item={item} />
+                  </TouchableOpacity>
+                )
+              }) :
+              <Text style={{ paddingTop: 150, textAlign: 'center' }}>This category has no product.</Text>
+            }
+            <View style={{ height: 150 }}></View>
+          </ProductContainer>
+        </ContextArea>
+      </>
+      }
+      {/* </CartBarWrapper> */}
 
     </>
   );
@@ -114,7 +114,6 @@ const CartBarWrapper = styled.View`
       max-width: 500px;
 `;
 const ContextArea = styled.View`
-      flex: 1;
       flex-direction: row;
       flex-wrap: wrap;
       align-items: flex-start;
@@ -122,10 +121,10 @@ const ContextArea = styled.View`
       background-color: white;
       width: 100%;
       max-width: 500px;
-
+      height: ${Platform.OS === 'web' ? `calc(100vh)` : `100%`}; */
 `;
 const CategoryScrollView = styled.ScrollView`
-      height: ${Platform.OS === "web" ? 'calc(100vh-70px)' : '100%'};
+      height: 100%;
       background-color: white;
       border-right-color: #e8e6e6;
 `;
@@ -142,9 +141,9 @@ const CategoryContainer = styled.View`
       height: ${Platform.OS === 'web' ? `calc(100vh - 160px)` : `100%`}; */
 `;
 const ProductContainer = styled.ScrollView`
-      flex: 5;
+      flex: 6;
       background-color: white;
       /* background-color: #e8e6e6; */
-      height: ${Platform.OS === "web" ? 'calc(100vh-70px)' : '100%'};
+      height: 100%;
       flex-direction: column;
 `;
