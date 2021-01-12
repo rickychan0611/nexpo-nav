@@ -22,7 +22,7 @@ export default function Store({ ssrData }) {
 
   const {
     setSelectedItem, selectedCat, selected,
-    newOrderProductList, setSelected
+    newOrderProductList, setSelected, categories
   } = useContext(Context);
 
   const {
@@ -42,6 +42,16 @@ export default function Store({ ssrData }) {
   useEffect(() => {
     setSelected("store")
   }, [])
+
+
+  useEffect(() => {
+    if (!categories) {
+      listenCategories()
+    }
+    else if (!selectedCat && categories) {
+      setSelectedCat(categories[0].uid)
+    }
+  }, [selectedCat, categories])
 
   return (
     <>

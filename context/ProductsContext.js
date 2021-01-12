@@ -7,7 +7,7 @@ import moment from "moment";
 export const ProductsContext = createContext();
 
 const ProductsProvider = ({ children }) => {
-  const { setSelectedItem, selectedCat, selected,
+  const { setSelectedItem, selectedCat, setSelectedCat, selected,
     newOrderProductList, setSelected } = useContext(Context)
 
   const [productData, setProductData] = useState([]);

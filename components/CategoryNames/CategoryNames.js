@@ -12,11 +12,12 @@ export default function CategoryNames() {
   const { theme } = useContext(ThemeContext)
 
   useEffect(() => {
-    if (!selectedCat) {
+    listenCategories()
+    if (!selectedCat && categories) {
+      console.log("!!!!!!!!!!" + categories[0].uid)
       setSelectedCat(categories[0].uid)
     }
-    listenCategories()
-  }, [selectedCat])
+  }, [selectedCat, categories])
 
   return (
     <>
