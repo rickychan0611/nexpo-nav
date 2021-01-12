@@ -7,6 +7,7 @@ import useQty from '../../hooks/useQty';
 import styled from 'styled-components/native';
 import { Badge, Icon, withBadge } from 'react-native-elements'
 import { Context } from "../../context/Context";
+import BottomBarIcons from "../../components/BottomBarIcons"
 
 let useRouter;
 if (Platform.OS === 'web') {
@@ -45,108 +46,7 @@ export default function BottomBar() {
     <>
       <Wrapper style={Elevations[6]}>
         <ContentArea>
-          <Button onPress={() => {
-            setSelected("home")
-            navigate({
-              routeName: "home"
-            })
-          }}>
-            <Icon
-              name='home'
-              type='font-awesome-5'
-              color={selected === "home" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "home" ? 'black' : '#ababab'}>Home</Name>
-          </Button>
-
-          {/* <Button>
-            <Icon
-              name='star'
-              type='font-awesome-5'
-              color={selected === "star" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "star" ? 'black' : '#ababab'}>Special</Name>
-          </Button> */}
-
-          <Button onPress={() => {
-            setSelected("store")
-            navigate({
-              routeName: "store"
-            })
-          }}>
-
-            <Icon
-              name='store'
-              type='font-awesome-5'
-              color={selected === "store" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "store" ? 'black' : '#ababab'}>Shop</Name>
-          </Button>
-
-          <Button onPress={() => {
-            setSelected("cart")
-            navigate({
-              routeName: "cart"
-            })
-          }}>
-
-            <BadgedIcon
-              name='shopping-cart'
-              type='font-awesome-5'
-              color={selected === "cart" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "cart" ? 'black' : '#ababab'}>Cart</Name>
-          </Button>
-
-          <Button onPress={() => {
-            console.log("account")
-            setSelected("account")
-            if (user) {
-              navigate({
-                routeName: "account",
-              })
-            }
-            else {
-              navigate({
-                routeName: "login",
-              })
-            }
-          }}>
-            <Icon
-              name='user-circle'
-              type='font-awesome-5'
-              color={selected === "account" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "account" ? 'black' : '#ababab'}>Account</Name>
-          </Button>
-
-          <Button onPress={() => {
-            setSelected("qrcode")
-            if (user) {
-              if (user.role === "admin") {
-                navigate({
-                  routeName: "admin/redeem-points",
-                })
-              }
-              else {
-                navigate({
-                  routeName: "qrcode",
-                })
-              }
-            }
-            else {
-              navigate({
-                routeName: "login",
-              })
-            }
-          }}>
-            <Icon
-              name='barcode'
-              type='font-awesome-5'
-              color={selected === "qrcode" ? 'black' : '#ababab'}
-            />
-            <Name selected={selected === "qrcode" ? 'black' : '#ababab'}>My QRcode</Name>
-          </Button>
+          <BottomBarIcons />
 
         </ContentArea>
       </Wrapper >

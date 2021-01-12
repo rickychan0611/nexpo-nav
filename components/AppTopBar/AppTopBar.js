@@ -11,11 +11,12 @@ import logo from "../../assets/icon.png"
 
 import SaveProductButton from '../../components/SaveProductButton';
 import EditProductButton from '../../components/EditProductButton';
+import TopBarIcons from "../../components/TopBarIcons"
 
 import { Link, useRouting } from "expo-next-react-navigation";
 
 export default function AppTopBar() {
-  const { theme } = useContext(ThemeContext);
+  const { theme, setSelected } = useContext(ThemeContext);
   const { navigate, getParam } = useRouting();
 
   const {
@@ -44,17 +45,29 @@ export default function AppTopBar() {
           flex: 1,
           flexDirection: "row",
           flexWrap: "nowrap",
-          justifyContent: "center",
+          justifyContent: "space-between",
           alignItems: "center",
           paddingLeft: 25
         }}>
+
           <View style={{
-            flex: 1
-          }}>
+            flex: 1,
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+            onPress={() => {
+              setSelected("home")
+              navigate({
+                routeName: "home"
+              })
+            }}
+          >
             <Image source={logo} style={
               {
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
               }
             } />
             <Header style={{
@@ -64,9 +77,13 @@ export default function AppTopBar() {
           </View>
 
           <View style={{
-            flex: 5
+            flex: 2,
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}>
-
+            <TopBarIcons />
           </View>
 
         </View>
