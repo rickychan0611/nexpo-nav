@@ -5961,6 +5961,13 @@ expo-pwa@0.0.46:
     fs-extra "9.0.0"
     update-check "1.5.3"
 
+expo-screen-orientation@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-2.0.0.tgz#3d73eb6de51c906d1c657d9ffdd5c06378f5b53d"
+  integrity sha512-pVjzNL3nQyr3iPzn34dOkNgBIwsdcLDshS+/J6otjKPswJxu34jnnFsYrB0tX/xTc0pYTHL5N+ycXIuk14ElYA==
+  dependencies:
+    fbjs "1.0.0"
+
 expo-splash-screen@^0.6.1, expo-splash-screen@~0.6.1:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.6.2.tgz#2be7fc28ad62549e870c69f1fe133ebe756c524f"
@@ -10884,6 +10891,11 @@ react-native-reanimated@~1.13.0:
   integrity sha512-3sF46jts9MbktgIasf0sTM8uhOYO5a5Q3YyQ4X1jjSE82n/fY2nW3XTFsLGfLEpK2ir4XSDhQWVgFHazaXZTww==
   dependencies:
     fbjs "^1.0.0"
+
+react-native-responsive-screen@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-responsive-screen/-/react-native-responsive-screen-1.4.2.tgz#45280826d24f9accbfdf46a36cb8e6d780f76f28"
+  integrity sha512-BLYz0UUpeohrib7jbz6wDmtBD5OmiuMRko4IT8kIF63taXPod/c5iZgmWnr5qOnK8hMuKiGMvsM3sC+eHX/lEQ==
 
 react-native-safe-area-context@3.1.4:
   version "3.1.4"

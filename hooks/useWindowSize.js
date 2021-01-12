@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Platform } from 'react-native';
 
 function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -15,18 +16,20 @@ export default function useWindowSize() {
     })
 
     useEffect(() => {
-        setTimeout(() => {
-            setWindowDimensions(getWindowDimensions())
-            if (typeof window !== 'undefined') {
+        if (Platform.OS === 'web') {
+            setTimeout(() => {
+                setWindowDimensions(getWindowDimensions())
+                if (typeof window !== 'undefined') {
 
-                function handleResize() {
-                    setWindowDimensions(getWindowDimensions());
+                    function handleResize() {
+                        setWindowDimensions(getWindowDimensions());
+                    }
+
+                    window.addEventListener('resize', handleResize);
+                    return () => window.removeEventListener('resize', handleResize);
                 }
-
-                window.addEventListener('resize', handleResize);
-                return () => window.removeEventListener('resize', handleResize);
-            }
-        }, 2000)
+            }, 1000)
+        }
     }, []);
 
     return windowDimensions;

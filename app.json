@@ -3,12 +3,18 @@
     "name": "e-shop",
     "slug": "e-shop",
     "platforms": ["ios", "android", "web"],
-    "android":{"softwareKeyboardLayoutMode": "pan"},
+    "android": {
+      "softwareKeyboardLayoutMode": "pan"
+    },
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
-    }
+    },
+    "ios": {
+      "requireFullScreen": true
+    },
+    "orientation": "portrait"
   }
 }
