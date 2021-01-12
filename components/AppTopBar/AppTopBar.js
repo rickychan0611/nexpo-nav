@@ -39,7 +39,8 @@ export default function AppTopBar() {
         shadowOpacity: 0.4,
         shadowRadius: 5,
         elevation: 5,
-        zIndex: 1000
+        zIndex: 1000,
+        backgroundColor: "white"
       }}>
         <View style={{
           flex: 1,
@@ -47,7 +48,9 @@ export default function AppTopBar() {
           flexWrap: "nowrap",
           justifyContent: "space-between",
           alignItems: "center",
-          paddingLeft: 25
+          paddingLeft: 25,
+          backgroundColor: "white"
+
         }}>
 
           <View style={{
@@ -66,8 +69,8 @@ export default function AppTopBar() {
           >
             <Image source={logo} style={
               {
-                width: 40,
-                height: 40,
+                width: "40px",
+                height: "40px",
               }
             } />
             <Header style={{
@@ -101,6 +104,7 @@ const Container = styled.View`
   /* flex: .5; */
   flex-direction: row;
   width: 100%;
+  height: 60px;
   justify-content: flex-end;
   padding: 15px 15px 10px 15px;
   background-color: white;

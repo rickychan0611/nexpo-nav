@@ -19,16 +19,15 @@ import mom2 from "../assets/mom2.jpg"
 
 export default function Home() {
   const { navigate } = useRouting();
-  const { user, setUser, newOrderProductList } = useContext(Context);
+  // const { user, setUser, newOrderProductList } = useContext(Context);
   const { vh, vw } = useWindowSize();
   const { theme } = useContext(ThemeContext);
 
   return (
     <>
-      {Platform.OS == "web" && vw > 690 && <AppTopBar />}
+      {vw > 690 && <AppTopBar />}
       <Wrapper>
         <CartBarWrapper>
-
 
           {Platform.OS !== "web" && <Image
             style={{
@@ -55,7 +54,7 @@ export default function Home() {
                   marginTop: 20,
 
                 }}>
-                  天天渔港超市{"\n"}天天送貨到家
+                  天天漁港超市{"\n"}天天送貨到家
                  </Text>
 
                 <Text style={{
