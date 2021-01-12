@@ -58,7 +58,6 @@ export default function qrcode() {
         backgroundColor: theme.red,
         paddingTop: 60,
         paddingBottom: 120,
-
       }}>
         <View style={{
           // flex: 1,
