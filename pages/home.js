@@ -12,6 +12,9 @@ import banner1 from "../public/banner1.jpg"
 import BottomBar from "../components/BottomBar";
 import AppTopBar from "../components/AppTopBar";
 
+import Home_LG from "../views/Home_LG";
+import Home_XS from "../views/Home_XS";
+
 import useWindowSize from "../hooks/useWindowSize"
 import { ThemeContext } from "../context/ThemeContext";
 import mom1 from "../assets/mom1.jpg"
@@ -38,90 +41,7 @@ export default function Home() {
             source={banner1} />}
           <ContextArea>
 
-            <View style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "flex-start",
-            }}>
-
-              <View style={{ flex: 1 }}>
-
-                <Text style={{
-                  fontSize: 50,
-                  fontWeight: "bold",
-                  color: theme.red,
-                  textAlign: "left",
-                  marginTop: 20,
-
-                }}>
-                  天天漁港超市{"\n"}天天送貨到家
-                 </Text>
-
-                <Text style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  color: theme.darkGrey,
-                  textAlign: "left",
-                  marginTop: 20,
-                  paddingRight: 40
-
-                }}>
-                  無論你想選購你最喜愛的水果蔬菜、海鮮肉類、五谷雜糧、手工點心、養生食材或生活用品。天天漁港超市使你足不出戶，輕鬆為你送到府上！
-                </Text>
-
-                <Button
-                  contained
-                  color="white"
-                  style={{
-                    backgroundColor: "black",
-                    width: 150,
-                    marginBottom: 10,
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    marginVertical: 30
-                  }}
-                  onPress={() => {
-                    navigate({ routeName: "store" })
-                  }}>
-                  立即購物
-              </Button>
-
-              </View>
-
-
-              <View style={{
-                flex: 1,
-                padding: 20
-              }}>
-                <Image source={mom2} style={{
-                  width: '100%',
-                  height: '100%',
-                  aspectRatio: 1,
-                }} />
-              </View>
-
-            </View>
-
-            <View style={{
-              backgroundColor: theme.red,
-              height: 100,
-              marginTop: 40,
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
-              <Text style={{
-                fontSize: 40,
-                fontWeight: "bold",
-                color: "white",
-                textAlign: "center",
-                // marginTop: 20,
-              }}>
-                會員積分優惠  天天讓你省更多!
-              </Text>
-
-            </View>
-
-
+            {vw > 690 ? <Home_LG /> : <Home_XS vw={vw} />}
 
           </ContextArea>
         </CartBarWrapper>
@@ -134,8 +54,9 @@ export default function Home() {
 }
 
 const Wrapper = styled.ScrollView`
-      flex: 1;
+      /* flex: 1; */
       width: 100%;
+      height: ${Platform.OS == "web" ? "100hv" : "100%"};
       max-width: 900px;
       padding-bottom: 62px;
       background-color: white;
@@ -147,13 +68,11 @@ const CartBarWrapper = styled.View`
       align-items: flex-start;
 
 `;
-const ContextArea = styled.View`
-      flex: 1;
-      align-items: left;
+const ContextArea = styled.ScrollView`
       background-color: white;
       width: 100%;
       max-width: 900px;
-      padding: 30px;
+      /* padding: 30px; */
 `;
 const MyText = styled.Text`
       font-size: 20px;

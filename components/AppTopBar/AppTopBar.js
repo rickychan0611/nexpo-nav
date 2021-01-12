@@ -76,7 +76,7 @@ export default function AppTopBar() {
             <Header style={{
               textAlign: "left",
               color: theme.red
-            }}>天天海港超市 </Header>
+            }}>天天漁港超市 </Header>
           </View>
 
           <View style={{
