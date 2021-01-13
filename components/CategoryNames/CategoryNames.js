@@ -61,7 +61,7 @@ const NamesContainer = styled.TouchableOpacity`
       background-color: 
       ${props => props.selected ? props.theme.red : props.theme.lightGrey};
       padding: 7px 0px 7px 0px;
-      margin: 5px 5px 10px 5px;
+      margin: 5px 15px 10px 5px;
 `;
 const Name = styled.Text`
       text-transform: capitalize;

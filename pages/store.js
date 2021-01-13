@@ -47,9 +47,6 @@ export default function Store() {
   return (
     <AppWrapper>
       <Store_Web_LG />
-      {/* {Platform.OS === "web" && <Store_Web_LG />}
-      {Platform.OS !== "web" && <Store_Mobile_XS />} */}
-
     </AppWrapper>
   );
 }
