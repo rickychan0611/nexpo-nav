@@ -22,10 +22,10 @@ export default function AppWrapper({ children }) {
   )
 };
 
-const Wrapper = styled.ScrollView`
+const Wrapper = styled.View`
       width: 100%;
       max-width: ${Platform.OS === "web" ? "900px" : wp("100%")};
-      height: ${Platform.OS === "web" ? "100hv" : "100%"};
+      height: ${Platform.OS === "web" ? "calc(100vh - 60px)" : "100%"};
       padding-bottom: 62px;
       background-color: white;
 `;

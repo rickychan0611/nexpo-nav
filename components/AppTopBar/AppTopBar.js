@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { db } from "../../firebaseApp";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Context } from "../../context/Context";
 
-import { View, Text, Platform, Image } from "react-native";
+import { View, Text, Platform, Image, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
 import { Title } from 'react-native-paper';
@@ -16,11 +15,11 @@ import TopBarIcons from "../../components/TopBarIcons"
 import { Link, useRouting } from "expo-next-react-navigation";
 
 export default function AppTopBar() {
-  const { theme, setSelected } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { navigate, getParam } = useRouting();
 
   const {
-    setOpenWebAdminMenu, selected
+    setSelected, selected
   } = useContext(Context);
 
   useEffect(() => {
@@ -52,32 +51,32 @@ export default function AppTopBar() {
           backgroundColor: "white"
 
         }}>
-
-          <View style={{
-            flex: 1,
-            flexDirection: "row",
-            flexWrap: "nowrap",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }}
-            onPress={() => {
-              setSelected("home")
-              navigate({
-                routeName: "home"
-              })
+          <TouchableOpacity onPress={() => {
+            navigate({
+              routeName: "home"
+            })
+            setSelected("home")
+          }}>
+            <View style={{
+              flex: 1,
+              flexDirection: "row",
+              flexWrap: "nowrap",
+              justifyContent: "flex-start",
+              alignItems: "center",
             }}
-          >
-            <Image source={logo} style={
-              {
-                width: "40px",
-                height: "40px",
-              }
-            } />
-            <Header style={{
-              textAlign: "left",
-              color: theme.red
-            }}>天天漁港超市 </Header>
-          </View>
+            >
+              <Image source={logo} style={
+                {
+                  width: "40px",
+                  height: "40px",
+                }
+              } />
+              <Header style={{
+                textAlign: "left",
+                color: theme.red
+              }}>天天漁港超市 </Header>
+            </View>
+          </TouchableOpacity>
 
           <View style={{
             flex: 2,

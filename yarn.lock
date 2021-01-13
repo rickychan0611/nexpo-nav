@@ -10823,6 +10823,13 @@ react-is@16.8.6:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
+react-native-easy-grid@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-easy-grid/-/react-native-easy-grid-0.2.2.tgz#f0be33620be1ebe2d2295918eb58b0a27e8272ab"
+  integrity sha512-MlYrNIldnEMKn6TVatQN1P64GoVlwGIuz+8ncdfJ0Wq/xtzUkQwlil8Uksyp7MhKfENE09MQnGNcba6Mx3oSAA==
+  dependencies:
+    lodash "^4.17.15"
+
 react-native-elements@^3.0.0-alpha.1:
   version "3.0.0-alpha.1"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-3.0.0-alpha.1.tgz#03b9d5cbfc413226cee209dbbce2d22077fe3b1f"
@@ -10930,6 +10937,13 @@ react-native-status-bar-height@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
   integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
+
+react-native-super-grid@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-super-grid/-/react-native-super-grid-4.0.3.tgz#67ce71c241eb572a4ca92c4b667a053f3ec6a874"
+  integrity sha512-WsnK0s+hL3/hRscMcoMrCZBfUFrbDGTQbfvwPk+40ku069ebr+1czEqCmXP4UtNrpEQgysA6ge53CuuBDVY/qQ==
+  dependencies:
+    prop-types "^15.6.0"
 
 react-native-svg@12.1.0:
   version "12.1.0"

@@ -48,9 +48,8 @@ export default function ProductCard({ key, item }) {
 
       {
         item && <>
-          <Container key={key}
+          <ItemContainer key={key}
             style={{
-              backgroundColor: "white",
               shadowColor: "#000",
               shadowOffset: {
                 width: 0,
@@ -59,7 +58,8 @@ export default function ProductCard({ key, item }) {
               shadowOpacity: 0.15,
               shadowRadius: 10,
               elevation: item.activated ? 10 : 0,
-              zIndex: 1000
+              zIndex: 1000,
+              backgroundColor: 'white'
             }}>
 
 
@@ -118,22 +118,19 @@ export default function ProductCard({ key, item }) {
                 <ProductContent item={item} />
               </RightSideContentWrapper>
             </ContentContainer>
-          </Container>
+          </ItemContainer>
         </>
       }
     </>
   )
 };
 
-const Container = styled.View`
+const ItemContainer = styled.View`
       flex-direction: column;
       flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: flex-start;
-      width: 93%;
-      max-width: 500px;
       padding: 0px 5px 10px 5px;
-      margin: 10px;
       border-radius:10px;
       border:1px solid #d4d4d4;
 `;

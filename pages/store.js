@@ -8,8 +8,9 @@ import { View, TouchableOpacity, Platform, Text } from "react-native";
 import Store_Mobile_XS from "../layouts/Store_Mobile_XS";
 import Store_Web_LG from "../layouts/Store_Web_LG";
 
+import AppWrapper from "../components/AppWrapper";
 
-export default function Store({ ssrData }) {
+export default function Store() {
 
   const {
     selectedCat, selected,
@@ -44,10 +45,12 @@ export default function Store({ ssrData }) {
   }, [selectedCat, categories])
 
   return (
-    <>
-      {Platform.OS === "web" && <Store_Web_LG />}
-      {Platform.OS !== "web" && <Store_Mobile_XS />}
-    </>
+    <AppWrapper>
+      <Store_Web_LG />
+      {/* {Platform.OS === "web" && <Store_Web_LG />}
+      {Platform.OS !== "web" && <Store_Mobile_XS />} */}
+
+    </AppWrapper>
   );
 }
 

@@ -61,14 +61,14 @@ const NamesContainer = styled.TouchableOpacity`
       background-color: 
       ${props => props.selected ? props.theme.red : props.theme.lightGrey};
       padding: 7px 0px 7px 0px;
-      margin: 5px 5px 5px 5px;
+      margin: 5px 5px 10px 5px;
 `;
 const Name = styled.Text`
       text-transform: capitalize;
       color: ${props => props.selected ? "white" : props.theme.darkGrey};
 `;
 const TopSpace = styled.View`
-      height: 5px;
+      height: 15px;
 `;
 const Space = styled.View`
       height: 250px;
