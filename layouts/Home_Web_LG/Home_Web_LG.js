@@ -3,6 +3,7 @@ import { View, Text, Image } from "react-native";
 import styled from "styled-components/native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { Button, TextInput, Headline, IconButton } from "react-native-paper";
+import { useRouting } from "expo-next-react-navigation";
 
 import mom1 from "../../public/mom1.jpg"
 import mom2 from "../../public/mom2.jpg"
@@ -11,6 +12,7 @@ import mom2 from "../../public/mom2.jpg"
 export default function Home_Web_LG() {
 
   const { theme } = useContext(ThemeContext);
+  const { navigate } = useRouting();
 
   return (
     <>

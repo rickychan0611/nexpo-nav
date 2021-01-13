@@ -47,7 +47,7 @@ export default function BottomBarIcons() {
       <Button onPress={() => {
         setSelected("home")
         navigate({
-          routeName: "/"
+          routeName: "home"
         })
       }}>
         <Icon
