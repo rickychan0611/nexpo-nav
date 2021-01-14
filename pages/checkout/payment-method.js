@@ -67,7 +67,7 @@ export default function paymentMethod() {
                   flexDirection: "row",
                   flexWrap: "nowrap",
                   width: Platform.OS === "web" ? "100vw" : "100%",
-                  maxWidth: 500,
+                  maxWidth: 900,
                   marginBottom: 10
                 }}>
                 <IconButton icon="circle" size={14} color={theme.lightGrey} />
@@ -157,7 +157,7 @@ export default function paymentMethod() {
                       <Text style={{
                         fontSize: 16
                       }}>
-                        Pay upon delivery
+                        Pay upon delivery (Cash or Credit)
                     </Text>
                     </View>
                   </Row>
@@ -202,7 +202,7 @@ const ContextArea = styled.View`
   /* flex: 1; */
   width: ${Platform.OS === "web" ? `100vw` : `100%`};
   height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
-  max-width: 500px;
+  max-width: 900px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;

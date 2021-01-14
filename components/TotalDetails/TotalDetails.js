@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View, Text, Platform } from "react-native";
 import styled from "styled-components/native";
 
-export default function TotalDetails({total}) {
+export default function TotalDetails({ total }) {
 
   return (
     <>
@@ -30,7 +30,7 @@ const TotalContainer = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 900px;
   padding: 5px 25px 5px 25px;
 
 `;

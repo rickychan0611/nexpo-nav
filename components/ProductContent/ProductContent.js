@@ -95,7 +95,7 @@ export default function ProductContent({ item }) {
         </QtyWrapper>
       }
 
-      
+
     </View >
   )
 };
@@ -151,7 +151,7 @@ const Container = styled.View`
       align-items: flex-start;
       justify-content: flex-start;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
       padding: 0 10px 0 5px;
       margin-bottom: ${Platform.OS === 'web' ? "105px" : "5px"};
 `;

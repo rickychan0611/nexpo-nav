@@ -32,7 +32,7 @@ export default function orderSuccess() {
       <View style={{
         flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 500,
+        maxWidth: 900,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
@@ -75,7 +75,7 @@ export default function orderSuccess() {
           }}>
             {`Your Order ID: ${"\n" + newOrderId}`}
           </Headline>
-          <Text>You have earned {total*100} points</Text>
+          <Text>You have earned {total * 100} points</Text>
           {/* <TableRow >
             <Left><Text style={{ color: "grey" }}>Date:</Text></Left>
             <Right><Text style={{ color: "grey" }}>{moment().format("DD/MM/YYYY")}</Text></Right>
@@ -89,22 +89,22 @@ export default function orderSuccess() {
             <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
           </TableRow> */}
 
-          <Button 
+          <Button
             icon="arrow-right"
             contained
             color="white"
-              style={{
-                marginTop: 60,
-                backgroundColor: theme.primary,
-                borderWidth: 1,
-                borderRadius: 25,
-                // width: 100,
-                marginBottom: 10
-              }}
-              onPress={() => navigate({
-                routeName: "account"
-              })}>
-              Track Your Order</Button>
+            style={{
+              marginTop: 60,
+              backgroundColor: theme.primary,
+              borderWidth: 1,
+              borderRadius: 25,
+              // width: 100,
+              marginBottom: 10
+            }}
+            onPress={() => navigate({
+              routeName: "account"
+            })}>
+            Track Your Order</Button>
 
         </Surface>
       </View>

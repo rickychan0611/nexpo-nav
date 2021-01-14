@@ -46,7 +46,7 @@ const Wrapper = styled.TouchableOpacity`
   bottom: 68px;
   height: 55px;
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;

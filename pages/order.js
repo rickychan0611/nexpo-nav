@@ -64,13 +64,14 @@ export default function order() {
         <Dialog visible={cancelDialog} onDismiss={hideCancelDialog}>
           <Dialog.Title>Cancel Order</Dialog.Title>
           <Dialog.Content>
-            <Paragraph>Are you sure to cancel order?</Paragraph>
+            {/* <Paragraph>Are you sure to cancel order?</Paragraph> */}
+            <Paragraph>Please contact customer service: 604-558-1661</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             {!cancelLoading ?
               <>
-                <Button onPress={() => { hideCancelDialog() }}>No</Button>
-                <Button onPress={() => { onCancel() }}>Yes</Button>
+                <Button onPress={() => { hideCancelDialog() }}>OK</Button>
+                {/* <Button onPress={() => { onCancel() }}>OK</Button> */}
               </> :
               <>
                 <Button loading></Button>
@@ -215,7 +216,7 @@ const ItemsContainer = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 900px;
   padding: 15px 25px 15px 25px;
 `;
 
@@ -244,7 +245,7 @@ const ContextArea = styled.View`
   /* flex: 1; */
   width: ${Platform.OS === "web" ? `100vw` : `100%`};
   height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
-  max-width: 500px;
+  max-width: 900px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;
@@ -275,7 +276,7 @@ const Wrapper = styled.TouchableOpacity`
   bottom: 68px;
   height: 55px;
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;

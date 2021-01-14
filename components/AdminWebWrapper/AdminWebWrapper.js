@@ -48,6 +48,6 @@ const WebContextArea = styled.View`
       justify-content: flex-start;
       background-color: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
       height: 100vh;
 `;

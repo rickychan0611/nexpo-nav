@@ -7,7 +7,7 @@ import { Link, useRouting } from "expo-next-react-navigation";
 import styled from "styled-components/native";
 import BottomBar from "../../components/BottomBar";
 import CartCheckoutBar from "../../components/CartCheckoutBar";
-import {db, auth} from "../../firebaseApp";
+import { db, auth } from "../../firebaseApp";
 
 export default function admin() {
 
@@ -28,12 +28,12 @@ export default function admin() {
       .then((doc) => {
         console.log('logging in... wait' + JSON.stringify(doc.user))
         db.collection("users").doc(doc.user.uid).get()
-        .then(doc => {
-          if (doc.data().isAdmin) {
-            setUser(doc.data())
-            navigate({web:{path: "/admin/panel"}})
-          }
-        })
+          .then(doc => {
+            if (doc.data().isAdmin) {
+              setUser(doc.data())
+              navigate({ web: { path: "/admin/panel" } })
+            }
+          })
       })
       .catch(function (error) {
         // Handle Errors here.
@@ -46,37 +46,37 @@ export default function admin() {
 
   return (
     <>
-        <ContextArea>
-          <MyText>Admin Login </MyText>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 5 }}
-            onChangeText={text => onChangeText("email", text)}
-            value={login.email}
-          />
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 5 }}
-            onChangeText={text => onChangeText("password", text)}
-            value={login.password}
-            name={"password"}
-          />
-          <Button
-            title="submit"
-            onPress={() =>
-              onSubmit()
-            }
-          />
-          <Button
-            title="Sign out"
-            onPress={() =>
-              auth.signOut().then(function () {
-                console.log("Sign-out successful")
-                setUser("")
-              }).catch(function (error) {
-                // An error happened.
-              })
-            }
-          />
-        </ContextArea>
+      <ContextArea>
+        <MyText>Admin Login </MyText>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 5 }}
+          onChangeText={text => onChangeText("email", text)}
+          value={login.email}
+        />
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, margin: 5 }}
+          onChangeText={text => onChangeText("password", text)}
+          value={login.password}
+          name={"password"}
+        />
+        <Button
+          title="submit"
+          onPress={() =>
+            onSubmit()
+          }
+        />
+        <Button
+          title="Sign out"
+          onPress={() =>
+            auth.signOut().then(function () {
+              console.log("Sign-out successful")
+              setUser("")
+            }).catch(function (error) {
+              // An error happened.
+            })
+          }
+        />
+      </ContextArea>
     </>
   );
 }
@@ -92,7 +92,7 @@ const CartBarWrapper = styled.View`
       justify-content: space-between;
       align-items: flex-start;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
       padding-bottom: 62px;
 `;
 const ContextArea = styled.View`
@@ -100,7 +100,7 @@ const ContextArea = styled.View`
       align-items: center;
       background-color: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
 `;
 const MyText = styled.Text`
       font-size: 20px;

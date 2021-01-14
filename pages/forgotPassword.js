@@ -124,9 +124,9 @@ export default function forgotPassword() {
             <Paragraph>Please check email and click on the URL provided to reset your password.</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-          <Button 
-            contained
-            color="white"
+            <Button
+              contained
+              color="white"
               style={{
                 backgroundColor: theme.black,
                 borderWidth: 1,
@@ -137,8 +137,9 @@ export default function forgotPassword() {
               onPress={() => {
                 hideModal()
                 navigate({
-                routeName: "login"
-              })}}>
+                  routeName: "login"
+                })
+              }}>
               OK</Button>
           </Dialog.Actions>
         </Dialog>
@@ -147,7 +148,7 @@ export default function forgotPassword() {
       <View style={{
         flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 500,
+        maxWidth: 900,
         flexDirection: 'column',
         // flexWrap: 'wrap',
         justifyContent: 'flex-start',
@@ -202,7 +203,7 @@ export default function forgotPassword() {
                 onPress={() => passwordReset()}>Submit</Button>
               <Divider />
               <InputView></InputView>
-              <Link routeName="login"  style={{marginBottom: 20}}><Caption>Go back to login</Caption></Link>
+              <Link routeName="login" style={{ marginBottom: 20 }}><Caption>Go back to login</Caption></Link>
               <Link routeName="signUp"><Caption>Don't have an account? Sign up</Caption></Link>
               <InputView>
               </InputView>

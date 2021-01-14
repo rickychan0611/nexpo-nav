@@ -14,6 +14,8 @@ import ProductCard from "../../components/ProductCard";
 import CategoryNames from "../../components/CategoryNames";
 import ViewCartBar from "../../components/ViewCartBar";
 
+import Store_Web_LG from "../../layouts/Store_Web_LG"
+
 // const API_URL = `https://strapi-ric.herokuapp.com/categories`
 // const API_URL = `http://localhost:1337/categories`
 
@@ -63,43 +65,15 @@ export default function StoreContents({ ssrData }) {
             // value={"search"}
             lightTheme
             platform="ios"
-            containerStyle={{ width: "100%", maxWidth: 500, backgroundColor: "white" }}
+            containerStyle={{ width: "100%", maxWidth: 900, backgroundColor: "white" }}
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           /> */}
         <ContextArea up={newOrderProductList.length > 0}>
-
-          <CategoryScrollView up={newOrderProductList.length > 0}>
-            <CategoryNames />
-          </CategoryScrollView>
-
-          <ProductContainer>
-            {productData && productData[selectedCat] && productData[selectedCat].length > 0 ?
-              productData[selectedCat].map((item) => {
-                return (
-                  <TouchableOpacity key={item.uid}
-                    onPress={() => {
-                      setSelectedItem(item)
-                      setProduct(item)
-                      navigate({
-                        routeName: "admin/edit-product",
-                        params: { id: item.uid, path: "edit-product" },
-                        web: { as: `/admin/edit-product?id=${item.uid}` },
-                      })
-                    }}>
-                    <ProductCard item={item} />
-                  </TouchableOpacity>
-                )
-              }) :
-              <Text style={{ paddingTop: 150, textAlign: 'center' }}>This category has no product.</Text>
-            }
-            <View style={{ height: 150 }}></View>
-          </ProductContainer>
+          <Store_Web_LG edit={true} />
         </ContextArea>
       </>
       }
-      {/* </CartBarWrapper> */}
-
     </>
   );
 }
@@ -111,7 +85,7 @@ const CartBarWrapper = styled.View`
       justify-content: space-between;
       align-items: flex-start;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
 `;
 const ContextArea = styled.View`
       flex-direction: row;
@@ -120,7 +94,7 @@ const ContextArea = styled.View`
       justify-content: flex-start;
       background-color: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
       height: ${Platform.OS === 'web' ? `calc(100vh)` : `100%`}; */
 `;
 const CategoryScrollView = styled.ScrollView`

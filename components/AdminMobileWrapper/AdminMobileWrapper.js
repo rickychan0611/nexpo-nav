@@ -14,10 +14,10 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function AdminMobileWrapper({ children }) {
   const { theme } = useContext(ThemeContext);
-  const { openWebAdminMenu, setOpenWebAdminMenu,  data
+  const { openWebAdminMenu, setOpenWebAdminMenu, data
   } = useContext(Context);
 
-   const menu = <AdminSideBar data={data} />
+  const menu = <AdminSideBar data={data} />
 
   //This is mobile layout, mobile has side bar closed
   return (
@@ -34,9 +34,9 @@ export default function AdminMobileWrapper({ children }) {
       }
     >
       <AdminTopBar />
-        <MobileContextArea backgroundColor={theme.backgroundColor}>
-          {children}
-        </MobileContextArea>
+      <MobileContextArea backgroundColor={theme.backgroundColor}>
+        {children}
+      </MobileContextArea>
     </SideMenu>
   );
 }
@@ -50,6 +50,6 @@ const MobileContextArea = styled.View`
       background-color: ${props => props.backgroundColor};
       width: 100%;
       /* App width */
-      max-width: 500px; 
+      max-width: 900px; 
       /* padding: 0px 10px 20px 10px; */
 `;

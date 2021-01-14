@@ -25,12 +25,12 @@ export default function CartCheckoutBar() {
           routeName: "cart",
         })
       }}>
-          <Bar theme={theme}>
+        <Bar theme={theme}>
           <Total>
-          View Cart  ●  ${(+total).toFixed(2)}
+            View Cart  ●  ${(+total).toFixed(2)}
           </Total>
-          </Bar>
-          {/* <Qty>{qty}</Qty> */}
+        </Bar>
+        {/* <Qty>{qty}</Qty> */}
       </Wrapper>
     </>
   )
@@ -69,7 +69,7 @@ const Wrapper = styled.TouchableOpacity`
   bottom: 68px;
   height: 55px;
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   /* flex: 1; */
   flex-direction: row;
   flex-wrap: nowrap;

@@ -32,7 +32,7 @@ export default function login() {
       <View style={{
         flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 500,
+        maxWidth: 900,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         paddingBottom: 60,
@@ -56,12 +56,12 @@ export default function login() {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            width: Platform.OS ==="web" ? "100vw" : vw,
-            maxWidth: 500
+            width: Platform.OS === "web" ? "100vw" : vw,
+            maxWidth: 900
           }}>
-            <Button 
-            contained
-            color="white"
+            <Button
+              contained
+              color="white"
               style={{
                 backgroundColor: theme.primary,
                 borderWidth: 1,
@@ -75,16 +75,16 @@ export default function login() {
               })}>
               登錄 / Login</Button>
             <Button contain color="white"
-             mode="contained"
-             color="white"
-               style={{
-                 borderWidth: 1,
-                 borderRadius: 25,
-                 width: Platform.OS === "web" ? "90vw" : vw - 60,
-                 maxWidth: 400,
-                 marginBottom: 10
-               }}
-               onPress={() => navigate({
+              mode="contained"
+              color="white"
+              style={{
+                borderWidth: 1,
+                borderRadius: 25,
+                width: Platform.OS === "web" ? "90vw" : vw - 60,
+                maxWidth: 400,
+                marginBottom: 10
+              }}
+              onPress={() => navigate({
                 routeName: "signUp"
               })}>
               註冊 / Sign Up</Button>

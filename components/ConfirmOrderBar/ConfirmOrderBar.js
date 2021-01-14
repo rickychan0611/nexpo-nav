@@ -79,16 +79,14 @@ export default function ConfirmOrderBar() {
             discount: 0,
             shippingFee: 8,
             status: "In Progress",
-            paymentStatus: paymentData.message
+            paymentStatus: paymentData.message,
+            index: orderId
           })
             .then(() => {
               database.ref('stats/1111').update({ helkl })
                 .catch((err) => {
                   alert(err)
                 })
-
-
-
               db.collection("users").doc(user.email).update({
                 points: user.points + (total * 100)
               })
@@ -266,7 +264,7 @@ const Wrapper = styled.TouchableOpacity`
   bottom: 68px;
   height: 55px;
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   /* flex: 1; */
   flex-direction: row;
   flex-wrap: nowrap;

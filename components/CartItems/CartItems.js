@@ -47,7 +47,7 @@ const ItemsContainer = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 900px;
   padding: 15px 30px 15px 25px;
 `;
 

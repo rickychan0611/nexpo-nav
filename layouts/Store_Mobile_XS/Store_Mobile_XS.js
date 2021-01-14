@@ -61,7 +61,7 @@ export default function Store_Mobile_XS() {
             // value={"search"}
             lightTheme
             platform="ios"
-            containerStyle={{ width: "100%", maxWidth: 500, backgroundColor: "white" }}
+            containerStyle={{ width: "100%", maxWidth: 900, backgroundColor: "white" }}
             inputContainerStyle={{ backgroundColor: "#f2f2f2", ...outline }}
             inputStyle={outline}
           /> */}
@@ -133,7 +133,7 @@ const CartBarWrapper = styled.View`
       justify-content: space-between;
       align-items: flex-start;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
 `;
 const ContextArea = styled.View`
       flex: 1;
@@ -143,7 +143,7 @@ const ContextArea = styled.View`
       justify-content: flex-start;
       background-color: white;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
 
 `;
 const CategoryScrollView = styled.ScrollView`

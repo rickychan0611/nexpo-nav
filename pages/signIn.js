@@ -155,7 +155,7 @@ export default function signIn() {
       <View style={{
         flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 500,
+        maxWidth: 900,
         flexDirection: 'column',
         // flexWrap: 'wrap',
         justifyContent: 'flex-start',

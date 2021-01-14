@@ -29,7 +29,7 @@ export default function addressBook() {
     onEdit, setOnEdit,
     onAddNew, setOnAddNew,
     editAddress, setEditAddress,
-    initLoaded, 
+    initLoaded,
     task, setTask,
     setNewBillingBoxchecked
   } = useContext(Context);
@@ -51,7 +51,7 @@ export default function addressBook() {
   }
 
   useEffect(() => {
-    return () => {setTask("newBillingAddress")}
+    return () => { setTask("newBillingAddress") }
   }, [])
 
   return (
@@ -103,7 +103,7 @@ export default function addressBook() {
                         {onEdit && address === editAddress &&
                           <AddressForm
                             index={index}
-                            onEdit 
+                            onEdit
                             setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
@@ -111,7 +111,7 @@ export default function addressBook() {
                         {onAddNew && index === 0 &&
                           <AddressForm
                             index={index}
-                            onEdit 
+                            onEdit
                             setOnEdit={setOnEdit}
                             onAddNew={onAddNew}
                             setOnAddNew={setOnAddNew} />}
@@ -220,7 +220,7 @@ const ContextArea = styled.View`
   /* flex: 1; */
   width: ${Platform.OS === "web" ? `100vw` : `100%`};
   height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
-  max-width: 500px;
+  max-width: 900px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;

@@ -11,7 +11,7 @@ import OpenNavBtn from "../components/OpenNavBtn";
 import Loader from "../components/Loader";
 import { Marker } from '@react-google-maps/api';
 import Map from "../components/Map";
-import { db} from "../firebaseApp";
+import { db } from "../firebaseApp";
 
 function Route() {
   const { navigate } = useRouting();
@@ -46,7 +46,7 @@ function Route() {
     setErr({})
     //del all empty keys
     if (!destination) {
-      setErr({ destination: "Required. Please enter your end point"})
+      setErr({ destination: "Required. Please enter your end point" })
       setLoading(false)
       return
     }
@@ -74,8 +74,8 @@ function Route() {
             .then(snapshot => {
               if (snapshot.empty) {
                 console.log('No matching documents.', keyName);
-                setErr(prev => ({ ...prev, [keyName]: "ID not found"}))
-                throw("ID not found")
+                setErr(prev => ({ ...prev, [keyName]: "ID not found" }))
+                throw ("ID not found")
               }
               snapshot.forEach(doc => {
                 orders.push(doc.data());
@@ -84,39 +84,40 @@ function Route() {
             })
             .catch(err => {
               console.log('Error getting documents', err);
-              throw(err)
+              throw (err)
             });
 
           promises.push(promise)
         })
 
         Promise.all(promises)
-        .then(() => {
-          let addresses = []
-          let idAndAddress = []
-          console.log("Done: ")
-          console.log(orders)
+          .then(() => {
+            let addresses = []
+            let idAndAddress = []
+            console.log("Done: ")
+            console.log(orders)
 
-          orders.map((item) => {
-            const address1 = item.shippingAddress.address1 + ", "
-            const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
-            const city = item.shippingAddress.city + ", "
-            const province = item.shippingAddress.province + ", "
-            const country = item.shippingAddress.country
-            const addressStr = address1 + address2 + city + province + country
-            addresses.push({ location: addressStr })
-            idAndAddress.push({ location: addressStr, orderId: item.orderId })
+            orders.map((item) => {
+              const address1 = item.shippingAddress.address1 + ", "
+              const address2 = item.shippingAddress.address2 ? item.shippingAddress.address2 + ", " : ""
+              const city = item.shippingAddress.city + ", "
+              const province = item.shippingAddress.province + ", "
+              const country = item.shippingAddress.country
+              const addressStr = address1 + address2 + city + province + country
+              addresses.push({ location: addressStr })
+              idAndAddress.push({ location: addressStr, orderId: item.orderId })
+            })
+
+            console.log("addresses: ")
+            console.log(addresses)
+            setWaypoints(addresses)
+            setRunDirectionsService(true)
+            setOrdersList(idAndAddress)
           })
-
-          console.log("addresses: ")
-          console.log(addresses)
-          setWaypoints(addresses)
-          setRunDirectionsService(true)
-          setOrdersList(idAndAddress)
-      })
-      .catch((err)=>{
-        setLoading(false)
-        console.log(err)})
+          .catch((err) => {
+            setLoading(false)
+            console.log(err)
+          })
       }
 
       else {//no routesKeyNames
@@ -127,7 +128,7 @@ function Route() {
     }
     else { //no route
       console.log("route is empty")
-      setErr({point0 : "Please enter an ID"})
+      setErr({ point0: "Please enter an ID" })
       setLoading(false)
       return
     }
@@ -155,7 +156,7 @@ function Route() {
 
   return (
     <>
-        {loading && <Loader/>}
+      {loading && <Loader />}
 
       <ContextArea>
         <ScrollView>
@@ -304,7 +305,7 @@ const ContextArea = styled.View`
   /* flex: 1; */
   width: ${Platform.OS === "web" ? `100vw` : `100%`};
   height: ${Platform.OS === "web" ? `calc(100vh) ` : `100%`};
-  max-width: 500px;
+  max-width: 900px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;

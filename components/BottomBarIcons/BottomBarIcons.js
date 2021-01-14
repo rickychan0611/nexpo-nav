@@ -180,7 +180,7 @@ const ContentArea = styled.View`
   bottom: 0;
   height: 60px;
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   flex: 1;
   flex-direction: row;
   flex-wrap: nowrap;

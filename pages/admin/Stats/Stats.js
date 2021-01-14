@@ -101,7 +101,8 @@ const Row = styled.View`
  flex-wrap: nowrap;
  justify-content: space-between;
  align-items: center;
- max-width: 460px;
+ max-width: 880px;
+
  padding: 0px 10px 0px 10px;
  margin-bottom: 10;
 `;

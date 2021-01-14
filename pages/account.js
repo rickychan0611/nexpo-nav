@@ -46,7 +46,7 @@ export default function account() {
               top: 0,
               position: "absolute",
               width: "100%",
-              maxWidth: 500,
+              maxWidth: 900,
               height: 200,
               resizeMode: "stretch"
             }}
@@ -59,7 +59,7 @@ export default function account() {
             justifyContent: "center",
             alignItems: "center",
             width: "100%",
-            maxWidth: 500,
+            maxWidth: 900,
             height: 200,
           }}>
             <Text
@@ -221,7 +221,7 @@ const ItemsContainer = styled.TouchableOpacity`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 900px;
   padding: 15px;
 `;
 
@@ -229,7 +229,7 @@ const DrawerContainer = styled.View`
   width: ${Platform.OS === "web" ? `100vw` : `null`};
   flex-direction: column;
   flex-wrap: nowrap;
-  max-width: 500px;
+  max-width: 900px;
   padding: 7px 0px 7px 0px;
 `;
 
@@ -247,7 +247,7 @@ const ContextArea = styled.View`
   /* flex: 1; */
   width: ${Platform.OS === "web" ? `100vw` : `100%`};
   height: ${Platform.OS === "web" ? `calc(100vh - 54px) ` : `100%`};
-  max-width: 500px;
+  max-width: 900px;
   background-color: white;
   /* padding-bottom: ${Platform.OS === "web" ? `35px` : `95px`}; */
 `;

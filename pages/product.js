@@ -139,7 +139,7 @@ const ContextArea = styled.View`
     align-items: flex-start;
     background-color: white;
     width: 100%;
-    max-width: 500px;
+    max-width: 900px;
     /* margin-bottom: 60px; */
     padding-bottom: 80px;
 `;
@@ -150,7 +150,7 @@ const CartBarWrapper = styled.View`
       justify-content: space-between;
       align-items: flex-start;
       width: 100%;
-      max-width: 500px;
+      max-width: 900px;
       padding-bottom: 62px;
 `;
 const IconContainer = styled.View`

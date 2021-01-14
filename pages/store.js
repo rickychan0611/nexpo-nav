@@ -9,6 +9,7 @@ import Store_Mobile_XS from "../layouts/Store_Mobile_XS";
 import Store_Web_LG from "../layouts/Store_Web_LG";
 
 import AppWrapper from "../components/AppWrapper";
+import ViewCartBar from "../components/ViewCartBar";
 
 export default function Store() {
 
@@ -18,6 +19,7 @@ export default function Store() {
   } = useContext(Context);
 
   const {
+    newOrderProductList,
     listenCategories,
     queryProduct,
   } = useContext(ProductsContext);
@@ -47,6 +49,11 @@ export default function Store() {
   return (
     <AppWrapper>
       <Store_Web_LG />
+      <ViewCartBar />
+
+      {/* {newOrderProductList && newOrderProductList.length > 0 ?
+        <ViewCartBar />
+        : null} */}
     </AppWrapper>
   );
 }

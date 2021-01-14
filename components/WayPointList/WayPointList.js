@@ -27,10 +27,10 @@ export default function WayPointList({
     }
   }
 
-  const ID = ({address, index}) => {
+  const ID = ({ address, index }) => {
     let order = ordersList.filter((item) => {
       return address === item.location
-      })
+    })
     return <Text>{convertChar(index) + ": ID #" + order[0].orderId}</Text>
   }
 
@@ -44,7 +44,7 @@ export default function WayPointList({
         style={{
           padding: 25,
           width: "100vw",
-          maxWidth: 500,
+          maxWidth: 900,
         }}>
         <Headline
           style={{
@@ -70,7 +70,7 @@ export default function WayPointList({
         {mapResponse && mapResponse.request.waypoints.map((item, index) => {
           return (
             <View key={index} style={{ marginVertical: 8 }}>
-            <ID address={item.location.query} index={index}/>
+              <ID address={item.location.query} index={index} />
               <Text style={{ paddingLeft: 16 }}>{item.location.query}</Text>
             </View>
           )

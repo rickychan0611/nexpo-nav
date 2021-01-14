@@ -54,7 +54,7 @@ export default function qrcode() {
       <ScrollView style={{
         width: Platform.OS === "web" ? '100vw' : '100%',
         height: Platform.OS === "web" ? '100vh' : '100%',
-        maxWidth: 500,
+        maxWidth: 900,
         backgroundColor: theme.red,
         paddingTop: 60,
         paddingBottom: 120,
