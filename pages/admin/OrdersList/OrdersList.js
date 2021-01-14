@@ -41,6 +41,7 @@ export default function OrdersList() {
 
   //dailog
   const [refundOrder, setRefundOrder] = useState();
+  const [refundMessage, setRefundMessage] = useState();
 
   const [showConfirmRefundDialog, setShowConfirmRefundDialog] = useState(false);
   const hideConfirmRefundDialog = () => setShowConfirmRefundDialog(false)
@@ -66,10 +67,18 @@ export default function OrdersList() {
       .then(async (data) => {
         console.log("retrun data")
         console.log(data)
-        // await updateStatus(refundOrder.orderId, "Cancelled")
-        // showRefundSuccessDialog(true)
+        if (data.data.approved) {
+          await updateStatus(refundOrder.orderId, "Cancelled")
+          hideConfirmRefundDialog()
+          setRefundMessage(data.data.message)
+          setShowRefundSuccessDialog(true)
+        }
+        else {
+          hideConfirmRefundDialog()
+          setRefundMessage("Error:" + data.data.message)
+          setShowRefundSuccessDialog(true)
+        }
       })
-
   }
 
   const updateStatus = async (orderId, status) => {
@@ -127,8 +136,8 @@ export default function OrdersList() {
           <Dialog.Title>Refund</Dialog.Title>
           <Dialog.Content>
             <Paragraph>
-              Refund Successful
-              </Paragraph>
+              {refundMessage}
+            </Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => hideRefundSuccessDialog()}>OK</Button>
@@ -191,7 +200,6 @@ export default function OrdersList() {
                       alignItems: "center",
                       margin: 0
                     }}>
-
                       <Menu
                         visible={visible === order.orderId && true}
                         onDismiss={closeMenu}
@@ -207,20 +215,29 @@ export default function OrdersList() {
                           }}
                           >
                             <IconButton icon="chevron-down" onPress={() => openMenu(order.orderId)} />
-                            <Text onPress={() => openMenu(order.orderId)} >{order.status}</Text>
+                            <Text onPress={() => openMenu(order.orderId)}
+                              style={{
+                                fontWeigth: "bolde",
+                                color:
+                                  order.status === "In Progress" ? "#2fa3eb" :
+                                    order.status === "Out for Delivery" ? "#3ae307" :
+                                      order.status === "Complete" ? "#d48404" :
+                                        order.status === "Cancelled" ? "red" 
+                            
+                            }}>{order.status}</Text>
                           </View>
                         }>
-                        <Menu.Item onPress={() => updateStatus(order.orderId, "In Progress")} title="In Progress" />
-                        <Divider />
-                        <Menu.Item onPress={() => updateStatus(order.orderId, "Out for Delivery")} title="Out for Delivery" />
-                        <Divider />
-                        <Menu.Item onPress={() => updateStatus(order.orderId, "Completed")} title="Completed" />
-                        <Divider />
-                        <Menu.Item onPress={() => {
-                          showRefundDialog(order)
+                        {order.status !== "Cancelled" &&
+                          <>
+                            <Menu.Item onPress={() => updateStatus(order.orderId, "In Progress")} title="In Progress" />
+                            <Divider />
+                            <Menu.Item onPress={() => updateStatus(order.orderId, "Out for Delivery")} title="Out for Delivery" />
+                            <Divider />
+                            <Menu.Item onPress={() => updateStatus(order.orderId, "Completed")} title="Completed" />
+                            <Divider />
+                            <Menu.Item onPress={() => { showRefundDialog(order) }} title="Cancel & Refund" />
+                          </>
                         }
-                        } title="Cancel & Refund" />
-
                       </Menu>
                     </View>
                   </View>
@@ -302,7 +319,7 @@ const ItemsContainer = styled.View`
   /* width: ${Platform.OS === "web" ? `100%` : `null`}; */
   flex-direction: row;
   flex-wrap: nowrap;
-  max-width: 440px;
+  max-width: 860px;
   padding: 10px 0px 10px 0px;
 `;
 const Qty = styled.View`

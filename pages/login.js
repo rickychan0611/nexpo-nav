@@ -32,7 +32,7 @@ export default function login() {
       <View style={{
         flex: 1,
         width: Platform.OS === "web" ? '100vw' : '100%',
-        maxWidth: 900,
+        maxWidth: 500,
         flexDirection: 'column',
         justifyContent: 'flex-start',
         paddingBottom: 60,
@@ -57,7 +57,7 @@ export default function login() {
             justifyContent: "center",
             alignItems: "center",
             width: Platform.OS === "web" ? "100vw" : vw,
-            maxWidth: 900
+            maxWidth: 500
           }}>
             <Button
               contained

@@ -184,8 +184,8 @@ export default function account() {
                           textAlign: "right",
                           backgroundColor: theme.lightGrey,
                           paddingVertical: 10,
-                          paddingHorizontal: 15,
-                          borderRadius: 25
+                          paddingHorizontal: 25,
+                          borderRadius: 25,
                         }}>{"Details"}</Text>
                       </Next>
                     </ItemsContainer>
@@ -222,7 +222,7 @@ const ItemsContainer = styled.TouchableOpacity`
   flex-direction: row;
   flex-wrap: nowrap;
   max-width: 900px;
-  padding: 15px;
+  padding: 25px;
 `;
 
 const DrawerContainer = styled.View`
