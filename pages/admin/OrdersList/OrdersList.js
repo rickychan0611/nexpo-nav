@@ -106,6 +106,14 @@ export default function OrdersList() {
     }
   }
 
+  const color = (status) => {
+    if (status === "In Progress") { return "#2fa3eb" }
+    else if (status === "Out for Delivery") { return "#3ae307" }
+    else if (status === "Complete") { return "#d48404" }
+    else if (status === "In Progress") { return "#red" }
+    else if (status === "In Progress") { return "#2fa3eb" }
+  }
+
   useEffect(() => {
     listenOrders()
   }, [])
@@ -218,12 +226,7 @@ export default function OrdersList() {
                             <Text onPress={() => openMenu(order.orderId)}
                               style={{
                                 fontWeigth: "bolde",
-                                color:
-                                  order.status === "In Progress" ? "#2fa3eb" :
-                                    order.status === "Out for Delivery" ? "#3ae307" :
-                                      order.status === "Complete" ? "#d48404" :
-                                        order.status === "Cancelled" ? "red" 
-                            
+                                color: color(order.status)
                             }}>{order.status}</Text>
                           </View>
                         }>
