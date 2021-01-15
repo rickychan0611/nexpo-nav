@@ -46,16 +46,31 @@ export default function ProductContent({ item }) {
   }, [newOrderProductList])
 
   return (
-    <View>
-      <Name>{item.chineseName + "\n" + item.englishName}</Name>
-      <Text style={{
-        color: "#999999",
-        marginBottom: 5,
-        fontSize: 12
-      }}>{item.ch_description + "\n" + item.en_description}</Text>
+    <View style={{
+      height: 230,
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      flexDirection: "column",
+      flexWrap: "nowrap"
+
+    }}>
+      <View >
+        <Name numberOfLines={2}>{item.chineseName}</Name>
+        <Name numberOfLines={2}>{item.englishName}</Name>
+        <Text numberOfLines={2} style={{
+          color: "#999999",
+          marginBottom: 5,
+          fontSize: 12
+        }}>{item.ch_description}</Text>
+        <Text numberOfLines={2} style={{
+          color: "#999999",
+          marginBottom: 5,
+          fontSize: 12
+        }}>{item.en_description}</Text>
+      </View>
+
 
       <PriceQtyWrapper>
-
         <PricesWrapper>
           <View style={{
             flexDirection: "row",
@@ -94,14 +109,13 @@ export default function ProductContent({ item }) {
             </> : null}
         </QtyWrapper>
       }
-
-
     </View >
+
   )
 };
 
 const PriceQtyWrapper = styled.View`
-  /* flex: 1; */
+  flex: 1;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-end;
@@ -122,6 +136,7 @@ const PricesWrapper = styled.View`
   justify-content: flex-end;
 `;
 const Name = styled.Text`
+  /* flex: 1; */
   font-size: 14px;
   margin-bottom: 5px;
   font-weight: bold;

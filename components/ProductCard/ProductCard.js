@@ -67,7 +67,8 @@ export default function ProductCard({ key, item }) {
               <ContentContainer
                 style={{
                   justifyContent: "space-between",
-                  alignItems: "center"
+                  alignItems: "center",
+                  height: 50
                 }}
               >
                 <TouchableOpacity
@@ -102,7 +103,7 @@ export default function ProductCard({ key, item }) {
               style={{
                 opacity: item.activated ? 1 : 0.4,
                 borderTopWidth: 1,
-                borderTopColor: "#e3e3e3"
+                borderTopColor: "#e3e3e3",
               }}>
               <ImageWrapper>
                 {item.images && item.images[0] ?
@@ -117,6 +118,7 @@ export default function ProductCard({ key, item }) {
               <RightSideContentWrapper>
                 <ProductContent item={item} />
               </RightSideContentWrapper>
+
             </ContentContainer>
           </ItemContainer>
         </>

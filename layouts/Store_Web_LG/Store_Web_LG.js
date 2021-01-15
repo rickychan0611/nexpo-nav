@@ -36,7 +36,7 @@ export default function Store_Web_LG({ edit }) {
       </Col>
 
       <Col size={3} style={{
-        height: Platform.OS === "web" ? "calc(100vh)" : "100%",
+        height: Platform.OS === "web" ? "calc(100vh - 60px)" : "100%",
         backgroundColor: "#e8dfe1"
       }}>
 
@@ -45,7 +45,7 @@ export default function Store_Web_LG({ edit }) {
           flex: 1
         }}
           data={productData[selectedCat]}
-          itemDimension={200}
+          itemDimension={250}
           spacing={10}
           renderItem={({ item }) => {
             return (

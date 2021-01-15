@@ -28,7 +28,12 @@ export default function AdminWebWrapper({ children }) {
             open={openWebAdminMenu}
             onSetOpen={() => setOpenWebAdminMenu(false)}
             shadow
-            styles={{ sidebar: { position: "fixed", left: 0, background: "white", paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170 } }}
+            styles={{
+              sidebar: {
+                position: "fixed", left: 0, background: "white",
+                paddingLeft: 30, paddingRight: 30, paddingTop: 10, minWidth: 170,
+              }
+            }}
           >
             {/* <WebContentColumn   backgroundColor={theme.backgroundColor}> */}
             {children}
@@ -49,5 +54,5 @@ const WebContextArea = styled.View`
       background-color: white;
       width: 100%;
       max-width: 900px;
-      height: 100vh;
+      height: calc(100vh - 60px);
 `;
