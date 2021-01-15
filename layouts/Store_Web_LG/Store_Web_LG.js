@@ -27,7 +27,7 @@ export default function Store_Web_LG({ edit }) {
     <Grid>
       <Col size={1} style={{
         maxWidth: 150,
-        minWidth: 100,
+        minWidth: 130,
         height: Platform.OS === "web" ? "calc(100vh - 60px)" : "100%",
       }}>
         <ScrollView>

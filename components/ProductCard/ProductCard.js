@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useLayoutEffect } from "react";
 import { View, TouchableOpacity, Platform, Text } from "react-native";
 import imagePlaceholder from "../../public/imagePlaceholder.jpg";
 import { Switch, IconButton, Button, Portal, Dialog, Paragraph } from 'react-native-paper';
@@ -12,6 +12,8 @@ import { Context } from "../../context/Context";
 export default function ProductCard({ key, item }) {
   const { theme } = useContext(ThemeContext);
   const { selected } = useContext(Context);
+  const ref = useRef(null)
+  const [elWidth, setElWidth] = useState(0)
 
   //dailog
   const [showDialog, setShowDialog] = useState(false);
@@ -31,6 +33,11 @@ export default function ProductCard({ key, item }) {
       db.collection("products").doc(item.uid).update({ activated: !item.activated })
     }
   }
+
+  useLayoutEffect(() => {
+    setElWidth(ref.current.clientWidth)
+  }, [ref.current, ref.current ? ref.current.clientWidth : 0])
+
   return (
     <>
       <Portal>
@@ -49,6 +56,7 @@ export default function ProductCard({ key, item }) {
       {
         item && <>
           <ItemContainer key={key}
+            ref={ref}
             style={{
               shadowColor: "#000",
               shadowOffset: {
@@ -62,6 +70,7 @@ export default function ProductCard({ key, item }) {
               backgroundColor: 'white'
             }}>
 
+            <Text>{elWidth}</Text>
 
             {selected !== "store" &&
               <ContentContainer
@@ -96,14 +105,16 @@ export default function ProductCard({ key, item }) {
                       setDelItem(item.uid)
                     }} />
                 </View>
-              </ContentContainer>}
+              </ContentContainer>
+            }
 
 
-            <ContentContainer
+            <View
               style={{
                 opacity: item.activated ? 1 : 0.4,
                 borderTopWidth: 1,
                 borderTopColor: "#e3e3e3",
+                width: "100%"
               }}>
               <ImageWrapper>
                 {item.images && item.images[0] ?
@@ -119,7 +130,7 @@ export default function ProductCard({ key, item }) {
                 <ProductContent item={item} />
               </RightSideContentWrapper>
 
-            </ContentContainer>
+            </View>
           </ItemContainer>
         </>
       }
@@ -137,29 +148,31 @@ const ItemContainer = styled.View`
       border:1px solid #d4d4d4;
 `;
 const ContentContainer = styled.View`
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: flex-start;
-      justify-content: flex-start;
+      /* flex-direction: row;
+      flex-wrap: nowrap; */
+      align-items: center;
+      justify-content: center;
       width: 100%;
 `;
 
 const ImageWrapper = styled.View`
-      flex: 3;
+      /* flex: 3;
       padding: 5px 0 5px 0 ;
       /* width: 100px; */
-      height: 150px;
+      align-items: center;
+      justify-content: center;
+      height: 200px; 
 `;
 const Image = styled.Image`
-      flex: 1;
-      /* width: 100px;
-      height: 100px; */
+      /* flex: 1; */
+      width: 100%; 
+      height: 200px; 
       /* background-color: white; */
       resize-mode: contain;
 `;
 
 const RightSideContentWrapper = styled.View`
-      flex: 4;
+      /* flex: 4; */
       flex-direction: column;
       /* flex-wrap: nowrap;
       align-items: flex-start;

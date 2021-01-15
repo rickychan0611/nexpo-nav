@@ -47,17 +47,17 @@ export default function ProductContent({ item }) {
 
   return (
     <View style={{
-      height: 230,
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      flexDirection: "column",
-      flexWrap: "nowrap"
+      // height: 230,
+      // justifyContent: "flex-start",
+      // alignItems: "flex-start",
+      // flexDirection: "column",
+      // flexWrap: "nowrap"
 
     }}>
-      <View >
-        <Name numberOfLines={2}>{item.chineseName}</Name>
-        <Name numberOfLines={2}>{item.englishName}</Name>
-        <Text numberOfLines={2} style={{
+      {/* <View > */}
+      <Name numberOfLines={2}>{item.chineseName}</Name>
+      <Name numberOfLines={2}>{item.englishName}</Name>
+      {/* <Text numberOfLines={2} style={{
           color: "#999999",
           marginBottom: 5,
           fontSize: 12
@@ -66,8 +66,8 @@ export default function ProductContent({ item }) {
           color: "#999999",
           marginBottom: 5,
           fontSize: 12
-        }}>{item.en_description}</Text>
-      </View>
+        }}>{item.en_description}</Text> */}
+      {/* </View> */}
 
 
       <PriceQtyWrapper>
@@ -115,7 +115,7 @@ export default function ProductContent({ item }) {
 };
 
 const PriceQtyWrapper = styled.View`
-  flex: 1;
+  /* flex: 1; */
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-end;
