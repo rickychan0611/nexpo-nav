@@ -33,7 +33,7 @@ export default function order() {
   const onCancel = async () => {
     setCancelLoading(true)
     const orderRef = db.collection("orders").doc(selectedOrder.orderId)
-    await orderRef.update({ status: "Order Cancelled" })
+    await orderRef.update({ status: "Cancelled & Refunded" })
     await db.collection("users").doc(user.email).update({ points: user.points - (selectedOrder.totalAmt * 100) })
     const onUpdate = functions.httpsCallable('minusTotalCounter')
     onUpdate({
@@ -41,7 +41,7 @@ export default function order() {
       MM_YYYY: moment(selectedOrder.createAt).format("MM_YYYY"),
       DD: moment(selectedOrder.createAt).format("DD")
     })
-    setSelectedOrder(prev => ({ ...prev, status: "Order Cancelled" }))
+    setSelectedOrder(prev => ({ ...prev, status: "Cancelled & Refunded" }))
     showCancelledDialog()
     hideCancelDialog()
     setCancelLoading(false)

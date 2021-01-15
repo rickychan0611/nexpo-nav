@@ -60,25 +60,36 @@ export default function OrdersList() {
     console.log("refund order:!!!!")
     console.log(refundOrder)
     //model are you sure to refun? or enter refund amount
-    const refundPayment = functions.httpsCallable('refundPayment')
-    refundPayment({
-      order: refundOrder
-    })
-      .then(async (data) => {
-        console.log("retrun data")
-        console.log(data)
-        if (data.data.approved) {
-          await updateStatus(refundOrder.orderId, "Cancelled")
-          hideConfirmRefundDialog()
-          setRefundMessage(data.data.message)
-          setShowRefundSuccessDialog(true)
-        }
-        else {
-          hideConfirmRefundDialog()
-          setRefundMessage("Error:" + data.data.message)
-          setShowRefundSuccessDialog(true)
-        }
+
+    if (refundOrder.paymentStatus === "Approved") {
+
+      const refundPayment = functions.httpsCallable('refundPayment')
+      refundPayment({
+        order: refundOrder
       })
+        .then(async (data) => {
+          console.log("retrun data")
+          console.log(data)
+          if (data.data.approved) {
+            await updateStatus(refundOrder.orderId, "Cancelled & Refunded")
+            hideConfirmRefundDialog()
+            setRefundMessage(data.data.message)
+            setShowRefundSuccessDialog(true)
+          }
+          else {
+            hideConfirmRefundDialog()
+            setRefundMessage("Error:" + data.data.message)
+            setShowRefundSuccessDialog(true)
+          }
+        })
+    }
+
+    else {
+      updateStatus(refundOrder.orderId, "Cancelled")
+      hideConfirmRefundDialog()
+      setRefundMessage("Order Cancelled")
+      setShowRefundSuccessDialog(true)
+    }
   }
 
   const updateStatus = async (orderId, status) => {
@@ -109,9 +120,8 @@ export default function OrdersList() {
   const color = (status) => {
     if (status === "In Progress") { return "#2fa3eb" }
     else if (status === "Out for Delivery") { return "#3ae307" }
-    else if (status === "Complete") { return "#d48404" }
-    else if (status === "In Progress") { return "#red" }
-    else if (status === "In Progress") { return "#2fa3eb" }
+    else if (status === "Completed") { return "#d48404" }
+    else if (status === "Cancelled & Refunded") { return "red" }
   }
 
   useEffect(() => {
@@ -222,15 +232,17 @@ export default function OrdersList() {
                             // width: "100%"
                           }}
                           >
-                            <IconButton icon="chevron-down" onPress={() => openMenu(order.orderId)} />
+                            <IconButton icon="chevron-down"
+                              onPress={() => order.status !== "Cancelled & Refunded" && openMenu(order.orderId)}
+                              color={order.status === "Cancelled & Refunded" ? "white" : "black"} />
                             <Text onPress={() => openMenu(order.orderId)}
                               style={{
                                 fontWeigth: "bolde",
                                 color: color(order.status)
-                            }}>{order.status}</Text>
+                              }}>{order.status}</Text>
                           </View>
                         }>
-                        {order.status !== "Cancelled" &&
+                        {order.status !== "Cancelled & Refunded" &&
                           <>
                             <Menu.Item onPress={() => updateStatus(order.orderId, "In Progress")} title="In Progress" />
                             <Divider />
