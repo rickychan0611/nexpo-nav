@@ -5,22 +5,29 @@
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
-    "android": {
-      "softwareKeyboardLayoutMode": "pan"
-    },
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbacktoCacheTimeout": 0
-    },
     "ios": {
+      "bundleIdentifier": "ca.tintin.tintinfood",
+      "buildNumber": "1.0.0",
       "requireFullScreen": true,
       "supportsTablet": true
     },
-    "orientation": "portrait"
+    "android": {
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "ca.tintin.tintinfood",
+      "versionCode": 2,
+      "permissions": [
+        "CAMERA", "RECORD_AUDIO", "READ_PHONE_STATE", "READ_CONTACTS"
+      ]
+    },
+    "orientation": "portrait",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    }
   }
 }

@@ -10,6 +10,7 @@ import { createStackNavigator, TransitionPresets } from "@react-navigation/stack
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import home from "./pages/home";
+import route from "./pages/route";
 import qrcode from "./pages/qrcode";
 import store from "./pages/store";
 import product from "./pages/product";
