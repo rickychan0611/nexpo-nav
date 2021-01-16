@@ -10,6 +10,7 @@ import styled from 'styled-components/native';
 import { Icon } from 'react-native-elements'
 import { Context } from "../../context/Context";
 import { ThemeContext } from "../../context/ThemeContext";
+import useWindowSize from "../../hooks/useWindowSize"
 
 export default function CartCheckoutBar() {
   const { navigate } = useRouting();
@@ -17,14 +18,17 @@ export default function CartCheckoutBar() {
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
 
+  const { vh, vw } = useWindowSize();
+
   return (
     <>
-      <Wrapper onPress={() => {
-        setSelected("cart")
-        navigate({
-          routeName: "cart",
-        })
-      }}>
+      <Wrapper vw={vw}
+        onPress={() => {
+          setSelected("cart")
+          navigate({
+            routeName: "cart",
+          })
+        }}>
         <Bar theme={theme}>
           <Total>
             View Cart  ●  ${(+total).toFixed(2)}
@@ -66,7 +70,8 @@ const Bar = styled.View`
 `;
 const Wrapper = styled.TouchableOpacity`
   position: ${Platform.OS === "web" ? `fixed` : `absolute`};
-  bottom: 68px;
+  bottom: ${ "68px"};
+  /* bottom: ${props => props.vw >= 690 ? "28px" : "68px"}; */
   height: 55px;
   width: 100%;
   max-width: 900px;

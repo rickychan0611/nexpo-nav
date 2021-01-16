@@ -72,17 +72,34 @@ export default function ProductContent({ item }) {
 
       <PriceQtyWrapper>
         <PricesWrapper>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center"
-          }}>
-            <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
-            <Text style={{
-              color: "#999999",
-              fontSize: 12
-            }}> / {item.unit} </Text>
-          </View>
-          <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
+          {+item.original_price === +item.final_price ?
+            <>
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <RegPrice>${(+item.original_price).toFixed(2)}</RegPrice>
+                <Text style={{
+                  color: "#999999",
+                  fontSize: 12
+                }}> / {item.unit} </Text>
+              </View>
+            </>
+            :
+            <>
+              <View style={{
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <RegPriceCross>${(+item.original_price).toFixed(2)}</RegPriceCross>
+                <Text style={{
+                  color: "#999999",
+                  fontSize: 12
+                }}> / {item.unit} </Text>
+              </View>
+              <DisPrice>${(+item.final_price).toFixed(2)}</DisPrice>
+            </>
+          }
         </PricesWrapper>
 
       </PriceQtyWrapper>
@@ -153,6 +170,9 @@ const Description = styled.Text`
 
 `;
 const RegPrice = styled.Text`
+
+`;
+const RegPriceCross = styled.Text`
 text-decoration: line-through;
 `;
 const DisPrice = styled.Text`

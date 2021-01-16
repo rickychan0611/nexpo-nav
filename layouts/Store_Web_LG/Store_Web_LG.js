@@ -2,10 +2,11 @@
 import React, { useContext } from "react";
 import { Context } from "../../context/Context";
 import { ProductsContext } from "../../context/ProductsContext";
-import { ScrollView, TouchableOpacity, Platform, View } from "react-native";
+import { ScrollView, TouchableOpacity, Platform, View, Text } from "react-native";
 import { useRouting } from "expo-next-react-navigation";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { FlatGrid } from 'react-native-super-grid'
+import useWindowSize from "../../hooks/useWindowSize"
 
 import ProductCard from "../../components/ProductCard";
 import CategoryNames from "../../components/CategoryNames";
@@ -23,11 +24,13 @@ export default function Store_Web_LG({ edit }) {
 
   const outline = Platform.OS === 'web' ? { outline: "none" } : null;
 
+  const { vh, vw } = useWindowSize();
+
   return (
     <Grid>
       <Col size={1} style={{
-        maxWidth: 150,
-        minWidth: 130,
+        maxWidth: vw > 690 ? undefined : 140,
+        minWidth: vw > 690 ? undefined : 140,
         height: Platform.OS === "web" ? "calc(100vh - 60px)" : "100%",
       }}>
         <ScrollView>
@@ -37,12 +40,11 @@ export default function Store_Web_LG({ edit }) {
 
       <Col size={3} style={{
         height: Platform.OS === "web" ? "calc(100vh - 60px)" : "100%",
-        backgroundColor: "#e8dfe1"
+        // backgroundColor: "#e8dfe1",
       }}>
 
         <FlatGrid style={{
-          marginTop: 10,
-          flex: 1
+          // flex: 1,
         }}
           data={productData[selectedCat]}
           itemDimension={250}
@@ -73,7 +75,7 @@ export default function Store_Web_LG({ edit }) {
               </>
             )
           }} />
-        <View style={{ height: 50 }}></View>
+
       </Col>
     </Grid>
   );

@@ -35,6 +35,7 @@ export default function ProductCard({ key, item }) {
   }
 
   useLayoutEffect(() => {
+    // get the width of a element
     setElWidth(ref.current.clientWidth)
   }, [ref.current, ref.current ? ref.current.clientWidth : 0])
 
@@ -70,10 +71,10 @@ export default function ProductCard({ key, item }) {
               backgroundColor: 'white'
             }}>
 
-            <Text>{elWidth}</Text>
-
+            {/* admin product edit */}
             {selected !== "store" &&
-              <ContentContainer
+
+              <ControlContainer
                 style={{
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -105,7 +106,8 @@ export default function ProductCard({ key, item }) {
                       setDelItem(item.uid)
                     }} />
                 </View>
-              </ContentContainer>
+              </ControlContainer>
+
             }
 
 
@@ -147,9 +149,9 @@ const ItemContainer = styled.View`
       border-radius:10px;
       border:1px solid #d4d4d4;
 `;
-const ContentContainer = styled.View`
-      /* flex-direction: row;
-      flex-wrap: nowrap; */
+const ControlContainer = styled.View`
+      flex-direction: row;
+      flex-wrap: nowrap;
       align-items: center;
       justify-content: center;
       width: 100%;

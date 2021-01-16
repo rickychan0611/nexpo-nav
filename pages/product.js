@@ -82,15 +82,17 @@ export default function Product() {
             <ImageSwiper images={selectedItem.images} />
             {/* <Divider tall="2px" /> */}
             <Content>
-              <Name>{selectedItem.chineseName + " " + selectedItem.englishName}</Name>
+              <ScrollView>
+                <Name>{selectedItem.chineseName + " " + selectedItem.englishName}</Name>
 
-              <ScrollView style={{ width: "100%", marginBottom: 10 }}>
-                <Description>{selectedItem.ch_description + "\n" + selectedItem.en_description}</Description>
+                <View style={{ width: "100%", marginBottom: 10 }}>
+                  <Description>{selectedItem.ch_description + "\n" + selectedItem.en_description}</Description>
+                </View>
               </ScrollView>
-
               <View style={{
                 flexDirection: "row",
                 alignItems: "center",
+                marginTop: 10
               }}>
                 <RegPrice>${(+selectedItem.original_price).toFixed(2)}</RegPrice>
                 <Text style={{
@@ -174,13 +176,13 @@ const Content = styled.View`
 `;
 const Name = styled.Text`
     font-Size: 20px;
-    margin-top: 6px;
+    /* margin-top: 6px; */
     font-weight: 500;
     margin-bottom: 10px;
     padding: 10px 20px 0 20px;
 `;
 const Description = styled.Text`
-    font-size: 16px;
+    font-size: 14px;
     color: gray;
     margin-bottom: 10px;
     padding: 5px 20px 0 20px;

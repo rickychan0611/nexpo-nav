@@ -1,8 +1,10 @@
 {
   "expo": {
-    "name": "e-shop",
-    "slug": "e-shop",
+    "name": "Tin Tin Food Wholesale",
+    "slug": "tin-tin-food",
+    "privacy": "public",
     "platforms": ["ios", "android", "web"],
+    "version": "1.0.0",
     "android": {
       "softwareKeyboardLayoutMode": "pan"
     },
@@ -12,8 +14,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "updates": {
+      "fallbacktoCacheTimeout": 0
+    },
     "ios": {
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "supportsTablet": true
     },
     "orientation": "portrait"
   }

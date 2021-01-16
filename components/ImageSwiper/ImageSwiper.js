@@ -8,15 +8,15 @@ import { ActivityIndicator, Colors } from 'react-native-paper';
 
 export default function ImageSwiper({ images, uploading }) {
   const swiperRef = useRef(null);
-  const {swiperControl, setSwiperControl} = useContext(Context);
-  
-  useEffect(()=>{
+  const { swiperControl, setSwiperControl } = useContext(Context);
+
+  useEffect(() => {
     setSwiperControl(swiperRef)
-  },[])
+  }, [])
 
   return (
     <SlideContainer>
-      {images && images[0] && !uploading?
+      {images && images[0] && !uploading ?
 
         <Swiper
           ref={swiperRef}
@@ -60,7 +60,7 @@ const SlideContainer = styled.View`
       /* flex: 2; */
       width: 100%;
       justify-content: center;
-      height: 300px;
+      height: 260px;
       /* align-items: center; */
 `;
 
