@@ -40,11 +40,11 @@ export default function Store_Web_LG({ edit }) {
 
       <Col size={3} style={{
         height: Platform.OS === "web" ? "calc(100vh - 60px)" : "100%",
-        // backgroundColor: "#e8dfe1",
+        backgroundColor: "#e8dfe1",
       }}>
 
         <FlatGrid style={{
-          // flex: 1,
+          paddingBottom: 100
         }}
           data={productData[selectedCat]}
           itemDimension={250}
