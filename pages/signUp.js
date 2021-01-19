@@ -204,8 +204,8 @@ export default function signUp() {
 
               <InputView>
                 <TextInput
-                  label="Frist Name 名字*"
-                  placeholder='Frist Name 名字'
+                  label="First Name 名字*"
+                  placeholder='First Name 名字'
                   style={{
                     // backgroundColor: theme.InputBoxBackgroundColor,
                     // width: "100%",
