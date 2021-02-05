@@ -55,7 +55,7 @@ export default function signUp() {
 
     let validate = new Promise((resolve, reject) => {
       if (validator.isEmpty(login.firstName)) {
-        setErrMsg(prev => ({ ...prev, firstName: "Required. Please eneter an frist name." }))
+        setErrMsg(prev => ({ ...prev, firstName: "Required. Please eneter an first name." }))
         reject()
       }
       if (validator.isEmpty(login.lastName)) {

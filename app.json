@@ -20,7 +20,7 @@
     "android": {
       "softwareKeyboardLayoutMode": "pan",
       "package": "ca.tintin.tintinfood",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
         "CAMERA", "RECORD_AUDIO", "READ_PHONE_STATE", "READ_CONTACTS"
       ]
