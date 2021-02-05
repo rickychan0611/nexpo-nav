@@ -148,6 +148,7 @@ const ItemContainer = styled.View`
       padding: 0px 5px 10px 5px;
       border-radius:10px;
       border:1px solid #d4d4d4;
+      min-height: 350px;
 `;
 const ControlContainer = styled.View`
       flex-direction: row;
