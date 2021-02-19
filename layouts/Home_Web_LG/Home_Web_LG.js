@@ -25,6 +25,15 @@ export default function Home_Web_LG() {
       }}>
 
         <View style={{ flex: 1 }}>
+          <Text style={{
+            fontSize: 28,
+            fontWeight: "bold",
+            color: theme.red,
+            textAlign: "left",
+            marginTop: 20,
+          }}>
+            Tin Tin Food Wholesale{"\n"}Home delivery every day
+         </Text>
 
           <Text style={{
             fontSize: 50,
@@ -37,7 +46,7 @@ export default function Home_Web_LG() {
          </Text>
 
           <Text style={{
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: "bold",
             color: theme.darkGrey,
             textAlign: "left",
@@ -46,13 +55,23 @@ export default function Home_Web_LG() {
           }}>
             無論你想選購你最喜愛的水果蔬菜、海鮮肉類、五谷雜糧、手工點心、養生食材或生活用品。天天漁港超市使你足不出戶，輕鬆為你送到府上！
         </Text>
+          <Text style={{
+            fontSize: 16,
+            fontWeight: "bold",
+            color: theme.darkGrey,
+            textAlign: "left",
+            marginTop: 20,
+            paddingRight: 40,
+          }}>
+            Whether you want to buy your favorite fruits, vegetables, seafood, meat, handmade dimsum, snacks, healthy ingredients or daily necessities, we deliver to your comfy home!
+        </Text>
 
           <Button
             contained
             color="white"
             style={{
               backgroundColor: "black",
-              width: 150,
+              width: 250,
               marginBottom: 10,
               fontSize: 20,
               fontWeight: "bold",
@@ -61,7 +80,7 @@ export default function Home_Web_LG() {
             onPress={() => {
               navigate({ routeName: "store" })
             }}>
-            立即購物
+            立即購物 Shop Now
       </Button>
 
         </View>
@@ -88,13 +107,22 @@ export default function Home_Web_LG() {
         alignItems: "center"
       }}>
         <Text style={{
-          fontSize: 40,
+          fontSize: 35,
           fontWeight: "bold",
           color: "white",
           textAlign: "center",
           // marginTop: 20,
         }}>
           會員積分優惠  天天讓你省更多!
+        </Text>
+        <Text style={{
+          fontSize: 25,
+          fontWeight: "bold",
+          color: "white",
+          textAlign: "center",
+          // marginTop: 20,
+        }}>
+          Tin Tin Points rewards program saves you more every day
         </Text>
       </View>
 
