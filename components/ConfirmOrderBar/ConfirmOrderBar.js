@@ -132,7 +132,8 @@ export default function ConfirmOrderBar() {
           shippingFee,
           discount: 0,
           status: "In Progress",
-          paymentStatus: 'Not Paid. Pay upon delivery'
+          paymentStatus: 'Not Paid. Pay upon delivery',
+          index: orderId
         })
           .then(() => {
             db.collection("users").doc(user.email).update({
