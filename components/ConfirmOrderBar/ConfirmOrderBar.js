@@ -40,8 +40,6 @@ export default function ConfirmOrderBar() {
       const orderId = await snapshot.data().orderId
       setNewOrderId(now + "A" + orderId)
       if (paymentMethod === "credit") {
-        console.log("creditCardPayment run")
-
 
         // functions.useFunctionsEmulator('http://localhost:5001')
         const cardPayment = functions.httpsCallable('cardPayment')
@@ -52,17 +50,12 @@ export default function ConfirmOrderBar() {
           orderId: now + "A" + orderId
         })
           .then((result) => {
-            console.log(result.data)
             return result.data
           })
           .catch((err) => {
-            console.log("Error: " + err)
             throw err
           })
 
-
-        console.log("finish creditCardPayment run")
-        console.log(paymentData)
         if (paymentData && paymentData.approved === "1") {
 
           const orderRef = db.collection("orders").doc(now + "A" + orderId)
@@ -165,16 +158,12 @@ export default function ConfirmOrderBar() {
   }
 
   const updateStats = () => {
-    console.log("updateStats")
     const onUpdate = functions.httpsCallable('addTotalCounter')
     onUpdate({
       total: total,
       MM_YYYY: moment().format("MM_YYYY"),
       DD: moment().format("DD")
     })
-      .then((data) => {
-        console.log("counter added")
-      })
     // database.ref('stats/').update({ hello: "fukc" })
     //   .then(() => {
     //     alert("added")

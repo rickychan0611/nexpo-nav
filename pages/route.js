@@ -34,7 +34,6 @@ function Route() {
   const onChange = (name, value) => {
     setMapResponse()
     setWaypoints()
-    console.log(name, " : ", value)
     if (name === "destination") {
       setDestination(value)
     }
@@ -62,18 +61,15 @@ function Route() {
       }
       const routesKeyNames = Object.getOwnPropertyNames(cleanedRoutes)
       if (routesKeyNames && routesKeyNames[0]) {
-        console.log("getAddressByOrderIdPromise: ", routesKeyNames)
 
         let promises = []
         let orders = [];
 
         routesKeyNames.map((keyName) => {
-          console.log("get keyName: ", keyName)
           let name = wayPointIds[keyName]
           let promise = db.collection("orders").where("index", "==", name).get()
             .then(snapshot => {
               if (snapshot.empty) {
-                console.log('No matching documents.', keyName);
                 setErr(prev => ({ ...prev, [keyName]: "ID not found" }))
                 throw ("ID not found")
               }
@@ -94,8 +90,6 @@ function Route() {
           .then(() => {
             let addresses = []
             let idAndAddress = []
-            console.log("Done: ")
-            console.log(orders)
 
             orders.map((item) => {
               const address1 = item.shippingAddress.address1 + ", "
@@ -108,8 +102,6 @@ function Route() {
               idAndAddress.push({ location: addressStr, orderId: item.orderId })
             })
 
-            console.log("addresses: ")
-            console.log(addresses)
             setWaypoints(addresses)
             setRunDirectionsService(true)
             setOrdersList(idAndAddress)
@@ -121,13 +113,11 @@ function Route() {
       }
 
       else {//no routesKeyNames
-        console.log("routesKeyNames is empty")
         setLoading(false)
         return
       }
     }
     else { //no route
-      console.log("route is empty")
       setErr({ point0: "Please enter an ID" })
       setLoading(false)
       return
@@ -143,10 +133,7 @@ function Route() {
 
   useEffect(() => {
     if ("geolocation" in navigator) {
-      console.log("Available");
       navigator.geolocation.getCurrentPosition(function (position) {
-        console.log("Latitude is :", position.coords.latitude);
-        console.log("Longitude is :", position.coords.longitude);
         setOrigin({ lat: position.coords.latitude, lng: position.coords.longitude })
       })
     } else {

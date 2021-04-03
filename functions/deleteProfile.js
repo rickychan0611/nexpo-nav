@@ -12,9 +12,7 @@ exports.deleteProfile = functions.https.onCall(async (info) => {
   // encode profileCode
   let passcode = functions.config().tintin.id + ":" + functions.config().tintin.profile_code
   let base64data = encode.encode(passcode, 'base64')
-  console.log("info")
-  console.log("info")
-  console.log(info)
+
   const profile = await fetch(`https://api.na.bambora.com/v1/profiles/${info.profileId}`, {
     method: 'DELETE',
     headers: {

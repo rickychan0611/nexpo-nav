@@ -6,7 +6,6 @@ const fetch = require('node-fetch');
 const { user } = require('firebase-functions/lib/providers/auth');
 
 exports.cardPayment = functions.https.onCall(async (data) => {
-    console.log("cardPayment run")
     let passcode = functions.config().tintin.id + ":" + functions.config().tintin.payment_key
 
     let base64data = base64.encode(passcode, 'base64')
@@ -30,7 +29,7 @@ exports.cardPayment = functions.https.onCall(async (data) => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log("payment response::" , data)  
+
         return data
     })
       .catch((error) => {

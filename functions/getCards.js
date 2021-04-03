@@ -24,7 +24,6 @@ exports.getCards = functions.https.onCall(async (data) => {
         .then(response => response.json())
         .then(data => {
           if (data) {
-            console.log("#########################", data)
             return data
           }
           else return undefined
@@ -32,7 +31,6 @@ exports.getCards = functions.https.onCall(async (data) => {
     })
   )
 
-  console.log(profiles)
   if (profiles) {
     const filteredProfiles = profiles.filter(function (el) {
       return el !== undefined;

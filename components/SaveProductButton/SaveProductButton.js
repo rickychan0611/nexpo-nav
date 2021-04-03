@@ -21,8 +21,6 @@ export default function SaveProductButton() {
 
     const productRef = db.collection("products").doc()
     const timestamp = new Date()
-    console.log(selectedCategory)
-    console.log(product)
     setError({})
 
     product.category = selectedCategory

@@ -24,10 +24,6 @@ export default function OpenNavBtn({ mapResponse, origin, destination }) {
       encodeURI(`https://www.google.com/maps/dir/?api=1&origin=${origin.lat},${origin.lng}&destination=${destination}&travelmode=driving&waypoints=${point}`)
     )
   }
-  useEffect(() => {
-    console.log(mapUrl())
-  }, [])
-
 
   return (
     <>

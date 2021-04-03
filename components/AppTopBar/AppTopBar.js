@@ -22,11 +22,6 @@ export default function AppTopBar() {
     setSelected, selected
   } = useContext(Context);
 
-  useEffect(() => {
-    console.log("selected!!!!!!!!!!!!!")
-    console.log(navigate)
-  }, [])
-
   return (
     <>
       <Container theme={theme} style={{

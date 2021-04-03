@@ -22,11 +22,6 @@ export default function AdminTopBar() {
     setOpenWebAdminMenu, selected
   } = useContext(Context);
 
-  useEffect(() => {
-    console.log("selected!!!!!!!!!!!!!")
-    console.log(navigate)
-  }, [])
-
   return (
     <>
       <Container theme={theme} style={{
@@ -45,7 +40,6 @@ export default function AdminTopBar() {
             <TouchableOpacity
               onPress={() => {
                 setOpenWebAdminMenu(true)
-                console.log(selected)
               }}>
               <Icon
                 name='bars'

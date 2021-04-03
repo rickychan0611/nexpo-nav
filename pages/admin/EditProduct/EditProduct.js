@@ -193,7 +193,6 @@ export default function EditProduct() {
       db.collection("products").doc(getParam("id")).get()
         .then((doc) => {
           if (!doc.empty) {
-            console.log(doc.data())
             setProduct(prev => ({ ...prev, ...doc.data() }))
             setUploading(true)
             setSelectedCategory(doc.data().category)
@@ -344,8 +343,6 @@ export default function EditProduct() {
         <View style={{ padding: 0, marginBottom: 20 }}>
 
           {categories && categories.map((category) => {
-            // console.log(category)
-            // const uid = category.chineseName + category.englishName
             const uid = category.uid
             return (
               <>

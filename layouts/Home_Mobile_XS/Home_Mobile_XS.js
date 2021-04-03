@@ -52,7 +52,6 @@ export default function Home_Mobile_XS() {
         </Text>
 
         <TouchableOpacity onPress={() => {
-          console.log("fuck")
           navigate({ routeName: "store" })
         }}>
           <View style={{

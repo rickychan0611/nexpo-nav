@@ -41,7 +41,6 @@ export default function confirmOrder() {
   }
 
   useEffect(() => {
-    console.log(selectedCard)
     if (!user || !shippingAddress) {
       setSelected("cart")
       navigate({

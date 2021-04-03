@@ -84,7 +84,6 @@ export default function Category() {
 
       await Promise.all( //update database
         reSortedTempArr.map(async (category, index) => {
-          console.log(category)
 
           return await db.collection("categories").doc(category.uid).set(category)
         })
@@ -99,17 +98,14 @@ export default function Category() {
   const handleDelete = async () => {
     // move all product ids in categories db collection
     setLoading(true)
-    console.log(selectedCategory)
 
 
     selectedCategory && db.collection("products").where("category", "array-contains", selectedCategory.uid).get()
       .then(async (snapshot) => {
         let tempArr = []
 
-        console.log(snapshot)
         snapshot.forEach(doc => {
           tempArr.push(doc.data())
-          console.log(tempArr)
         })
 
         if (!snapshot.empty) {
@@ -155,7 +151,6 @@ export default function Category() {
 
             await Promise.all( //update database
               deletedCat.map(async (category, index) => {
-                console.log(category)
                 return await db.collection("categories").doc(category.uid).set(category)
               })
             )

@@ -35,7 +35,6 @@ export default function RedeemForm() {
       }
     })
     validate.then(() => {
-      console.log("load scanner")
       setLoading(true)
       setError("")
       navigate({ routeName: "admin/qrScanner" })

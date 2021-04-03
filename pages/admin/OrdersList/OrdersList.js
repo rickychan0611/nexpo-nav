@@ -57,8 +57,6 @@ export default function OrdersList() {
   }
 
   const refundPayment = () => {
-    console.log("refund order:!!!!")
-    console.log(refundOrder)
     //model are you sure to refun? or enter refund amount
 
     if (refundOrder.paymentStatus === "Approved") {
@@ -68,8 +66,6 @@ export default function OrdersList() {
         order: refundOrder
       })
         .then(async (data) => {
-          console.log("retrun data")
-          console.log(data)
           if (data.data.approved) {
             await updateStatus(refundOrder.orderId, "Cancelled & Refunded")
             hideConfirmRefundDialog()
@@ -94,7 +90,6 @@ export default function OrdersList() {
 
   const updateStatus = async (orderId, status) => {
     setLoading(true)
-    console.log("update sent")
     await db.collection("orders").doc(orderId).update({ status: status, "statusUpdatedAt": moment().format() })
       .then(() => {
         setLoading(false)
@@ -272,9 +267,7 @@ export default function OrdersList() {
                   </View>
 
                   {order.orderItems.map((item, index) => {
-                    // console.log(item)
                     return (
-                      // <Text>{item.quantity}</Text>
                       <>
                         <Divider />
 

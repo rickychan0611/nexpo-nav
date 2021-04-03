@@ -64,7 +64,6 @@ export default function EditProductButton() {
           images: images && images
         })
         .then(() => {
-          console.log(selectedCategory)
           setLoading(false)
           setSelectedCat(product.category[0].uid) //select category when redirect
           navigate({ routeName: "admin/store-listings" })

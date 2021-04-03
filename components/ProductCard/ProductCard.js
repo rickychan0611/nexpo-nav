@@ -28,7 +28,6 @@ export default function ProductCard({ key, item }) {
   }
 
   const onToggleSwitch = () => {
-    console.log("swtich")
     if (Platform.OS !== "web") {
       db.collection("products").doc(item.uid).update({ activated: !item.activated })
     }

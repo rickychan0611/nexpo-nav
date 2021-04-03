@@ -23,26 +23,26 @@ export default function admin() {
     })
   }
 
-  const onSubmit = () => {
-    auth.signInWithEmailAndPassword("admin@admin.com", "112233")
-      .then((doc) => {
-        console.log('logging in... wait' + JSON.stringify(doc.user))
-        db.collection("users").doc(doc.user.uid).get()
-          .then(doc => {
-            if (doc.data().isAdmin) {
-              setUser(doc.data())
-              navigate({ web: { path: "/admin/panel" } })
-            }
-          })
-      })
-      .catch(function (error) {
-        // Handle Errors here.
-        console.log("error")
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-  }
+  // const onSubmit = () => {
+  //   auth.signInWithEmailAndPassword("admin@admin.com", "112233")
+  //     .then((doc) => {
+  //       console.log('logging in... wait' + JSON.stringify(doc.user))
+  //       db.collection("users").doc(doc.user.uid).get()
+  //         .then(doc => {
+  //           if (doc.data().isAdmin) {
+  //             setUser(doc.data())
+  //             navigate({ web: { path: "/admin/panel" } })
+  //           }
+  //         })
+  //     })
+  //     .catch(function (error) {
+  //       // Handle Errors here.
+  //       console.log("error")
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // ...
+  //     });
+  // }
 
   return (
     <>
@@ -62,7 +62,7 @@ export default function admin() {
         <Button
           title="submit"
           onPress={() =>
-            onSubmit()
+            // onSubmit()
           }
         />
         <Button

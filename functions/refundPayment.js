@@ -6,13 +6,8 @@ const fetch = require('node-fetch');
 const { user } = require('firebase-functions/lib/providers/auth');
 
 exports.refundPayment = functions.https.onCall(async (data) => {
-  console.log("refund Payment run")
   let passcode = functions.config().tintin.id + ":" + functions.config().tintin.payment_key
   let base64data = encode.encode(passcode, 'base64')
-
-  console.log(data.order)
-  console.log(data.order.totalAmt)
-  console.log(data.order.paymentData.links[1].href)
 
   const refund = await fetch(data.order.paymentData.links[1].href, {
     method: 'POST',
@@ -30,7 +25,6 @@ exports.refundPayment = functions.https.onCall(async (data) => {
   })
     .then(response => response.json())
     .then(data => {
-      console.log("REFUND response::", data)
       return data
     })
     .catch((error) => {

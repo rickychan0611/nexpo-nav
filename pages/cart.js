@@ -68,7 +68,6 @@ export default function Cart() {
   }
 
   const handleChanage = (value) => {
-    console.log(value)
     setRedeemPoint(value)
   }
 

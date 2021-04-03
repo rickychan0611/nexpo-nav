@@ -33,7 +33,6 @@ export default function BottomBar() {
 
     if (router) {
       let pathname = router.pathname.substring(1)
-      console.log(pathname)
       if (
         pathname === "checkout" ||
         pathname === "checkout/shipping"

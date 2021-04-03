@@ -32,7 +32,6 @@ export default function BottomBarIcons() {
 
     if (router) {
       let pathname = router.pathname.substring(1)
-      console.log(pathname)
       if (
         pathname === "checkout" ||
         pathname === "checkout/shipping"
@@ -98,7 +97,6 @@ export default function BottomBarIcons() {
       </Button>
 
       <Button onPress={() => {
-        console.log("account")
         setSelected("account")
         if (user) {
           navigate({

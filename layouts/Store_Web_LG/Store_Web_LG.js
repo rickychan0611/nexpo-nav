@@ -26,6 +26,19 @@ export default function Store_Web_LG({ edit }) {
 
   const { vh, vw } = useWindowSize();
 
+  const filterProduct = (products) => {
+    let tempArr = [];
+    products && products.forEach((item) => {
+      if (!edit && item.activated) {
+          tempArr.push(item)
+      }
+      else if (edit) {
+        tempArr.push(item)
+      }
+    })
+    return tempArr
+  }
+
   return (
     <Grid>
       <Col size={1} style={{
@@ -46,7 +59,9 @@ export default function Store_Web_LG({ edit }) {
         <FlatGrid style={{
           paddingBottom: 100
         }}
-          data={productData[selectedCat]}
+          data={
+            filterProduct(productData[selectedCat])
+          }
           itemDimension={250}
           spacing={10}
           renderItem={({ item }) => {
@@ -68,7 +83,6 @@ export default function Store_Web_LG({ edit }) {
                         params: { id: item.uid },
                         web: { as: `/product?id=${item.uid}` },
                       })
-
                   }}>
                   <ProductCard item={item} />
                 </TouchableOpacity>

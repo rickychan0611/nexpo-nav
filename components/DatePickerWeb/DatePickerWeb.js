@@ -15,7 +15,6 @@ export default function DatePickerWeb() {
       <div>Date: <DatePicker selected={orderDate} 
       onChange={date => {
         setOrderDate(date)
-        console.log(date)
       }
 
       } /></div>

@@ -25,7 +25,6 @@ export default function paymentMethod() {
 
 
   const onSubmit = () => {
-    console.log(paymentMethod)
     if (paymentMethod === "cash") {
       navigate({ routeName: "confirmOrder" })
     }

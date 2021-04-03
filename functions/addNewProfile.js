@@ -12,8 +12,6 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
   // encode profileCode
   let passcode = functions.config().tintin.id + ":" + functions.config().tintin.profile_code
   let base64data = encode.encode(passcode, 'base64')
-  console.log("create profile info::::!!!!!!!!!!!")
-  console.log(info)
 
   const token = await fetch("https://api.na.bambora.com/scripts/tokenization/tokens", {
     method: 'POST',
@@ -25,7 +23,6 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
   })
     .then(response => response.json())
     .then(data => {
-      console.log("!!!!!!!!!!!!!" + data.token)
       return data.token
     })
 
@@ -51,8 +48,6 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
     .then(data => {
       return data
     })
-  console.log("profile!!!")
-  console.log(profile)
 
 
   const getProfile = await fetch(`https://api.na.bambora.com/v1//profiles/${profile.customer_code}`, {
@@ -67,9 +62,6 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
       return data
     })
 
-  console.log("getProfile")
-  console.log(getProfile)
-
   if (getProfile.code !== 1) {
     return { message: "Please check if card or billing address is correct." }
   }
@@ -81,9 +73,7 @@ exports.addNewProfile = functions.https.onCall(async (info) => {
         defaultProfileId: getProfile.customer_code
       })
       .then((res) => {
-        console.log('res')
-        console.log(res)
-        return getProfile
+         return getProfile
       })
   }
 })

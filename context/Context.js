@@ -82,7 +82,6 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
 
     auth.onAuthStateChanged((authUser) => {
-      // console.log("context: 84: USER: ", authUser)
 
       if (authUser) {
         console.log("logged in", authUser.email);
@@ -94,16 +93,13 @@ const ContextProvider = ({ children }) => {
           }
 
           if (doc.exists && doc.data().addressBook) {
-            console.log("context: 91: USER: ", doc.data())
             //convert addressBook to array
             let tempArr = []
-            console.log(Object.keys(doc.data().addressBook).length)
 
             let sortedKey = Object.keys(doc.data().addressBook) && Object.keys(doc.data().addressBook)[0] &&
               Object.keys(doc.data().addressBook).sort((a, b) => b - a)
 
             sortedKey && sortedKey.forEach((key) => {
-              console.log(doc.data().addressBook[key])
               doc.data().addressBook[key]
               tempArr.push(doc.data().addressBook[key])
             })
@@ -127,7 +123,6 @@ const ContextProvider = ({ children }) => {
   //load card profile when app initiate
   const checkCards = () => {
     setLoadingCards(true)
-    console.log("card loading...")
     if (user && user.profiles && user.profiles !== cards) {
       const getCards = functions.httpsCallable('getCards')
       user && user.profiles && getCards({
@@ -136,12 +131,9 @@ const ContextProvider = ({ children }) => {
         email: user.email
       })
         .then((result) => {
-          console.log(result)
           setCards(user.profiles)
-          console.log("card loaded")
           cards && cards[0] && cards.map(profile => {
             if (profile.customer_code === user.defaultProfileId) {
-              console.log("@@@@@@@profile", profile)
               setSelectedCard(profile)
             }
           })
@@ -170,7 +162,6 @@ const ContextProvider = ({ children }) => {
         await AsyncStorage.setItem('newOrderProductList', JSON.stringify(newOrderProductList))
         await AsyncStorage.setItem('selectedItem', JSON.stringify(selectedItem))
         await AsyncStorage.setItem('total', (+total).toFixed(2))
-        console.log(AsyncStorage.getItem('newOrderProductList'))
       } catch (e) {
         console.log("AsyncStorage Save Error:", e)
       }
@@ -178,7 +169,6 @@ const ContextProvider = ({ children }) => {
   }
   useEffect(() => {
     if (newOrderProductList && newOrderProductList[0]) {
-      console.log("store dataaaaaaaaaaaaaaaaaa")
       storeData()
     }
   }, [newOrderProductList, total])

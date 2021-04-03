@@ -11,15 +11,12 @@ import { IconButton } from 'react-native-paper';
 export default function PrinterMobile({order}) {
 
   const printHTML = async (order) => {
-    console.log(order)
     try {
       await Print.printAsync({ html: InvoiceHTML(order) });
     } catch (error) {
       console.error(error);
     }
   };
-
-  const handlePrint = () => {console.log("print something man")}
 
   return (
     <>

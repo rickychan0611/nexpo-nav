@@ -3,7 +3,6 @@ const admin = require('firebase-admin');
 var db = admin.database();
 
 exports.minusTotalCounter = functions.https.onCall(async (data) => {
-    console.log("MINUS")
     let MM_YYYY = data.MM_YYYY
     let DD = data.DD
 

@@ -37,7 +37,6 @@ export default function addressBook() {
   //update addressType so that it is selected
   const updateShippingAddress = (addressId) => {
     const key = `addressType.shipping`
-    console.log("key:" + key)
     db.collection("users").doc(user.email).update({
       [key]: addressId
     })

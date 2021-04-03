@@ -48,7 +48,6 @@ export default function QrScanning() {
       const customer = await db.collection('users').doc(data).get()
         .then((snapshot) => {
           if (snapshot.exists) {
-            console.log(snapshot.data())
             return snapshot.data()
           }
           else {
@@ -61,7 +60,6 @@ export default function QrScanning() {
           throw (err)
         })
 
-      console.log(customer)
       let newPoints
 
       if (redeemPoints > customer.points) {

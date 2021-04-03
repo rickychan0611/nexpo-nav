@@ -58,7 +58,6 @@ export default function newCard() {
 
 
   const setShippingAsBilling = () => {
-    console.log(newBillingBoxchecked)
 
     if (newBillingBoxchecked) {
       setNewCard(prev => ({ ...prev, ...shippingAddress }))
@@ -142,8 +141,6 @@ export default function newCard() {
     validate.then(() => {
       setErr(empty)
       setLoading(true)
-      console.log("newCard!!!!!!!")
-      console.log(newCard)
       if (!newBillingBoxchecked && newCard) {
         const id = moment().unix()
         const keyName = `addressBook.${id}`
@@ -174,7 +171,6 @@ export default function newCard() {
       //1. get a token
       // functions.useFunctionsEmulator('http://localhost:5001')
       const addNewProfile = functions.httpsCallable('addNewProfile')
-      console.log(newCard)
       addNewProfile({
         card: {
           "name": newCard.firstName + " " + newCard.lastName,
@@ -200,8 +196,6 @@ export default function newCard() {
             throw result.data.message
           }
           else {
-            console.log(result.data)
-
 
             user.profiles.map(profile => {
               if (profile.customer_code === user.defaultProfileId) {

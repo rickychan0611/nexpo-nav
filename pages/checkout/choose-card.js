@@ -41,8 +41,6 @@ export default function chooseCard() {
       defaultProfileId: profile.customer_code
     })
       .then(() => {
-        console.log("card")
-        console.log(card)
         setSelectedCard(profile)
       })
       .catch(err => console.log(err))
@@ -88,7 +86,6 @@ export default function chooseCard() {
 
     user.profiles && user.profiles[0] && user.profiles.map(profile => {
       if (profile.customer_code === user.defaultProfileId) {
-        console.log("!!!!!!!!!!!!!profile", profile)
         setSelectedCard(profile)
       }
     })

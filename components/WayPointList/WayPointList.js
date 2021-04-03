@@ -12,8 +12,6 @@ export default function WayPointList({
   destination,
   setShowList
 }) {
-  console.log("mapResponse", mapResponse)
-  console.log("waypoints", waypoints)
 
   const convertChar = (index) => {
     if (index >= 0 && index <= 9) {

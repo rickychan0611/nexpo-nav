@@ -17,12 +17,10 @@ export default function Map({
   function directionsCallback(response) {
     if (response !== null) {
       if (response.status === 'OK') {
-        console.log(response)
         setMapResponse(response)
         setShowList(true)
         setLoading(false)
       } else {
-        console.log('directionsCallback err: ', response)
         setLoading(false)
       }
     }

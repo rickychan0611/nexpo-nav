@@ -65,7 +65,6 @@ export default function Cart() {
   }
 
   const handleChanage = (value) => {
-    console.log(value)
     setRedeemPoint(value)
   }
 
@@ -122,7 +121,9 @@ export default function Cart() {
           {newOrderProductList[0] ?
             <>
               <CartItems />
-              <View style={{ padding: 25 }}>
+
+              {/***** POINTS REDEM ******/}
+              {/* <View style={{ padding: 25 }}>
                 <Text>Your points: {user.points} (eg. 1,000 points = $1 value)</Text>
                 <TextInput
                   label="Redeem your point"
@@ -161,16 +162,22 @@ export default function Cart() {
                 <HelperText type="error" visible={pointErr}>
                   {pointErr}
                 </HelperText>
-              </View>
+              </View> */}
+
+
               <Divider />
               <TotalContainer style={{ paddingTop: 20, paddingRight: 30 }}>
                 <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
                 <Price ><Text style={{ color: "grey" }}>${total.toFixed(2)}</Text></Price>
               </TotalContainer>
-              <TotalContainer style={{ paddingRight: 30 }}>
+
+              {/*****Discount *****/}
+              {/* <TotalContainer style={{ paddingRight: 30 }}>
                 <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
                 <Price ><Text style={{ color: "grey" }}>-${(+redeemPoint / 1000).toFixed(2)}</Text></Price>
-              </TotalContainer>
+              </TotalContainer> */}
+
+
               <TotalContainer style={{ paddingRight: 30 }}>
                 <Content ><Text style={{ color: "grey" }}>Shipping: (Free over $60) </Text></Content>
                 <Price ><Text style={{ color: "grey" }}>{shippingFee(total)}</Text></Price>

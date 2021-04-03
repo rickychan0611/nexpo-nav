@@ -97,8 +97,6 @@ export default function AddressForm({
       setLoading(true)
       setErr(empty)
 
-      console.log("tasker", tasker)
-      console.log(hasShippingAddress)
       if (tasker === "1stAddress") {
         const id = moment().unix()
         const keyName = `addressBook.${id}`

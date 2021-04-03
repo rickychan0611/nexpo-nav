@@ -18,8 +18,6 @@ export default function PrintAllMobile({allOrders}) {
     }
   };
 
-  const handlePrint = () => {console.log("print something man")}
-
   return (
     <>
     <Button color="#e0e0e0" icon="printer" mode="contained"
