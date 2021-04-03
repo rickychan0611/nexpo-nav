@@ -15,14 +15,14 @@ export default function AdminSideBar({ data }) {
 
   return (
     <Container>
-      <TouchableOpacity>
+      {/* <TouchableOpacity>
         <Name onPress={() => {
-          navigate({ routeName: "admin/store-stats" })
-          setOpenWebAdminMenu(false)
+          // navigate({ routeName: "admin/store-stats" })
+          // setOpenWebAdminMenu(false)
         }}>
           Dashboard
           </Name>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity>
         <Name onPress={() => {

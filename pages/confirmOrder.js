@@ -120,16 +120,16 @@ export default function confirmOrder() {
             </TableRow>
             <TableRow style={{ paddingRight: 25 }}>
               <Left><Text style={{ color: "grey" }}>Shipping</Text></Left>
-              <Right><Text style={{ color: "grey" }}>FREE</Text></Right>
+              <Right><Text style={{ color: "grey" }}>{+total >= 60 ? "FREE" : "$8.00"}</Text></Right>
             </TableRow>
             <TableRow style={{ paddingRight: 25, paddingBottom: 15 }}>
               <Left><Text style={{ color: "grey" }}>GST</Text></Left>
-              <Right><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Right>
+              <Right><Text style={{ color: "grey" }}>${((total + (total >= 60 ? 0 : 8)) * 0.05).toFixed(2)}</Text></Right>
             </TableRow>
             <Divider />
             <TableRow style={{ paddingTop: 20, paddingBottom: 20, paddingRight: 25 }}>
               <Left><Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>You Pay:</Text></Left>
-              <Right><Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
+              <Right><Text style={{ color: "black", fontSize: 20, fontWeight: "bold" }}>${((total + (total >= 60 ? 0 : 8)) * 1.05).toFixed(2)}</Text></Right>
             </TableRow>
           </View>
 
@@ -242,12 +242,16 @@ export default function confirmOrder() {
             <Right><Text style={{ color: "grey" }}>-$0.00</Text></Right>
           </TableRow>
           <TableRow style={{ paddingRight: 25 }}>
+            <Left><Text style={{ color: "grey" }}>Shipping fee:</Text></Left>
+            <Right><Text style={{ color: "grey" }}>{+total >= 60 ? "FREE" : "$8.00"}</Text></Right>
+          </TableRow>
+          <TableRow style={{ paddingRight: 25 }}>
             <Left><Text style={{ color: "grey" }}>Taxes:</Text></Left>
-            <Right><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Right>
+            <Right><Text style={{ color: "grey" }}>${((total + (total >= 60 ? 0 : 8)) * 0.05).toFixed(2)}</Text></Right>
           </TableRow>
           <TableRow style={{ paddingBottom: 20, paddingRight: 25 }}>
             <Left><Text style={{ color: "black" }}>Total:</Text></Left>
-            <Right><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Right>
+            <Right><Text style={{ color: "black" }}>${((total + (total >= 60 ? 0 : 8)) * 1.05).toFixed(2)}</Text></Right>
           </TableRow>
 
 

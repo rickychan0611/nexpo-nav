@@ -88,7 +88,7 @@ export default function Cart() {
   }, [user])
 
   const shippingFee = (total) => {
-    if (+total > 60) {
+    if (+total >= 60) {
       return "FREE"
     }
     else return "$8.00"
@@ -96,10 +96,10 @@ export default function Cart() {
 
   const totalAmt = (total) => {
     let shipping = 8
-    if (+total > 60) {
+    if (total >= 60) {
       shipping = 0
     }
-    return (+total * 1.15 - (+redeemPoint / 1000) + shipping).toFixed(2)
+    return (((+total + shipping)- (+redeemPoint / 1000)) * 1.15  ).toFixed(2)
   }
 
   return (
@@ -184,12 +184,12 @@ export default function Cart() {
               </TotalContainer>
               <TotalContainer style={{ paddingRight: 30 }}>
                 <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-                <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
+                <Price ><Text style={{ color: "grey" }}>${((total + (total >= 60 ? 0 : 8)) * 0.05).toFixed(2)}</Text></Price>
               </TotalContainer>
               <TotalContainer style={{ paddingBottom: 20, paddingRight: 30 }}>
                 <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
                 <Price ><Text style={{ color: "black", fontWeight: "bold", fontSize: 18 }}>
-                  ${totalAmt(total)}
+                ${((total + (total >= 60 ? 0 : 8)) * 1.05).toFixed(2)}
                 </Text></Price>
               </TotalContainer>
               <Divider />

@@ -86,7 +86,7 @@ export default function paymentMethod() {
                 Choose your payment method:
               </Title>
 
-              <TouchableOpacity onPress={() => setPaymentMethod('credit')}>
+              {/* <TouchableOpacity onPress={() => setPaymentMethod('credit')}>
                 <Surface style={{
                   elevation: 4,
                   marginHorizontal: 20,
@@ -128,7 +128,7 @@ export default function paymentMethod() {
                     </View>
                   </Row>
                 </Surface>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               <TouchableOpacity onPress={() => setPaymentMethod('cash')}>
                 <Surface style={{

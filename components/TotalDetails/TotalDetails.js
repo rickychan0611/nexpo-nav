@@ -2,25 +2,29 @@ import React, { useContext } from "react";
 import { View, Text, Platform } from "react-native";
 import styled from "styled-components/native";
 
-export default function TotalDetails({ total }) {
+export default function TotalDetails({ order }) {
 
   return (
     <>
       <TotalContainer style={{ paddingTop: 20, paddingRight: 25 }}>
         <Content ><Text style={{ color: "grey" }}>Subtotal:</Text></Content>
-        <Price ><Text style={{ color: "grey" }}>${(+total).toFixed(2)}</Text></Price>
+        <Price ><Text style={{ color: "grey" }}>${(+order.subTotal).toFixed(2)}</Text></Price>
       </TotalContainer>
       <TotalContainer style={{ paddingRight: 25 }}>
         <Content ><Text style={{ color: "grey" }}>Discount:</Text></Content>
-        <Price ><Text style={{ color: "grey" }}>-$0.00</Text></Price>
+        <Price ><Text style={{ color: "grey" }}>-${(+order.discount).toFixed(2)}</Text></Price>
+      </TotalContainer>
+      <TotalContainer style={{ paddingRight: 25 }}>
+        <Content ><Text style={{ color: "grey" }}>Shipping fee:</Text></Content>
+        <Price ><Text style={{ color: "grey" }}>${(+order.shippingFee).toFixed(2)}</Text></Price>
       </TotalContainer>
       <TotalContainer style={{ paddingRight: 25 }}>
         <Content ><Text style={{ color: "grey" }}>Taxes:</Text></Content>
-        <Price ><Text style={{ color: "grey" }}>${(+total * 0.15).toFixed(2)}</Text></Price>
+        <Price ><Text style={{ color: "grey" }}>${(+order.gst).toFixed(2)}</Text></Price>
       </TotalContainer>
       <TotalContainer style={{ paddingBottom: 20, paddingRight: 25 }}>
         <Content ><Text style={{ color: "black" }}>Total:</Text></Content>
-        <Price ><Text style={{ color: "black" }}>${(+total * 1.15).toFixed(2)}</Text></Price>
+        <Price ><Text style={{ color: "black" }}>${(+order.totalAmt).toFixed(2)}</Text></Price>
       </TotalContainer>
     </>
   )

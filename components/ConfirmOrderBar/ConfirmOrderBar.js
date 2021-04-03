@@ -17,7 +17,7 @@ export default function ConfirmOrderBar() {
 
 
   const { setSelected, total, user,
-    shippingAddress, newOrderProductList,
+    shippingAddress, newOrderProductList, setNewOrderProductList,
     paymentMethod, setNewOrderId } = useContext(Context);
   const { theme } = useContext(ThemeContext);
   const qty = useQty();
@@ -29,6 +29,10 @@ export default function ConfirmOrderBar() {
 
   const onOrderSubmit = async () => {
     try {
+      const shippingFee = total >= 60 ? 0 : 8
+      const gst = +(((total + (total >= 60 ? 0 : 8)) * 0.05).toFixed(2))
+      const totalAmt = +(((total + (total >= 60 ? 0 : 8)) * 1.05).toFixed(2))
+
       setLoading(true)
       const timestamp = new Date()
       let now = moment().format("YYMMDD")
@@ -57,7 +61,7 @@ export default function ConfirmOrderBar() {
           })
 
         if (paymentData && paymentData.approved === "1") {
-
+         
           const orderRef = db.collection("orders").doc(now + "A" + orderId)
           await orderRef.set({
             paymentData,
@@ -67,24 +71,26 @@ export default function ConfirmOrderBar() {
             userId: user.email,
             createAt: timestamp,
             subTotal: total,
-            gst: (+total * 0.05).toFixed(2),
-            totalAmt: (+total * 1.15).toFixed(2),
-            discount: 0,
-            shippingFee: 8,
+            gst,
+            totalAmt,
+            shippingFee,
+            discount: 0, //discount
             status: "In Progress",
             paymentStatus: paymentData.message,
             index: orderId
           })
             .then(() => {
-              database.ref('stats/1111').update({ helkl })
-                .catch((err) => {
-                  alert(err)
-                })
+              // database.ref('stats/1111').update({ helkl })
+              //   .catch((err) => {
+              //     alert(err)
+              //   })
               db.collection("users").doc(user.email).update({
                 points: user.points + (total * 100)
               })
                 .then(() => {
+                  updateStats()
                   setLoading(false)
+                  setNewOrderProductList([])
                   setSelected("orderSuccess")
                   navigate({
                     routeName: "orderSuccess",
@@ -121,10 +127,10 @@ export default function ConfirmOrderBar() {
           userId: user.email,
           createAt: timestamp,
           subTotal: total,
-          gst: (+total * 0.05).toFixed(2),
-          totalAmt: (+total * 1.15).toFixed(2),
+          gst,
+          totalAmt,
+          shippingFee,
           discount: 0,
-          shippingFee: 8,
           status: "In Progress",
           paymentStatus: 'Not Paid. Pay upon delivery'
         })
@@ -134,6 +140,7 @@ export default function ConfirmOrderBar() {
             })
               .then(() => {
                 updateStats() //update stats in database
+                setNewOrderProductList([])
                 setLoading(false)
                 setSelected("orderSuccess")
                 navigate({
@@ -164,18 +171,6 @@ export default function ConfirmOrderBar() {
       MM_YYYY: moment().format("MM_YYYY"),
       DD: moment().format("DD")
     })
-    // database.ref('stats/').update({ hello: "fukc" })
-    //   .then(() => {
-    //     alert("added")
-    //     setLoading(false)
-    //     setSelected("orderSuccess")
-    //     navigate({
-    //       routeName: "orderSuccess",
-    //     })
-    //   })
-    //   .catch((err) => {
-    //     alert(err)
-    //   })
   }
 
   useEffect(() => {

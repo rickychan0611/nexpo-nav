@@ -187,7 +187,7 @@ export default function order() {
 
                 <Divider />
 
-                <TotalDetails total={selectedOrder ? selectedOrder.totalAmt : 0} />
+                <TotalDetails order={selectedOrder} />
 
                 <Divider />
 
