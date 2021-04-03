@@ -32,7 +32,7 @@ export default function paymentMethod() {
       if (user.defaultProfileId) {
         navigate({ routeName: "checkout/choose-card" })
       }
-      else navigate({ routeName: "checkout/new-card" })
+      // else navigate({ routeName: "checkout/new-card" })
     }
   }
 

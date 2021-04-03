@@ -50,7 +50,7 @@ const ContextProvider = ({ children }) => {
   const [onAddNew, setOnAddNew] = useState(false);
   const [editAddress, setEditAddress] = useState(false);
   const [initLoaded, setInitLoaded] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('credit');
+  const [paymentMethod, setPaymentMethod] = useState('cash');
   const [shippingAddress, setShippingAddress] = useState()
   const [billingAddress, setBillingAddress] = useState()
   const [task, setTask] = useState("")

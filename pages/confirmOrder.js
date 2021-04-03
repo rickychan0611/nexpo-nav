@@ -53,7 +53,11 @@ export default function confirmOrder() {
     <>
       <ContextArea>
         <IconButton icon="arrow-left"
-          onPress={() => { navigate({ routeName: "checkout/choose-card" }) }} />
+          onPress={() => { 
+            paymentMethod === "credit" ? 
+            navigate({ routeName: "checkout/choose-card" }) :
+            navigate({ routeName: "checkout/payment-method" })
+             }} />
         <ScrollView>
           <View
             style={{

@@ -66,7 +66,8 @@ function Route() {
         let orders = [];
 
         routesKeyNames.map((keyName) => {
-          let name = wayPointIds[keyName]
+          let name = +wayPointIds[keyName]
+          console.log(name)
           let promise = db.collection("orders").where("index", "==", name).get()
             .then(snapshot => {
               if (snapshot.empty) {
